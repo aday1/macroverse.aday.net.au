@@ -1,4 +1,14 @@
 // VJ Output - standalone pop-out renderer
+import {
+  applyGigOutputQrFramePayload,
+  drawGigOutputQrOnCanvas,
+  type GigOutputQrFrame,
+} from './gigOutputQr.js';
+import {
+  audienceMouseQuery,
+  fetchAudienceParticipationConfig,
+} from './vjAudienceParticipation.js';
+import { getViewTokenFromUrl, vjViewQuery } from './vjTokens.js';
 // Receives state from main window via BroadcastChannel and renders independently.
 // This page has its own WebGL contexts and animation loop so it keeps rendering
 // even when the main browser tab is in the background.
@@ -61,6 +71,7 @@ interface FrameMsg {
   mouseY: number;
   paramsA: Record<string, number | boolean>;
   paramsB: Record<string, number | boolean>;
+  qrOverlay?: GigOutputQrFrame;
 }
 interface ClearMsg { type: 'clear'; deck: 'A' | 'B' }
 type VJMsg = ShaderMsg | FrameMsg | ClearMsg;
@@ -149,7 +160,9 @@ const glOpts: WebGLContextAttributes = {
 };
 
 const outputCanvas = document.getElementById('vjCanvas') as HTMLCanvasElement;
+const qrOverlayCanvas = document.getElementById('vjQrOverlay') as HTMLCanvasElement | null;
 const statusEl = document.getElementById('status') as HTMLDivElement;
+const audienceInteractHintEl = document.getElementById('audienceInteractHint') as HTMLDivElement | null;
 
 const deckCanvasA = document.createElement('canvas');
 deckCanvasA.width = DECK_W;
@@ -222,6 +235,10 @@ function resize(): void {
     outputCanvas.width = w;
     outputCanvas.height = h;
   }
+  if (qrOverlayCanvas && (qrOverlayCanvas.width !== w || qrOverlayCanvas.height !== h)) {
+    qrOverlayCanvas.width = w;
+    qrOverlayCanvas.height = h;
+  }
 }
 window.addEventListener('resize', resize);
 resize();
@@ -254,6 +271,7 @@ function applyVJMsg(msg: VJMsg): void {
     mouseY = msg.mouseY ?? 0.5;
     paramsA = msg.paramsA;
     paramsB = msg.paramsB;
+    if ('qrOverlay' in msg) applyGigOutputQrFramePayload(msg.qrOverlay);
   } else if (msg.type === 'clear') {
     const gl = msg.deck === 'A' ? glA : glB;
     const oldProg = msg.deck === 'A' ? progA : progB;
@@ -267,11 +285,20 @@ function setStatus(text: string): void {
   if (statusEl) statusEl.textContent = text;
 }
 
+function streamQuery(): string {
+  const viewToken = getViewTokenFromUrl();
+  if (viewToken) {
+    return `viewToken=${encodeURIComponent(viewToken)}`;
+  }
+  return vjViewQuery();
+}
+
 function connectRemoteStream(): void {
   setStatus('Connecting to stream...');
+  const q = streamQuery();
   const url = (typeof window !== 'undefined' && window.location.origin)
-    ? window.location.origin + '/api/vj-output/stream'
-    : '/api/vj-output/stream';
+    ? `${window.location.origin}/api/vj-output/stream?${q}`
+    : `/api/vj-output/stream?${q}`;
   let es = new EventSource(url);
   let receivedAny = false;
   let reconnectAttempts = 0;
@@ -348,15 +375,91 @@ if (useRemoteOnly || isRemoteHost || noOpener) {
   }, 500);
 }
 
-// Mouse/touch XY pad on the pop-out canvas
-outputCanvas.style.cursor = 'crosshair';
+/** Audience member opened the phone QR (not projector / operator pop-out). */
+function isAudiencePhonePage(): boolean {
+  if (typeof window === 'undefined') return false;
+  const params = new URLSearchParams(window.location.search);
+  return params.get('audienceUi') === '1' && Boolean(getViewTokenFromUrl());
+}
+
+let audienceParticipation = false;
+let lastAudiencePost = 0;
+const AUDIENCE_POST_MS = 50;
+let interactHintFadeTimer = 0;
+let interactHintHideTimer = 0;
+
+const INTERACT_HINT_HOLD_MS = 2800;
+const INTERACT_HINT_FADE_MS = 1100;
+
+function showAudienceInteractHint(): void {
+  if (!audienceInteractHintEl || !isAudiencePhonePage() || !audienceParticipation) return;
+  window.clearTimeout(interactHintFadeTimer);
+  window.clearTimeout(interactHintHideTimer);
+  audienceInteractHintEl.hidden = false;
+  audienceInteractHintEl.classList.remove('is-visible');
+  void audienceInteractHintEl.offsetWidth;
+  audienceInteractHintEl.classList.add('is-visible');
+  interactHintFadeTimer = window.setTimeout(() => {
+    audienceInteractHintEl.classList.remove('is-visible');
+    interactHintHideTimer = window.setTimeout(() => {
+      audienceInteractHintEl.hidden = true;
+    }, INTERACT_HINT_FADE_MS);
+  }, INTERACT_HINT_HOLD_MS);
+}
+
+async function refreshAudienceParticipation(): Promise<void> {
+  if (!isAudiencePhonePage()) return;
+  const enabled = await fetchAudienceParticipationConfig();
+  if (enabled === audienceParticipation) return;
+  const wasOff = !audienceParticipation;
+  audienceParticipation = enabled;
+  outputCanvas.style.cursor = enabled ? 'crosshair' : 'default';
+  if (enabled && wasOff) {
+    showAudienceInteractHint();
+  }
+  if (!enabled && audienceInteractHintEl) {
+    audienceInteractHintEl.classList.remove('is-visible');
+    audienceInteractHintEl.hidden = true;
+  }
+}
+
+function postAudienceMouse(mx: number, my: number): void {
+  const now = performance.now();
+  if (now - lastAudiencePost < AUDIENCE_POST_MS) return;
+  lastAudiencePost = now;
+  void fetch(`/api/vj-output/audience-mouse?${audienceMouseQuery()}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mouseX: mx, mouseY: my }),
+  }).catch(() => {});
+}
+
 function setOutputMouseFromClient(clientX: number, clientY: number): void {
   const rect = outputCanvas.getBoundingClientRect();
-  mouseX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-  mouseY = Math.max(0, Math.min(1, 1 - (clientY - rect.top) / rect.height));
+  const mx = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  const my = Math.max(0, Math.min(1, 1 - (clientY - rect.top) / rect.height));
+  if (isAudiencePhonePage()) {
+    if (audienceParticipation) {
+      postAudienceMouse(mx, my);
+      mouseX = mx;
+      mouseY = my;
+    }
+    return;
+  }
+  mouseX = mx;
+  mouseY = my;
 }
+
+if (isAudiencePhonePage()) {
+  void refreshAudienceParticipation();
+  window.setInterval(() => void refreshAudienceParticipation(), 4000);
+} else {
+  outputCanvas.style.cursor = 'crosshair';
+}
+
 outputCanvas.addEventListener('mousemove', (e) => setOutputMouseFromClient(e.clientX, e.clientY));
 outputCanvas.addEventListener('mouseleave', () => {
+  if (isAudiencePhonePage()) return;
   mouseX = 0.5;
   mouseY = 0.5;
 });
@@ -366,14 +469,18 @@ outputCanvas.addEventListener('touchstart', (e) => {
 outputCanvas.addEventListener('touchmove', (e) => {
   if (e.touches.length) {
     setOutputMouseFromClient(e.touches[0].clientX, e.touches[0].clientY);
-    e.preventDefault();
+    if (isAudiencePhonePage() && audienceParticipation) e.preventDefault();
   }
 }, { passive: false });
-outputCanvas.addEventListener('touchend', (e) => {
-  if (e.touches.length === 0) { mouseX = 0.5; mouseY = 0.5; }
+outputCanvas.addEventListener('touchend', () => {
+  if (isAudiencePhonePage()) return;
+  mouseX = 0.5;
+  mouseY = 0.5;
 }, { passive: true });
-outputCanvas.addEventListener('touchcancel', (e) => {
-  if (e.touches.length === 0) { mouseX = 0.5; mouseY = 0.5; }
+outputCanvas.addEventListener('touchcancel', () => {
+  if (isAudiencePhonePage()) return;
+  mouseX = 0.5;
+  mouseY = 0.5;
 }, { passive: true });
 
 // ---- Render loop ----
@@ -439,6 +546,9 @@ function frame(): void {
   renderDeck(glA, deckCanvasA, progA, bufA, paramsA, metaA);
   renderDeck(glB, deckCanvasB, progB, bufB, paramsB, metaB);
   renderMix();
+  if (qrOverlayCanvas) {
+    drawGigOutputQrOnCanvas(qrOverlayCanvas);
+  }
   requestAnimationFrame(frame);
 }
 

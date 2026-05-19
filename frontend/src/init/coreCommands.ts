@@ -222,6 +222,17 @@ export function registerCoreCommands(): void {
     keywords: ['preferences', 'config', 'theme']
   });
   registerCommand({
+    id: 'app.quickstart',
+    label: 'Quick start guide',
+    description: 'First-visit tour: library, views, VJ, command palette',
+    category: 'App',
+    run: async () => {
+      const { showQuickStartGuide } = await import('./quickStartGuide.js');
+      showQuickStartGuide(true);
+    },
+    keywords: ['onboarding', 'tutorial', 'new', 'first']
+  });
+  registerCommand({
     id: 'app.help',
     label: 'Open help',
     description: 'Keyboard shortcuts, features, Wire export tips',

@@ -7,10 +7,13 @@ Scope: aday.net.au
 
 Create at: https://dash.cloudflare.com/profile/api-tokens
 
-Then set GitHub secret on aday1/aday-net-au (and optionally macroverse.aday.net.au):
+Set GitHub secret on aday1/aday-net-au (use a dedicated name so Pages token is not used):
 
-  gh secret set CLOUDFLARE_API_TOKEN --repo aday1/aday-net-au
+  gh secret set CLOUDFLARE_DNS_API_TOKEN --repo aday1/aday-net-au
 
-The Pages deploy token (Workers/Pages only) returns HTTP 403 on dns_records API.
+The existing CLOUDFLARE_API_TOKEN (Pages deploy) returns HTTP 403 on dns_records API.
+Workflow sync-linode-dns falls back to it only if CLOUDFLARE_DNS_API_TOKEN is unset.
 
 Run workflow: aday1/aday-net-au -> Actions -> sync-linode-dns
+
+Manual fallback (no API token): see ops/MANUAL-DEV-DNS.txt

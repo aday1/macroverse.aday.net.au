@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Determine track
         id: track
@@ -50,11 +52,13 @@ jobs:
           SHORT_SHA="$(echo "$GITHUB_SHA" | cut -c1-12)"
           BUILD_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           mkdir -p frontend/public
+          LANE_SYNC="$(bash ops/compute-lane-sync.sh)"
           cat > frontend/public/deploy-meta.json <<EOF
           {
             "site": "macroverse.aday.net.au",
             "branch": "${GITHUB_REF_NAME}",
             "track": "${{ steps.track.outputs.track }}",
+          $LANE_SYNC
             "version": "${SHORT_SHA}",
             "build_date": "${BUILD_DATE}",
             "last_git_sha_short": "${SHORT_SHA}",
@@ -67,10 +71,10 @@ jobs:
             "changelog_md_url": "https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/changelog.md",
             "releases_url": "https://github.com/${GITHUB_REPOSITORY}/releases",
             "workflow_run_url": "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}",
-            "deploy_note": "GHCR image built in CI; Linode compose pull (deploy-linode) may lag a few seconds.",
+            "deploy_note": "GHCR image built in CI; Linode compose pull (deploy-linode) may lag a few seconds. On main, :aday uses the same image as :live.",
             "deploy_switcher": {
               "live_url": "https://macroverse.aday.net.au/",
-              "dev_url": "https://dev.macroverse.aday.net.au/",
+              "dev_url": "https://macroverse-test.aday.net.au/",
               "aday_url": "https://macroverse-aday.aday.net.au/"
             },
             "run_id": "${GITHUB_RUN_ID}",
@@ -88,12 +92,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Prepare image tags
+        id: imagetags
+        run: |
+          TAGS="ghcr.io/${{ github.repository }}/macroverse:${{ steps.track.outputs.track }}
+          ghcr.io/${{ github.repository }}/macroverse:${{ steps.track.outputs.track }}-${{ github.sha }}"
+          if [ "${{ github.ref }}" = "refs/heads/main" ] && [ "${{ steps.track.outputs.track }}" = "live" ]; then
+            TAGS="${TAGS}
+          ghcr.io/${{ github.repository }}/macroverse:aday"
+          fi
+          {
+            echo 'tags<<EOF'
+            echo "$TAGS"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: |
-            ghcr.io/${{ github.repository }}/macroverse:${{ steps.track.outputs.track }}
-            ghcr.io/${{ github.repository }}/macroverse:${{ steps.track.outputs.track }}-${{ github.sha }}
+          tags: ${{ steps.imagetags.outputs.tags }}

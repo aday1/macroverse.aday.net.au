@@ -6,17 +6,58 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #000; overflow: hidden; }
-    canvas { width: 100vw; height: 100vh; display: block; object-fit: contain; }
+    #vjStack { position: relative; width: 100vw; height: 100vh; }
+    #vjStack canvas { width: 100%; height: 100%; display: block; object-fit: contain; }
+    #vjQrOverlay { position: absolute; inset: 0; pointer-events: none; }
     #status {
       position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
       color: #666; font-family: monospace; font-size: 14px; text-align: center;
       pointer-events: none; transition: opacity 0.4s;
     }
+    #audienceInteractHint {
+      position: fixed;
+      left: 50%;
+      bottom: clamp(12%, 10vh, 22%);
+      transform: translateX(-50%);
+      z-index: 20;
+      max-width: min(92vw, 420px);
+      padding: 14px 22px;
+      border-radius: 8px;
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+      background: rgba(6, 4, 15, 0.82);
+      border: 1px solid rgba(248, 221, 54, 0.55);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+      transition: opacity 0.9s ease;
+    }
+    #audienceInteractHint.is-visible { opacity: 1; }
+    #audienceInteractHint .hint-title {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(1.05rem, 4.2vw, 1.35rem);
+      font-weight: 600;
+      color: #f8dd36;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    #audienceInteractHint .hint-sub {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(0.85rem, 3.2vw, 1rem);
+      color: rgba(208, 200, 232, 0.92);
+      line-height: 1.35;
+    }
   </style>
 </head>
 <body>
-  <canvas id="vjCanvas"></canvas>
+  <div id="vjStack">
+    <canvas id="vjCanvas"></canvas>
+    <canvas id="vjQrOverlay"></canvas>
+  </div>
   <div id="status">Waiting for VJ decks...</div>
+  <div id="audienceInteractHint" hidden aria-live="polite">
+    <div class="hint-title">This screen is interactive</div>
+    <div class="hint-sub">Touch or drag — steers the live show on the main screen</div>
+  </div>
   <script type="module" src="/src/vjOutputPage.ts"></script>
 </body>
 </html>

@@ -8,6 +8,26 @@ import { midiEngine } from '../engines/midi.js';
 import { vjController } from '../engines/vjController.js';
 import { roliblockManager, sendStretchedLed } from '../engines/roliblock.js';
 import type { IndexEntry } from '../types.js';
+import {
+  getAudienceParticipationEnabled,
+  pushAudienceParticipation,
+  setAudienceParticipationEnabled,
+} from '../vjAudienceParticipation.js';
+import { getVjSessionId, isVjViewOnlyMode } from '../vjSession.js';
+import { onAudienceMouse, onVjConfig } from '../vjWs.js';
+import { ensureVjTokens, vjControlQuery, vjViewQuery } from '../vjTokens.js';
+import {
+  drawGigOutputQrOnCanvas,
+  gigOutputQrLayoutFromPointer,
+  getGigOutputQrFramePayload,
+  getGigOutputQrLayout,
+  isGigOutputQrVisible,
+  refreshGigOutputQrSession,
+  setGigOutputQrLayout,
+  setGigOutputQrVisible,
+} from '../gigOutputQr.js';
+import { createVjPreviewGigQrBlock } from '../gigQrUi.js';
+import { connectVjSession, onRemoteVjControl, publishVjControl } from '../vjWs.js';
 
 const CLIPS_PER_PAGE = 40;
 
@@ -19,17 +39,29 @@ const VJ_OSC_B_KEY = 'macroverse-vj-osc-b';
 const vjChannel = new BroadcastChannel('macroverse-vj-output');
 
 let lastRelayPost = 0;
-const RELAY_THROTTLE_MS = 100;
+const RELAY_THROTTLE_MS = 250;
+
+/** True while the VJ view tab is active; pauses WebGL loop and API relay when false. */
+let vjDeckTabActive = false;
+let vjFrameLoopStart: (() => void) | null = null;
+let vjFrameLoopStop: (() => void) | null = null;
+
+export function setVjDeckTabActive(active: boolean): void {
+  vjDeckTabActive = active;
+  if (active) vjFrameLoopStart?.();
+  else vjFrameLoopStop?.();
+}
 
 function sendVJMessage(msg: unknown): void {
   vjChannel.postMessage(msg);
   const isFrame = typeof msg === 'object' && msg !== null && (msg as { type?: string }).type === 'frame';
+  if (isFrame && !vjDeckTabActive && !isGigOutputQrVisible()) return;
   const now = performance.now();
   if (isFrame) {
     if (now - lastRelayPost < RELAY_THROTTLE_MS) return;
     lastRelayPost = now;
   }
-  fetch('/api/vj-output/state', {
+  fetch(`/api/vj-output/state?${vjControlQuery()}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(msg)
@@ -248,11 +280,46 @@ export function initVJDeck(): void {
   const container = document.getElementById('vjDeckContainer');
   if (!container) return;
 
-  // Only initialize once - subsequent calls just show the existing deck.
-  // Caller must set container visible (display flex) before first init so both Deck A and Deck B get valid WebGL contexts.
-  if (vjDeckInitialized && container.children.length > 0) return;
-  vjDeckInitialized = true;
+  if (container.querySelector('.vj-deck-wrap')) {
+    if (vjDeckTabActive) vjFrameLoopStart?.();
+    return;
+  }
+  if (container.querySelector('.vj-deck-loading')) return;
+
+  container.replaceChildren();
+  const loading = document.createElement('div');
+  loading.className = 'vj-deck-loading';
+  loading.style.cssText = 'padding:16px;font-size:11px;color:var(--crt-dim);';
+  loading.textContent = 'Loading VJ deck…';
+  container.appendChild(loading);
+  window.setTimeout(() => {
+    try {
+      buildVjDeck();
+    } catch (err) {
+      console.error('[VJ] buildVjDeck failed:', err);
+      container.replaceChildren();
+      const errEl = document.createElement('div');
+      errEl.style.cssText = 'padding:16px;font-size:11px;color:#c44;line-height:1.5;';
+      errEl.textContent = 'VJ deck failed to load. Try refreshing the page or check the browser console.';
+      container.appendChild(errEl);
+    }
+  }, 0);
+}
+
+function buildVjDeck(): void {
+  const container = document.getElementById('vjDeckContainer');
+  if (!container || container.querySelector('.vj-deck-wrap')) return;
+
   container.innerHTML = '';
+
+  if (isVjViewOnlyMode()) {
+    const viewOnly = document.createElement('div');
+    viewOnly.style.cssText =
+      'padding:8px 10px;margin-bottom:8px;font-size:10px;background:var(--amiga-surface);color:var(--crt-dim);border:1px solid var(--bevel-dark);line-height:1.4;';
+    viewOnly.textContent =
+      'Audience stream link: watch the viz. Touch X/Y only works when the operator enables Audience participation. For full deck control, use the VJ collaboration link (top-bar VJ chip), not this URL.';
+    container.appendChild(viewOnly);
+  }
 
   const shaderList = listSetFilter ? entries.filter((e) => (e.sets || []).includes(listSetFilter)) : entries;
   function getShaderList(): IndexEntry[] {
@@ -264,6 +331,9 @@ export function initVJDeck(): void {
   let mixMode: MixMode = 'crossfade';
   let currentPageA = 0;
   let currentPageB = 0;
+  let deckAGlobalIndex = -1;
+  let deckBGlobalIndex = -1;
+  let applyingRemoteControl = false;
   let outputFlipV = false;
   let outputFlipH = false;
   let outputRotation: 0 | 90 | 180 | 270 = 0;
@@ -1266,13 +1336,33 @@ export function initVJDeck(): void {
   outputHead.style.cssText = `display: flex; align-items: center; justify-content: space-between; gap: 8px;`;
   const outputLabel = document.createElement('div');
   outputLabel.style.cssText = 'font-size: 9px; text-transform: uppercase; color: var(--amiga-copper); letter-spacing: 0.08em;';
-  outputLabel.textContent = 'Output';
+  outputLabel.textContent = 'VJ Preview';
   const popOutBtn = document.createElement('button');
   popOutBtn.type = 'button';
   popOutBtn.textContent = 'Pop out';
   popOutBtn.title = 'Open output on another screen; reacts to MIDI/OSC/FFT';
   popOutBtn.style.cssText = 'font-size: 9px; padding: 2px 8px; background: var(--amiga-surface); color: var(--amiga-copper); border: 1px solid var(--bevel-dark); cursor: pointer;';
+  const audienceQrBtn = document.createElement('button');
+  audienceQrBtn.type = 'button';
+  audienceQrBtn.textContent = 'Audience QR';
+  audienceQrBtn.title = 'Show or hide join QR on the VJ output (preview, pop-out, HDMI)';
+  audienceQrBtn.style.cssText = popOutBtn.style.cssText;
+  const syncAudienceQrBtn = () => {
+    if (isGigOutputQrVisible()) {
+      audienceQrBtn.textContent = 'Hide QR on output';
+    } else {
+      audienceQrBtn.textContent = 'Audience QR';
+    }
+  };
+  audienceQrBtn.addEventListener('click', () => {
+    if (isGigOutputQrVisible()) setGigOutputQrVisible(false);
+    else setGigOutputQrVisible(true);
+    syncAudienceQrBtn();
+  });
+  window.addEventListener('macroverse-gig-output-qr-visible', () => syncAudienceQrBtn());
+  window.addEventListener('macroverse-gig-audience-qr-visible', () => syncAudienceQrBtn());
   outputHead.appendChild(outputLabel);
+  outputHead.appendChild(audienceQrBtn);
   outputHead.appendChild(popOutBtn);
   outputSection.appendChild(outputHead);
 
@@ -1313,6 +1403,13 @@ export function initVJDeck(): void {
   transformSection.appendChild(rotLabel);
   outputSection.appendChild(transformSection);
 
+  const previewAndQrRow = document.createElement('div');
+  previewAndQrRow.style.cssText =
+    'display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;';
+
+  const previewCol = document.createElement('div');
+  previewCol.style.cssText = 'flex:1 1 280px;min-width:0;position:relative;';
+
   const outputCanvas = document.createElement('canvas');
   outputCanvas.width = OUTPUT_CANVAS_W;
   outputCanvas.height = OUTPUT_CANVAS_H;
@@ -1325,7 +1422,76 @@ export function initVJDeck(): void {
     border: 1px solid var(--bevel-dark);
     display: block;
   `;
-  outputSection.appendChild(outputCanvas);
+
+  const outputQrOverlay = document.createElement('canvas');
+  outputQrOverlay.width = OUTPUT_CANVAS_W;
+  outputQrOverlay.height = OUTPUT_CANVAS_H;
+  outputQrOverlay.style.cssText = `
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: ${OUTPUT_CANVAS_W}px;
+    height: auto;
+    aspect-ratio: ${OUTPUT_CANVAS_W} / ${OUTPUT_CANVAS_H};
+    pointer-events: none;
+    visibility: hidden;
+  `;
+
+  previewCol.appendChild(outputCanvas);
+  previewCol.appendChild(outputQrOverlay);
+
+  let draggingOutputQr = false;
+  const syncOutputQrOverlayPointer = () => {
+    const on = isGigOutputQrVisible();
+    outputQrOverlay.style.pointerEvents = on ? 'auto' : 'none';
+    outputQrOverlay.style.cursor = on ? (draggingOutputQr ? 'grabbing' : 'grab') : 'default';
+  };
+  const moveOutputQrFromPointer = (clientX: number, clientY: number) => {
+    setGigOutputQrLayout(gigOutputQrLayoutFromPointer(clientX, clientY, outputQrOverlay));
+  };
+  outputQrOverlay.addEventListener('pointerdown', (e) => {
+    if (!isGigOutputQrVisible()) return;
+    draggingOutputQr = true;
+    syncOutputQrOverlayPointer();
+    outputQrOverlay.setPointerCapture(e.pointerId);
+    moveOutputQrFromPointer(e.clientX, e.clientY);
+    e.preventDefault();
+  });
+  outputQrOverlay.addEventListener('pointermove', (e) => {
+    if (!draggingOutputQr) return;
+    moveOutputQrFromPointer(e.clientX, e.clientY);
+    e.preventDefault();
+  });
+  const endOutputQrDrag = () => {
+    draggingOutputQr = false;
+    syncOutputQrOverlayPointer();
+  };
+  outputQrOverlay.addEventListener('pointerup', endOutputQrDrag);
+  outputQrOverlay.addEventListener('pointercancel', endOutputQrDrag);
+  outputQrOverlay.addEventListener(
+    'wheel',
+    (e) => {
+      if (!isGigOutputQrVisible()) return;
+      e.preventDefault();
+      const L = getGigOutputQrLayout();
+      setGigOutputQrLayout({ scale: L.scale + (e.deltaY > 0 ? -0.02 : 0.02) });
+    },
+    { passive: false }
+  );
+  window.addEventListener('macroverse-gig-output-qr-visible', syncOutputQrOverlayPointer);
+  syncOutputQrOverlayPointer();
+
+  const gigQrBlock = createVjPreviewGigQrBlock();
+  previewAndQrRow.appendChild(previewCol);
+  previewAndQrRow.appendChild(gigQrBlock.root);
+  outputSection.appendChild(previewAndQrRow);
+  window.addEventListener('macroverse-vj-session-changed', () => {
+    void ensureVjTokens(getVjSessionId()).then(() => {
+      gigQrBlock.refresh();
+      refreshGigOutputQrSession();
+    });
+  });
 
   vjOutputCanvasRef = outputCanvas;
   outputCanvas.style.cursor = 'crosshair';
@@ -1347,9 +1513,11 @@ export function initVJDeck(): void {
   const outputUrlInput = document.createElement('input');
   outputUrlInput.type = 'text';
   outputUrlInput.readOnly = true;
-  const vjOutputUrl = typeof window !== 'undefined' ? window.location.origin + '/vj-output.html' : '';
+  const vjOutputUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}/vj-output.html?remote=1&${vjViewQuery()}`
+    : '';
   outputUrlInput.value = vjOutputUrl;
-  outputUrlInput.title = 'Same URL on another machine: add ?remote=1 to use stream over network';
+  outputUrlInput.title = 'Pi HDMI / OBS: open this URL on the projector machine for this gig session';
   outputUrlInput.style.cssText = 'flex: 1; min-width: 120px; font-size: 9px; padding: 2px 6px; background: var(--amiga-bg); color: var(--crt-fg); border: 1px solid var(--bevel-dark); font-family: inherit;';
   const outputUrlCopy = document.createElement('button');
   outputUrlCopy.type = 'button';
@@ -1374,7 +1542,7 @@ export function initVJDeck(): void {
       popOutWin.focus();
       return;
     }
-    popOutWin = window.open('/vj-output.html', 'macroverse-vj-output');
+    popOutWin = window.open(`/vj-output.html?remote=1&${vjViewQuery()}`, 'macroverse-vj-output');
     if (!popOutWin) {
       console.warn('[VJ] Pop-out blocked by browser. Allow popups for this site.');
       return;
@@ -1391,6 +1559,7 @@ export function initVJDeck(): void {
   wrap.appendChild(audioSection);
   wrap.appendChild(outputSection);
   container.appendChild(wrap);
+  vjDeckInitialized = true;
 
   const glOpts: WebGLContextAttributes = {
     preserveDrawingBuffer: true,
@@ -1617,6 +1786,13 @@ export function initVJDeck(): void {
   let lastFrameJson = '';
   let lastVjFrameTime = 0;
   function runVJFrame(): void {
+    if (!vjDeckTabActive) {
+      if (rafMix) {
+        cancelAnimationFrame(rafMix);
+        rafMix = 0;
+      }
+      return;
+    }
     const now = performance.now();
     const dt = lastVjFrameTime ? (now - lastVjFrameTime) / 1000 : 0.016;
     lastVjFrameTime = now;
@@ -1637,6 +1813,7 @@ export function initVJDeck(): void {
     runDeckALogic();
     runDeckBLogic();
     runMixLogic();
+    drawGigOutputQrOnCanvas(outputQrOverlay);
 
     // Multi-device Roliblock LED dispatch
     if (outputCanvas) {
@@ -1714,7 +1891,12 @@ export function initVJDeck(): void {
         mouseX: _vjMouseXRef,
         mouseY: _vjMouseYRef,
         paramsA: { ...deckAParamValues },
-        paramsB: { ...deckBParamValues }
+        paramsB: { ...deckBParamValues },
+        qrOverlay: getGigOutputQrFramePayload() ?? {
+          enabled: false,
+          mix: 0,
+          opacity: 0,
+        },
       };
       const json = JSON.stringify(frameData);
       if (json !== lastFrameJson) {
@@ -1722,11 +1904,28 @@ export function initVJDeck(): void {
         sendVJMessage(frameData);
       }
     }
-    if (!document.hidden) rafMix = requestAnimationFrame(runVJFrame);
+    if (!document.hidden && vjDeckTabActive) rafMix = requestAnimationFrame(runVJFrame);
   }
+
+  vjFrameLoopStop = () => {
+    if (rafMix) {
+      cancelAnimationFrame(rafMix);
+      rafMix = 0;
+    }
+    if (bgVjInterval) {
+      clearInterval(bgVjInterval);
+      bgVjInterval = 0;
+    }
+  };
+  vjFrameLoopStart = () => {
+    if (!vjDeckTabActive) return;
+    if (rafMix || bgVjInterval) return;
+    runVJFrame();
+  };
 
   // Keep VJ frame loop running when tab is hidden (for LED streaming + parameter automation)
   document.addEventListener('visibilitychange', () => {
+    if (!vjDeckTabActive) return;
     if (document.hidden) {
       if (!bgVjInterval) bgVjInterval = window.setInterval(() => runVJFrame(), 33);
     } else {
@@ -1793,10 +1992,12 @@ export function initVJDeck(): void {
   crossfaderInput.addEventListener('input', () => {
     crossfader = parseFloat(crossfaderInput.value);
     crossfaderVal.textContent = Math.round(crossfader * 100) + '%';
+    if (!applyingRemoteControl) publishVjControl({ crossfader });
   });
 
   mixModeSelect.addEventListener('change', () => {
     mixMode = mixModeSelect.value as MixMode;
+    if (!applyingRemoteControl) publishVjControl({ mixMode });
   });
 
   function setAutoVjEnabled(en: boolean): void {
@@ -1883,6 +2084,8 @@ export function initVJDeck(): void {
     const list = getShaderList();
     if (list.length === 0) return;
     const idx = Math.max(0, Math.min(list.length - 1, Math.floor(globalIndex)));
+    deckAGlobalIndex = idx;
+    if (!applyingRemoteControl) publishVjControl({ deckAGlobalIndex: idx });
     const entry = list[idx];
     if (!entry?.path) return;
     deckAEntry.value = entry;
@@ -1902,6 +2105,8 @@ export function initVJDeck(): void {
     const list = getShaderList();
     if (list.length === 0) return;
     const idx = Math.max(0, Math.min(list.length - 1, Math.floor(globalIndex)));
+    deckBGlobalIndex = idx;
+    if (!applyingRemoteControl) publishVjControl({ deckBGlobalIndex: idx });
     const entry = list[idx];
     if (!entry?.path) return;
     deckBEntry.value = entry;
@@ -1942,10 +2147,71 @@ export function initVJDeck(): void {
   }
   vjController.register('vj/loadClipA', (v) => loadDeckABySlot(v));
   vjController.register('vj/loadClipB', (v) => loadDeckBBySlot(v));
-  vjController.register('vj/deckA/pageUp', () => { currentPageA++; });
-  vjController.register('vj/deckA/pageDown', () => { currentPageA = Math.max(0, currentPageA - 1); });
-  vjController.register('vj/deckB/pageLeft', () => { currentPageB = Math.max(0, currentPageB - 1); });
-  vjController.register('vj/deckB/pageRight', () => { currentPageB++; });
+  vjController.register('vj/deckA/pageUp', () => {
+    currentPageA++;
+    if (!applyingRemoteControl) publishVjControl({ pageA: currentPageA });
+  });
+  vjController.register('vj/deckA/pageDown', () => {
+    currentPageA = Math.max(0, currentPageA - 1);
+    if (!applyingRemoteControl) publishVjControl({ pageA: currentPageA });
+  });
+  vjController.register('vj/deckB/pageLeft', () => {
+    currentPageB = Math.max(0, currentPageB - 1);
+    if (!applyingRemoteControl) publishVjControl({ pageB: currentPageB });
+  });
+  vjController.register('vj/deckB/pageRight', () => {
+    currentPageB++;
+    if (!applyingRemoteControl) publishVjControl({ pageB: currentPageB });
+  });
 
-  runVJFrame();
+  onAudienceMouse((mx, my) => {
+    if (!getAudienceParticipationEnabled()) return;
+    setVjMouseFromRolibblock(mx, my);
+    lastBroadcast = 0;
+    lastFrameJson = '';
+  });
+  onVjConfig((cfg) => {
+    setAudienceParticipationEnabled(cfg.audienceParticipation);
+  });
+
+  void ensureVjTokens(getVjSessionId()).then(() => {
+    if (!isVjViewOnlyMode()) {
+      connectVjSession();
+      if (getAudienceParticipationEnabled()) {
+        void pushAudienceParticipation(true);
+      }
+    }
+  });
+  onRemoteVjControl((ctrl) => {
+    applyingRemoteControl = true;
+    try {
+      if (typeof ctrl.crossfader === 'number') {
+        crossfader = ctrl.crossfader;
+        crossfaderInput.value = String(crossfader);
+        crossfaderVal.textContent = Math.round(crossfader * 100) + '%';
+      }
+      if (ctrl.mixMode && MIX_MODES.some((m) => m.value === ctrl.mixMode)) {
+        mixMode = ctrl.mixMode as MixMode;
+        mixModeSelect.value = mixMode;
+      }
+      if (typeof ctrl.pageA === 'number') currentPageA = ctrl.pageA;
+      if (typeof ctrl.pageB === 'number') currentPageB = ctrl.pageB;
+      if (typeof ctrl.deckAGlobalIndex === 'number' && ctrl.deckAGlobalIndex >= 0 && ctrl.deckAGlobalIndex !== deckAGlobalIndex) {
+        loadDeckAByGlobalIndex(ctrl.deckAGlobalIndex);
+      }
+      if (typeof ctrl.deckBGlobalIndex === 'number' && ctrl.deckBGlobalIndex >= 0 && ctrl.deckBGlobalIndex !== deckBGlobalIndex) {
+        loadDeckBByGlobalIndex(ctrl.deckBGlobalIndex);
+      }
+      if (ctrl.paramsA) {
+        for (const [k, v] of Object.entries(ctrl.paramsA)) deckAParamValues[k] = v;
+      }
+      if (ctrl.paramsB) {
+        for (const [k, v] of Object.entries(ctrl.paramsB)) deckBParamValues[k] = v;
+      }
+    } finally {
+      applyingRemoteControl = false;
+    }
+  });
+
+  if (vjDeckTabActive) runVJFrame();
 }

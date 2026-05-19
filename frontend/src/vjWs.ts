@@ -1,4 +1,5 @@
-import { getVjSessionId } from './vjSession.js';
+import { getVjSessionId, isVjViewOnlyMode } from './vjSession.js';
+import { getStoredControlToken } from './vjTokens.js';
 
 export interface VjControlState {
   crossfader: number;
@@ -31,6 +32,10 @@ let isLeader = false;
 let remoteApply = false;
 const controlHandlers: ControlHandler[] = [];
 const clockHandlers: ClockHandler[] = [];
+type ConfigHandler = (cfg: { audienceParticipation: boolean }) => void;
+type AudienceMouseHandler = (mouseX: number, mouseY: number) => void;
+const configHandlers: ConfigHandler[] = [];
+const audienceMouseHandlers: AudienceMouseHandler[] = [];
 
 function wsUrl(): string {
   const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -54,13 +59,19 @@ export function reconnectVjSession(): void {
 }
 
 export function connectVjSession(): void {
+  if (isVjViewOnlyMode()) return;
   if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
     return;
   }
   const sessionId = getVjSessionId();
+  const controlToken = getStoredControlToken(sessionId);
   socket = new WebSocket(wsUrl());
   socket.onopen = () => {
-    send({ type: 'auth', role: 'client', sessionId });
+    if (controlToken) {
+      send({ type: 'auth', role: 'client', token: controlToken, sessionId });
+    } else {
+      send({ type: 'auth', role: 'client', sessionId });
+    }
     send({ type: 'session:join', sessionId });
     send({ type: 'vj:claim-leader' });
   };
@@ -74,6 +85,19 @@ export function connectVjSession(): void {
         isLeader = Boolean(msg.leader);
         const control = msg.control as VjControlState | undefined;
         if (control) applyRemoteControl(control);
+        if (typeof msg.audienceParticipation === 'boolean') {
+          applyVjConfig({ audienceParticipation: msg.audienceParticipation });
+        }
+      }
+      if (msg.type === 'vj:config' && typeof msg.audienceParticipation === 'boolean') {
+        applyVjConfig({ audienceParticipation: msg.audienceParticipation });
+      }
+      if (msg.type === 'vj:audience-mouse') {
+        const mx = Number(msg.mouseX);
+        const my = Number(msg.mouseY);
+        if (Number.isFinite(mx) && Number.isFinite(my)) {
+          for (const h of audienceMouseHandlers) h(mx, my);
+        }
       }
       if (msg.type === 'vj:control' && msg.control) {
         applyRemoteControl(msg.control as VjControlState);
@@ -100,8 +124,33 @@ export function connectVjSession(): void {
 }
 
 export function publishVjControl(patch: Partial<VjControlState>): void {
-  if (remoteApply) return;
+  if (remoteApply || isVjViewOnlyMode()) return;
   send({ type: 'vj:control', sessionId: getVjSessionId(), payload: patch });
+}
+
+export function publishVjConfig(cfg: { audienceParticipation: boolean }): void {
+  if (isVjViewOnlyMode()) return;
+  send({ type: 'vj:config', sessionId: getVjSessionId(), payload: cfg });
+}
+
+function applyVjConfig(cfg: { audienceParticipation: boolean }): void {
+  for (const h of configHandlers) h(cfg);
+}
+
+export function onVjConfig(handler: ConfigHandler): () => void {
+  configHandlers.push(handler);
+  return () => {
+    const i = configHandlers.indexOf(handler);
+    if (i >= 0) configHandlers.splice(i, 1);
+  };
+}
+
+export function onAudienceMouse(handler: AudienceMouseHandler): () => void {
+  audienceMouseHandlers.push(handler);
+  return () => {
+    const i = audienceMouseHandlers.indexOf(handler);
+    if (i >= 0) audienceMouseHandlers.splice(i, 1);
+  };
 }
 
 export function onRemoteVjControl(handler: ControlHandler): () => void {

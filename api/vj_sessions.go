@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"strings"
 	"sync"
 )
@@ -111,6 +112,35 @@ func vjOutputStreamSubscribe(sessionID string) (chan string, func()) {
 		vjSessions.Unlock()
 	}
 	return ch, unsub
+}
+
+// vjPublishAudienceMouseToStream patches mouse into the live output relay (projector, Pi, pop-out SSE).
+func vjPublishAudienceMouseToStream(sessionID string, mouseX, mouseY float64) {
+	sid := normalizeVJSessionID(sessionID)
+	vjSessions.Lock()
+	room := vjSessions.byID[sid]
+	if room == nil || room.lastFrame == "" {
+		vjSessions.Unlock()
+		return
+	}
+	var frame map[string]interface{}
+	if err := json.Unmarshal([]byte(room.lastFrame), &frame); err != nil {
+		vjSessions.Unlock()
+		return
+	}
+	if frame["type"] != "frame" {
+		vjSessions.Unlock()
+		return
+	}
+	frame["mouseX"] = mouseX
+	frame["mouseY"] = mouseY
+	updated, err := json.Marshal(frame)
+	vjSessions.Unlock()
+	if err != nil {
+		return
+	}
+	msg := string(updated)
+	vjOutputBroadcast(sid, msg)
 }
 
 func listVJSessions() []map[string]interface{} {

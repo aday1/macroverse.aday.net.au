@@ -1,6 +1,5 @@
 import { buildGigOutputUrl, drawGigQr } from './gigQr.js';
 import { getVjSessionId } from './vjSession.js';
-import { createRichSlider, updateSliderFill } from './ui/richSlider.js';
 
 const STORAGE_MIX = 'macroverse-gig-audience-mix';
 const OVERLAY_ID = 'macroverse-gig-audience-display';
@@ -143,26 +142,32 @@ class GigAudienceDisplayController {
     controls.style.cssText =
       'display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-top:8px;padding:12px 16px;background:rgba(0,0,0,0.55);border-radius:8px;border:1px solid #334155;';
 
-    const mixWrap = document.createElement('div');
-    mixWrap.style.cssText = 'min-width:200px;max-width:320px;';
-    const mixRich = createRichSlider({
-      label: 'Mix (shader / QR)',
-      min: 0,
-      max: 100,
-      step: 1,
-      value: Math.round(this.mix * 100),
-      colorKey: 'gig-audience-mix',
-      className: 'mv-rich-slider--audience',
-      formatValue: (v) => `${v}% QR`
-    });
-    this.mixSlider = mixRich.input;
+    const mixLabel = document.createElement('label');
+    mixLabel.style.cssText =
+      'display:flex;align-items:center;gap:8px;font-size:13px;color:#cbd5e1;font-family:system-ui,sans-serif;';
+    mixLabel.textContent = 'Mix';
+
+    this.mixSlider = document.createElement('input');
+    this.mixSlider.type = 'range';
+    this.mixSlider.min = '0';
+    this.mixSlider.max = '100';
+    this.mixSlider.value = String(Math.round(this.mix * 100));
+    this.mixSlider.style.cssText = 'width:140px;cursor:pointer;';
     this.mixSlider.title = '0 = shader/viz only, 100 = QR only';
-    mixWrap.appendChild(mixRich.root);
+
+    const mixValue = document.createElement('span');
+    mixValue.className = 'gig-audience-mix-value';
+    mixValue.style.cssText = 'font-size:12px;color:#94a3b8;min-width:4.5rem;font-variant-numeric:tabular-nums;';
+    mixValue.textContent = `${Math.round(this.mix * 100)}% QR`;
 
     this.mixSlider.addEventListener('input', () => {
       this.setMix(Number(this.mixSlider.value) / 100);
-      mixRich.setValue(Math.round(this.mix * 100));
+      mixValue.textContent = `${Math.round(this.mix * 100)}% QR`;
     });
+
+    mixLabel.appendChild(document.createTextNode('Shader '));
+    mixLabel.appendChild(this.mixSlider);
+    mixLabel.appendChild(mixValue);
 
     const hideQrBtn = document.createElement('button');
     hideQrBtn.type = 'button';
@@ -186,7 +191,7 @@ class GigAudienceDisplayController {
 
     closeBtn.addEventListener('click', () => dismissGigAudienceDisplay());
 
-    controls.appendChild(mixWrap);
+    controls.appendChild(mixLabel);
     controls.appendChild(hideQrBtn);
     controls.appendChild(closeBtn);
 
@@ -254,11 +259,10 @@ class GigAudienceDisplayController {
   setMix(mix: number): void {
     this.mix = clampMix(mix);
     this.mixSlider.value = String(Math.round(this.mix * 100));
-    updateSliderFill(this.mixSlider);
-    const val = this.mixSlider.closest('.mv-rich-slider')?.querySelector('.mv-rich-slider__value');
-    if (val) val.textContent = `${Math.round(this.mix * 100)}% QR`;
     saveMix(this.mix);
     this.applyMixInstant();
+    const val = document.querySelector('.gig-audience-mix-value');
+    if (val) val.textContent = `${Math.round(this.mix * 100)}% QR`;
     window.dispatchEvent(
       new CustomEvent('macroverse-gig-audience-mix', { detail: { mix: this.mix } })
     );

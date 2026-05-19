@@ -19,7 +19,8 @@ export default defineConfig({
       input: {
         main: 'index.html',
         'vj-output': 'vj-output.html',
-        'preview-output': 'preview-output.html'
+        'preview-output': 'preview-output.html',
+        'gig-join-qr': 'gig-join-qr.html'
       }
     }
   }

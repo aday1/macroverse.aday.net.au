@@ -457,6 +457,7 @@ export function initCodeEditor(): void {
       tab.classList.add('active');
       contentSplit.classList.remove('preview-only', 'code-only', 'split-mode', 'split-vertical');
       if (vjContainer) vjContainer.style.display = 'none';
+      void import('../panels/vjDeck.js').then((m) => m.setVjDeckTabActive(false)).catch(() => {});
       if (galleryContainer) galleryContainer.style.display = 'none';
       if (pipelineContainer) pipelineContainer.style.display = 'none';
       if (wirePipelineContainer) wirePipelineContainer.style.display = 'none';
@@ -472,12 +473,16 @@ export function initCodeEditor(): void {
         contentSplit.classList.add('code-only');
         codeArea.classList.add('visible');
       } else if (view === 'vj') {
-        if (previewSection) previewSection.style.display = 'none';
-        if (splitResizer_) splitResizer_.style.display = 'none';
-        if (codeArea) (codeArea as HTMLElement).style.display = 'none';
+        contentSplit.style.display = 'none';
         if (vjContainer) {
           vjContainer.style.display = 'flex';
-          import('../panels/vjDeck.js').then((m) => m.initVJDeck());
+          vjContainer.style.flexDirection = 'column';
+          void import('../panels/vjDeck.js')
+            .then((m) => {
+              m.setVjDeckTabActive(true);
+              m.initVJDeck();
+            })
+            .catch((err) => console.error('[VJ] initVJDeck failed:', err));
         }
       } else if (view === 'gallery') {
         contentSplit.style.display = 'none';

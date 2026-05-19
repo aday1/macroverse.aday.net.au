@@ -15,6 +15,23 @@
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="components.css">
+  <script>
+    (function () {
+      var h = location.hostname.toLowerCase();
+      var m = h.match(/^dev\.(macroverse|artbastard)\.aday\.net\.au$/);
+      if (m) {
+        location.replace(
+          location.protocol +
+            "//" +
+            m[1] +
+            "-dev.aday.net.au" +
+            location.pathname +
+            location.search +
+            location.hash
+        );
+      }
+    })();
+  </script>
 </head>
 <body>
   <!-- Read-only / demo instance banner — shown by JS when /api/config returns readonly:true -->
@@ -35,6 +52,20 @@
     <div class="app-bar-title">
       <span class="app-bar-shader" id="appBarShader" title="Currently loaded shader">No shader loaded</span>
       <span class="app-bar-dirty" id="appBarDirty" title="Unsaved changes" aria-hidden="true"></span>
+    </div>
+    <div class="app-bar-vj-session" id="appBarVjSession">
+      <button type="button" class="app-bar-vj-session-toggle" id="appBarVjSessionToggle"
+        title="VJ collaboration link (tap for co-VJ QR)" aria-expanded="false" aria-controls="appBarVjSessionPanel">
+        <span class="app-bar-vj-session-dot" id="appBarVjSessionDot" aria-hidden="true"></span>
+        <span class="app-bar-vj-session-label" id="appBarVjSessionLabel">--</span>
+      </button>
+      <div class="app-bar-vj-session-panel" id="appBarVjSessionPanel" hidden>
+        <div class="app-bar-vj-session-panel-title">VJ session</div>
+        <p class="app-bar-vj-session-id" id="appBarVjSessionIdDisplay"></p>
+        <p class="app-bar-vj-session-hint">VJ collaboration: full desk control on another laptop (controlToken)</p>
+        <canvas id="appBarVjJoinQr" width="132" height="132" aria-label="Join VJ session QR"></canvas>
+        <button type="button" class="app-bar-vj-session-copy" id="appBarVjJoinCopy">Copy join link</button>
+      </div>
     </div>
     <div class="app-bar-views" id="appBarViews">
       <select id="viewSelect" class="app-bar-view-select" aria-label="View mode">
@@ -124,6 +155,7 @@
             <div id="gallerySidebar" class="gallery-sidebar"></div>
           </div>
         </div>
+        <div id="vjDeckContainer" class="vj-deck-container" style="display:none;flex:1;flex-direction:column;min-height:0;overflow:auto;background:var(--amiga-bg);"></div>
         <div class="content-split split-mode split-vertical" id="contentSplit">
           <section class="preview-section">
             <div class="preview-area">
@@ -218,7 +250,6 @@
               </div>
             </div>
           </div>
-          <div id="vjDeckContainer" style="display:none;flex:1;overflow:auto;background:var(--amiga-bg);"></div>
         </div>
         <div class="status" id="status">
           <span class="status-text" id="statusText">Loading...</span>
@@ -395,17 +426,38 @@
         if (mo < 24) return mo + "mo since " + tag;
         return Math.round(sec / (365.2425 * 86400)) + "yr since " + tag;
       }
+      function canonicalDeployUrl(url) {
+        if (!url) return url;
+        try {
+          var u = new URL(url);
+          var h = u.hostname.toLowerCase();
+          if (h === "dev.macroverse.aday.net.au" || h === "macroverse-dev.aday.net.au") {
+            u.hostname = "macroverse-test.aday.net.au";
+          }
+          else if (h === "dev.artbastard.aday.net.au") u.hostname = "artbastard-dev.aday.net.au";
+          return u.href;
+        } catch (eCanon) {
+          return url;
+        }
+      }
       function resolvedSwitcher(ds, siteLc) {
-        if (ds && ds.live_url && ds.dev_url) return ds;
+        if (ds && ds.live_url && ds.dev_url) {
+          var out = {
+            live_url: canonicalDeployUrl(ds.live_url),
+            dev_url: canonicalDeployUrl(ds.dev_url),
+          };
+          if (ds.aday_url) out.aday_url = canonicalDeployUrl(ds.aday_url);
+          return out;
+        }
         if (siteLc.indexOf("artbastard") >= 0) {
           return {
             live_url: "https://artbastard.aday.net.au/",
-            dev_url: "https://dev.artbastard.aday.net.au/",
+            dev_url: "https://artbastard-dev.aday.net.au/",
           };
         }
         return {
           live_url: "https://macroverse.aday.net.au/",
-          dev_url: "https://dev.macroverse.aday.net.au/",
+          dev_url: "https://macroverse-test.aday.net.au/",
           aday_url: "https://macroverse-aday.aday.net.au/",
         };
       }
@@ -423,6 +475,7 @@
       function isDevDeployHost(hostn) {
         var h = String(hostn || "").toLowerCase();
         return (
+          /^(macroverse|artbastard)-dev\.aday\.net\.au$/.test(h) ||
           /^dev\.(macroverse|artbastard)\.aday\.net\.au$/.test(h) ||
           /^(macroverse|artbastard)-test\.aday\.net\.au$/.test(h) ||
           /^test\.(macroverse|artbastard)\.aday\.net\.au$/.test(h)
@@ -490,6 +543,47 @@
           esc("here: " + cur) +
           "</span></div>";
       }
+      function formatLaneSync(ls) {
+        if (!ls) return "";
+        var ahead = Number(ls.dev_commits_ahead_of_live || 0);
+        var behind = Number(ls.dev_commits_behind_live || 0);
+        var aligned =
+          ls.branches_aligned === true || ls.aligned === true || (ahead === 0 && behind === 0);
+        var html =
+          '<div style="margin:8px 0;padding:8px;border:1px solid rgba(76,255,138,.35);border-radius:4px;background:rgba(76,255,138,.06)">';
+        html += '<div style="font-weight:700;margin-bottom:4px">Dev vs live (main)</div>';
+        if (aligned) {
+          html += '<div style="color:#4cff8a">Aligned: dev and live are the same (0 ahead, 0 behind).</div>';
+        } else {
+          if (ahead > 0) {
+            html += '<div>Dev is <strong>' + ahead + "</strong> commit(s) ahead of live.</div>";
+          }
+          if (behind > 0) {
+            html +=
+              '<div style="color:#ffb4b4">Dev is <strong>' +
+              behind +
+              "</strong> commit(s) behind live — merge main into dev before promoting.</div>";
+          }
+        }
+        if (ls.live_sha_short) {
+          html +=
+            '<div style="opacity:.78;font-size:10px;margin-top:4px">Live (main) at: ' +
+            esc(ls.live_sha_short) +
+            "</div>";
+        }
+        if (ls.aday_image_tracks) {
+          html +=
+            '<div style="opacity:.78;font-size:10px;margin-top:2px">Aday image tracks: <strong>' +
+            esc(ls.aday_image_tracks) +
+            "</strong> (main push tags :live and :aday together).</div>";
+        }
+        if (ls.promote_ready) {
+          html +=
+            '<div style="margin-top:6px;font-size:10px">Ready to promote: merge dev into main, push main, wait for :live deploy.</div>";
+        }
+        html += "</div>";
+        return html;
+      }
       function render(m) {
         var siteLc = (m.site ? String(m.site) : "").toLowerCase();
         renderSwitcher(m.deploy_switcher, siteLc);
@@ -525,7 +619,8 @@
           esc(trk || "(unknown)") +
           "</div>";
         html +=
-          '<div style="opacity:.76;margin:-2px 0 6px;font-size:10px">Deploy track is the GHCR tag Linode pulls (:live|:dev|:aday). Runtime is not on Fly.io. Aday is the gated starter-pack lane.</div>';
+        html += formatLaneSync(m.lane_sync);
+          '<div style="opacity:.76;margin:-2px 0 6px;font-size:10px">Deploy track is the GHCR tag Linode pulls (:live|:dev|:aday). Runtime is Linode Docker Compose. Aday is the gated starter-pack lane.</div>';
         var localTz = tzName();
         if (localTz) html += "<div style=\"opacity:.78;margin:0 0 4px;font-size:10px\"><strong>Your timezone:</strong> " + esc(localTz) + "</div>";
         html += "<div style=\"margin:4px 0\"><strong>Last build (CI):</strong> " + esc(fmt(buildIso));

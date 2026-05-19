@@ -14,6 +14,10 @@ import { registerCoreCommands } from './coreCommands.js';
 import { initDockSystem } from './dockSystem.js';
 import { initBottomTabBar } from './bottomTabBar.js';
 import { CODE_VIEW_STORAGE_KEY, applyCodeViewState, toggleCodeView } from './codeViewEffect.js';
+import { isVjViewOnlyMode, persistVjSessionFromUrl } from '../vjSession.js';
+import { ensureVjTokens } from '../vjTokens.js';
+import { reconnectVjSession } from '../vjWs.js';
+import { maybeShowQuickStartGuide } from './quickStartGuide.js';
 
 let cooldownTimerId: ReturnType<typeof setInterval> | null = null;
 
@@ -106,6 +110,9 @@ export function startCooldownCountdown(initialSec: number, onTick: (remainingSec
 }
 
 export async function run(): Promise<void> {
+  const joinedSid = persistVjSessionFromUrl();
+  if (joinedSid) reconnectVjSession();
+  else if (!isVjViewOnlyMode()) void ensureVjTokens().catch(() => {});
   if (typeof window !== 'undefined' && /[?&]bulk=1/.test(window.location.search)) {
     import('../thumbnailRenderer.js').then((m) => {
       (window as unknown as { renderThumbnailSyncForBulk: (src: string) => string | null }).renderThumbnailSyncForBulk = m.renderThumbnailSync;
@@ -233,6 +240,7 @@ export async function run(): Promise<void> {
   }
 
   status('Ready.');
+  maybeShowQuickStartGuide();
 }
 
 async function pollAgentOutput(outEl: HTMLElement | null, maxMs: number): Promise<void> {

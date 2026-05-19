@@ -216,44 +216,6 @@ var oscState struct {
 	clients map[chan string]bool
 }
 
-var vjOutputState struct {
-	sync.Mutex
-	clients     map[chan string]bool
-	lastShaderA string
-	lastShaderB string
-	lastFrame   string
-}
-
-func vjOutputInit() {
-	vjOutputState.clients = make(map[chan string]bool)
-}
-
-func vjOutputBroadcast(msg string) {
-	vjOutputState.Lock()
-	if strings.Contains(msg, `"type":"shader"`) {
-		if strings.Contains(msg, `"deck":"A"`) {
-			vjOutputState.lastShaderA = msg
-		} else if strings.Contains(msg, `"deck":"B"`) {
-			vjOutputState.lastShaderB = msg
-		}
-	} else if strings.Contains(msg, `"type":"frame"`) {
-		vjOutputState.lastFrame = msg
-	} else if strings.Contains(msg, `"type":"clear"`) {
-		if strings.Contains(msg, `"deck":"A"`) {
-			vjOutputState.lastShaderA = ""
-		} else if strings.Contains(msg, `"deck":"B"`) {
-			vjOutputState.lastShaderB = ""
-		}
-	}
-	for ch := range vjOutputState.clients {
-		select {
-		case ch <- msg:
-		default:
-		}
-	}
-	vjOutputState.Unlock()
-}
-
 func oscInit() {
 	oscState.clients = make(map[chan string]bool)
 }
@@ -9224,6 +9186,12 @@ Shader to refactor:
 
 	oscInit()
 	vjOutputInit()
+	vjSessionMetaInit()
+	wsHubInit()
+
+	http.HandleFunc("/ws", wsHandleConnection)
+	http.HandleFunc("/api/bridge/token", handleBridgeToken)
+	http.HandleFunc("/api/bridge/status", handleBridgeStatus)
 
 	http.HandleFunc("/api/osc/start", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -9297,9 +9265,39 @@ Shader to refactor:
 		}
 	})
 
+	http.HandleFunc("/api/vj-sessions", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "method not allowed", 405)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"sessions":          listAllSessions(),
+			"defaultSessionId": defaultVJSessionID,
+		})
+	})
+
+	http.HandleFunc("/api/vj/tokens", handleVjTokens)
+	http.HandleFunc("/api/vj/session-config", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			handleVjSessionConfigGet(w, r)
+		case http.MethodPost:
+			handleVjSessionConfigPost(w, r)
+		default:
+			http.Error(w, "method not allowed", 405)
+		}
+	})
+	http.HandleFunc("/api/vj-output/audience-mouse", handleVjAudienceMouse)
+
 	http.HandleFunc("/api/vj-output/state", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "method not allowed", 405)
+			return
+		}
+		sessionID, status := vjSessionIDFromStatePost(r)
+		if status != 0 {
+			http.Error(w, "control token required", status)
 			return
 		}
 		body, err := io.ReadAll(r.Body)
@@ -9308,9 +9306,9 @@ Shader to refactor:
 			http.Error(w, "body required", 400)
 			return
 		}
-		vjOutputBroadcast(string(body))
+		vjOutputBroadcast(sessionID, string(body))
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"ok":true}`))
+		json.NewEncoder(w).Encode(map[string]interface{}{"ok": true, "sessionId": sessionID})
 	})
 
 	http.HandleFunc("/api/vj-output/stream", func(w http.ResponseWriter, r *http.Request) {
@@ -9319,39 +9317,18 @@ Shader to refactor:
 			http.Error(w, "streaming not supported", 500)
 			return
 		}
+		sessionID, status := vjSessionIDFromStreamRequest(r)
+		if status != 0 {
+			http.Error(w, "view token required", status)
+			return
+		}
 		w.Header().Set("Content-Type", "text/event-stream")
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Connection", "keep-alive")
 		w.Header().Set("X-Accel-Buffering", "no")
 
-		ch := make(chan string, 128)
-		vjOutputState.Lock()
-		vjOutputState.clients[ch] = true
-		if vjOutputState.lastShaderA != "" {
-			select {
-			case ch <- vjOutputState.lastShaderA:
-			default:
-			}
-		}
-		if vjOutputState.lastShaderB != "" {
-			select {
-			case ch <- vjOutputState.lastShaderB:
-			default:
-			}
-		}
-		if vjOutputState.lastFrame != "" {
-			select {
-			case ch <- vjOutputState.lastFrame:
-			default:
-			}
-		}
-		vjOutputState.Unlock()
-
-		defer func() {
-			vjOutputState.Lock()
-			delete(vjOutputState.clients, ch)
-			vjOutputState.Unlock()
-		}()
+		ch, unsub := vjOutputStreamSubscribe(sessionID)
+		defer unsub()
 
 		ctx := r.Context()
 		for {
@@ -9463,8 +9440,10 @@ Shader to refactor:
 		"/api/watch/status":          true,
 		"/api/output/macrocam/frame": true,
 		"/api/thumbnails":            true,
-		"/api/vj-output/stream":      true,
-		"/api/vj-output/state":       true,
+		"/api/vj-output/stream":         true,
+		"/api/vj-output/state":          true,
+		"/api/vj-output/audience-mouse": true,
+		"/api/vj/session-config":        true,
 	}
 	staticSuffix := []string{".js", ".css", ".html", ".ico", ".map", ".woff", ".woff2", ".png", ".jpg", ".svg"}
 

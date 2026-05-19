@@ -15,9 +15,18 @@ The Vite dev server proxies `/api` requests to the Go backend on port 8765.
 
 ### Deployment
 
-Production app (not Fly.io): push `main` / `dev` -> `macroverse-image` (GHCR) ->
+Production app (Linode): push `main` / `dev` -> `macroverse-image` (GHCR) ->
 `deploy-linode` on the Linode Macroverse compose stack. Live at
 https://macroverse.aday.net.au/
+
+### VJ sessions and LAN bridge
+
+- Per-gig `sessionId`: Settings UI, `?sessionId=` URL param, or `macroverse-vj-session-id` in localStorage.
+- VJ preview relay: `POST /api/vj-output/state?controlToken=` and SSE `?viewToken=` (audience QR uses signed view tokens, not raw sessionId).
+- Mint tokens: `POST /api/vj/tokens` with `{ sessionId }` (optional `VJ_OPERATOR_SECRET` on server hardens minting).
+- Real-time deck sync: WebSocket `GET /ws` (gorilla/websocket in `api/ws_hub.go`).
+- Pi agent: `macroverse-bridge-agent/` (native WebSocket client, Ableton Link). Operator doc: `docs/BRIDGE.md`.
+- Mint bridge tokens: `POST /api/bridge/token` with `{ bridgeId, sessionId }`. Set `BRIDGE_TOKEN_SECRET` in production.
 
 ### Gotchas
 

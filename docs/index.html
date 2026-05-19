@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Macroverse 42 — The Wired Atelier</title>
-  <meta name="description" content="GLSL/ISF shader lab and VJ tool for Resolume Wire. Browse, preview, expose parameters, fix shaders, and export to Wire. One binary.">
+  <meta name="description" content="GLSL/ISF shader lab, participatory multiplayer VJ, and Resolume Wire pipeline. Browse shaders, run gig sessions with audience QR join, co-VJ sync, and export to Wire.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -185,10 +185,10 @@
     /* ─── Two-up use cases ─────────────────────────────────────────────────── */
     .use-cases {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem; margin-top: 1.2rem;
     }
-    @media (max-width: 600px) { .use-cases { grid-template-columns: 1fr; } }
+    @media (max-width: 900px) { .use-cases { grid-template-columns: 1fr; } }
     .use-case {
       background: rgba(13,8,32,0.75); backdrop-filter: blur(8px);
       border: 1px solid rgba(68,136,204,0.15); padding: 1.4rem;
@@ -199,12 +199,14 @@
       width: 3px; height: 100%;
     }
     .use-case.uc-vj::before  { background: var(--teal); box-shadow: 0 0 8px var(--glow-t); }
+    .use-case.uc-gig::before { background: var(--violet); box-shadow: 0 0 8px var(--glow-v); }
     .use-case.uc-wire::before { background: var(--copper); box-shadow: 0 0 8px rgba(238,136,51,0.4); }
     .use-case h3 {
       font-family: 'Orbitron', sans-serif; font-size: 0.85rem;
       letter-spacing: 0.1em; margin-bottom: 0.8rem;
     }
     .uc-vj  h3 { color: var(--teal); }
+    .uc-gig h3 { color: #cc88ff; }
     .uc-wire h3 { color: var(--copper); }
     .use-case p { font-size: 0.88rem; margin: 0; }
 
@@ -404,13 +406,14 @@
       <h1>MACROVERSE 42</h1>
       <p class="tagline">The Wired Atelier</p>
       <p class="showcase-banner">GitHub Showcase Page // not the primary live app</p>
-      <p class="lain-quote">your whole library, live — search it, tag it, perform it</p>
+      <p class="lain-quote">your whole library, live — search it, tag it, perform it — or open the room to the audience</p>
       <div class="glow-line"></div>
       <div class="cta">
         <a class="btn btn-live" href="https://macroverse.aday.net.au/">Try it live</a>
         <a class="btn btn-primary" href="https://github.com/aday1/Macroverse/releases">Download</a>
         <a class="btn btn-secondary" href="https://github.com/aday1/Macroverse">Source on GitHub</a>
         <a class="btn btn-secondary" href="https://macroverse.aday.net.au/about.html">About MacroVerse</a>
+        <a class="btn btn-secondary" href="#participatory-vj">Participatory VJ</a>
         <a class="btn btn-secondary" href="#origin">Origin story</a>
         <a class="btn btn-secondary" href="#demos">Demo loops</a>
         <a class="btn btn-secondary" href="#help">Help &amp; Shortcuts</a>
@@ -421,7 +424,7 @@
           <span class="dep-label">Live</span>
           <span class="dep-val"><a href="https://macroverse.aday.net.au">macroverse.aday.net.au</a></span>
           <span class="dep-label">Test</span>
-          <span class="dep-val"><a href="https://dev.macroverse.aday.net.au">dev.macroverse.aday.net.au</a></span>
+          <span class="dep-val"><a href="https://macroverse-dev.aday.net.au">macroverse-dev.aday.net.au</a></span>
           <span class="dep-label">Aday</span>
           <span class="dep-val"><code>macroverse-aday.aday.net.au</code> &mdash; basic auth</span>
           <span class="dep-label">ArtBastard</span>
@@ -452,7 +455,7 @@
         <p class="ctrl-hint">
           move your cursor to warp the field &nbsp;·&nbsp; <kbd>~</kbd> opens the live GLSL editor<br>
           <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
-          <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex → Ollama → AI · or dream up entirely new shaders from a single prompt · A/B deck · crossfader · tag · search · perform your whole library · stream live to OBS · export to Wire</span>
+          <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex → Ollama → AI · or dream up entirely new shaders from a single prompt · A/B deck · crossfader · optional gig sessions (audience stream QR + co-VJ join) · tag · search · perform your whole library · stream live to OBS · export to Wire</span>
         </p>
       </div>
     </header>
@@ -474,18 +477,29 @@
       </p>
     </section>
 
-    <section>
-      <h2>Two ways in</h2>
+    <section id="participatory-vj">
+      <h2>Three ways in</h2>
       <div class="use-cases">
         <div class="use-case uc-vj">
           <h3>Standalone VJ Tool</h3>
-          <p>Browse and perform with your full GLSL/ISF library. A/B crossfader, mix modes, MIDI/OSC mapping, BLE/USB Roli Lightpad blocks, MJPEG stream to OBS or virtual webcam. Tag, search, revert. All signals, one window.</p>
+          <p>Browse and perform your full GLSL/ISF library. A/B crossfader, mix modes, MIDI/OSC, Roli Lightpad LED blocks, MJPEG to OBS. Tag, search, revert. One operator, one window.</p>
+        </div>
+        <div class="use-case uc-gig">
+          <h3>Participatory &amp; multiplayer VJ</h3>
+          <p><strong>Optional.</strong> Two access tiers on the same gig session (salted tokens — no raw session names in QR):</p>
+          <ul style="margin:0.6rem 0 0 1.1rem;font-size:0.92em;line-height:1.55;color:var(--text);">
+            <li><strong>Audience participation</strong> (stream QR / <code>viewToken</code>): phones watch the SSE preview. When you enable <em>Audience participation</em> on the host, they can drag or touch the stream to drive <code>mouseX</code> / <code>mouseY</code> only — playful, restrictive, no deck control.</li>
+            <li><strong>VJ collaboration</strong> (join link / <code>controlToken</code> from the top-bar <b>VJ</b> chip): hands-on co-VJ — full backend desk sync (crossfader, clips, mix, params) over WebSocket.</li>
+          </ul>
         </div>
         <div class="use-case uc-wire">
           <h3>Resolume Wire Pipeline</h3>
           <p>Load any GLSL file, check Wire compatibility, expose magic-number literals as ISF sliders, run the shader fix chain (regex &rarr; Ollama &rarr; AI), and push the finished macro straight into Resolume Wire with working parameters.</p>
         </div>
       </div>
+      <p class="dim" style="margin-top:1rem;">
+        Live app: Settings &rarr; <b>VJ Show Session ID</b> &rarr; Apply. VJ deck: toggle <b>Audience participation</b> for touch X/Y on the stream QR. Top-bar <b>VJ</b> chip: collaboration QR / link for co-VJs (full desk). Stream QR on output stays view-only unless participation is on (then touch steers mouse uniforms only).
+      </p>
     </section>
 
     <section id="demos">
@@ -564,6 +578,9 @@
         <div class="feat"><div class="tag">Expose</div><div class="label">One-click: turn magic numbers into ISF sliders for Wire</div></div>
         <div class="feat"><div class="tag">Fix chain</div><div class="label">Broken shader? Regex → Ollama → AI repairs it in order</div></div>
         <div class="feat"><div class="tag">VJ deck</div><div class="label">A/B crossfader, mix modes, auto-cycle, MIDI/OSC mapping</div></div>
+        <div class="feat"><div class="tag">Gig sessions</div><div class="label">Salted show ID; stream QR (view) + optional audience touch X/Y; collaboration link for full desk</div></div>
+        <div class="feat"><div class="tag">Multiplayer</div><div class="label">WebSocket sync: crossfader, clips, mix across browsers on one session</div></div>
+        <div class="feat"><div class="tag">VJ output</div><div class="label">Pop-out, Pi HDMI, OBS; signed view tokens (no raw sessionId in QR)</div></div>
         <div class="feat"><div class="tag">Wire export</div><div class="label">Check ISF compat, clipboard to Wire, push with params</div></div>
         <div class="feat"><div class="tag">OBS stream</div><div class="label">MJPEG stream at /api/output/macrocam/stream</div></div>
         <div class="feat"><div class="tag">Git history</div><div class="label">Auto-commit on save, browse and revert any version</div></div>
@@ -614,6 +631,7 @@
         <tr><td class="k">Save (disk)</td><td>Saves current shader; flashes when dirty.</td></tr>
         <tr><td class="k">Palette (&gt;_)</td><td>Opens the command palette. Same as <kbd>Ctrl+K</kbd>.</td></tr>
         <tr><td class="k">Hamburger</td><td>Opens the More sheet (mobile) or Settings (desktop fallback).</td></tr>
+        <tr><td class="k">VJ session chip</td><td>When a gig session is active: tap <b>VJ</b> in the top bar for the hidden session name, copy link, and <em>join</em> QR for co-VJs (operator token). Audience <em>stream</em> QR is burned into the VJ output canvas.</td></tr>
       </table>
 
       <h3 class="help-h3">4. Mobile bottom tab bar</h3>
@@ -711,6 +729,11 @@
         <tr><td class="k">Pop-out output</td><td>Open VJ output in its own window for full-screen on a second display. Uses BroadcastChannel for low-latency sync.</td></tr>
         <tr><td class="k">Text templates</td><td>Built-in neon, dotmatrix, LCD, 16-segment text overlays.</td></tr>
         <tr><td class="k">Mouse XY pad</td><td>Drag in the preview to drive mouseX/Y uniforms.</td></tr>
+        <tr><td class="k">Gig session (optional)</td><td>Settings &rarr; <b>VJ Show Session ID</b> &rarr; Apply. Salted <code>viewToken</code> / <code>controlToken</code> URLs so guessing a session name cannot hijack the show.</td></tr>
+        <tr><td class="k">Audience stream QR</td><td>VJ deck &rarr; show QR on output. Encodes <code>vj-output.html</code> with <code>viewToken</code> (SSE stream). Watch-only unless <b>Audience participation</b> is enabled — then phones can touch/drag the preview to send <code>mouseX</code> / <code>mouseY</code> only.</td></tr>
+        <tr><td class="k">Audience participation</td><td>VJ deck QR panel checkbox. Restrictive: touch X/Y on the stream preview feeds the host shader mouse uniforms. No crossfader, clips, or params.</td></tr>
+        <tr><td class="k">Co-VJ join QR</td><td>Top bar <b>VJ</b> chip &rarr; collaboration QR / copy link with <code>controlToken</code>. Full VJ desk: WebSocket syncs crossfader, clips, mix mode, and deck params across browsers.</td></tr>
+        <tr><td class="k">Pi / OBS output</td><td>Open <code>vj-output.html?remote=1</code> on a Pi HDMI display or OBS Browser Source. Same signed stream URL as the burned-in QR.</td></tr>
       </table>
 
       <h3 class="help-h3">12. Roliblock (multi-device, BLE / USB)</h3>

@@ -175,6 +175,7 @@ A/B deck mixer for live performance. Access via the **VJ** tab.
 - **Auto VJ** — automatic shader cycling with configurable timing
 - **MIDI / OSC** — map physical controllers to any parameter
 - **Pop-out output** — separate window for full-screen output on a second display
+- **Show sessions** — Settings → VJ Show Session ID; same ID on all devices syncs decks over WebSocket. Pi HDMI: `vj-output.html?remote=1&sessionId=YOUR-GIG`. LAN bridge: `docs/BRIDGE.md` and `macroverse-bridge-agent/`.
 
 ```
 # MJPEG stream for OBS / browser source:
@@ -377,7 +378,7 @@ See them live on the [showcase page](https://aday1.github.io/Macroverse/#demos).
 
 ## Production deploy (Linode)
 
-The hosted app runs on Linode Docker Compose, not Fly.io. Push `main` (or
+The hosted app runs on Linode Docker Compose. Push `main` (or
 `dev` / tagged releases for other tracks) triggers `macroverse-image`, which
 pushes `ghcr.io/aday1/macroverse.aday.net.au/macroverse:live` (or `:dev`,
 `:aday`). `deploy-linode` refreshes `~/compose/macroverse.aday.net.au` on the

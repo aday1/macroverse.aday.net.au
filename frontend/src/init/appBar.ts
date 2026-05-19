@@ -16,6 +16,7 @@
 import { el } from '../dom.js';
 import type { IndexEntry } from '../types.js';
 import { currentEntry } from '../state.js';
+import { initVjAppBarSession } from './vjAppBarSession.js';
 
 let appBarEl: HTMLElement | null = null;
 let shaderEl: HTMLElement | null = null;
@@ -89,6 +90,8 @@ export function initAppBar(): void {
   paramsBtn = el('appBarParamsBtn') as HTMLButtonElement | null;
   viewSelect = el('viewSelect') as HTMLSelectElement | null;
   if (!appBarEl) return;
+
+  initVjAppBarSession();
 
   // Initial label
   updateShaderLabel(currentEntry);

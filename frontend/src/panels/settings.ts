@@ -11,6 +11,10 @@ import type { Settings } from '../types.js';
 import type { ThemeColors } from '../themeUtils.js';
 import { midiEngine } from '../engines/midi.js';
 import { VJ_ACTION_IDS } from '../engines/vjController.js';
+import { buildGigAudienceStreamUrl, buildGigJoinUrl, buildGigOutputUrl, refreshGigQrPair } from '../gigQr.js';
+import { getVjSessionId, setVjSessionId } from '../vjSession.js';
+import { ensureVjTokens } from '../vjTokens.js';
+import { reconnectVjSession } from '../vjWs.js';
 import { oscEngine } from '../engines/osc.js';
 
 let panelEl: HTMLElement | null = null;
@@ -257,6 +261,28 @@ async function renderPanel(): Promise<void> {
         <div id="themeEditorColors" style="margin-bottom:8px;"></div>
       </div>
     </div>
+    <div class="settings-section" style="margin-bottom:20px;" id="settingsVjSessionSection">
+      <div style="color:var(--amiga-copper); font-size:11px; text-transform:uppercase; margin-bottom:8px;">VJ show session</div>
+      <div style="font-size:10px; color:var(--crt-dim); margin-bottom:8px;">Same session ID on tablets, cloud UI, and Pi HDMI output. Audience stream = watch (+ optional touch X/Y). Collaboration link = full VJ desk.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+        <input id="settingsVjSessionId" type="text" placeholder="default" style="flex:1; min-width:140px; padding:6px 8px; font-size:10px; background:var(--amiga-bg); color:var(--crt-fg); border:1px solid var(--bevel-dark); font-family:inherit;" />
+        <button type="button" id="settingsVjSessionApply" style="font-size:10px; padding:6px 10px; background:var(--amiga-surface); color:var(--amiga-copper); border:1px solid var(--bevel-dark); cursor:pointer;">Apply session</button>
+      </div>
+      <div id="settingsVjSessionHint" style="font-size:9px; color:var(--crt-dim);"></div>
+      <div style="display:flex; flex-wrap:wrap; gap:16px; margin-top:10px; align-items:flex-start;">
+        <div style="text-align:center;">
+          <div style="font-size:9px; color:var(--crt-dim); margin-bottom:4px;">VJ collaboration (full desk)</div>
+          <canvas id="settingsVjSessionQrJoin" width="180" height="180" style="background:#fff; padding:4px; border:1px solid var(--bevel-dark);"></canvas>
+          <div id="settingsVjSessionQrJoinUrl" style="font-size:8px; color:var(--crt-dim); word-break:break-all; max-width:180px; margin-top:4px;"></div>
+          <button type="button" id="settingsVjSessionQrCopyJoin" style="font-size:9px; margin-top:4px; padding:4px 8px; cursor:pointer;">Copy collaboration link</button>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:9px; color:var(--crt-dim); margin-bottom:4px;">Audience stream (view + touch X/Y)</div>
+          <canvas id="settingsVjSessionQrOutput" width="180" height="180" style="background:#fff; padding:4px; border:1px solid var(--bevel-dark);"></canvas>
+          <button type="button" id="settingsVjSessionQrCopyOutput" style="font-size:9px; margin-top:4px; padding:4px 8px; cursor:pointer;">Copy audience stream link</button>
+        </div>
+      </div>
+    </div>
     <div class="settings-section" style="margin-bottom:20px;" id="settingsVjControllerSection">
       <div style="color:var(--amiga-copper); font-size:11px; text-transform:uppercase; margin-bottom:8px;">MIDI / OSC - VJ controller</div>
       <div style="font-size:10px; color:var(--crt-dim); margin-bottom:8px;">Map hardware (e.g. APC40 MK2) to crossfader, deck params, clip launch, and page. OSC uses the same actions.</div>
@@ -396,6 +422,46 @@ async function renderPanel(): Promise<void> {
       const isHidden = themeCustomizeWrap.style.display === 'none';
       themeCustomizeWrap.style.display = isHidden ? 'block' : 'none';
       themeCustomizeToggle.textContent = isHidden ? 'Hide customization' : 'Customize colors';
+    });
+  }
+
+  const vjSessionInput = panel.querySelector('#settingsVjSessionId') as HTMLInputElement | null;
+  const vjSessionApply = panel.querySelector('#settingsVjSessionApply') as HTMLButtonElement | null;
+  const vjSessionHint = panel.querySelector('#settingsVjSessionHint') as HTMLElement | null;
+  const qrJoinCanvas = panel.querySelector('#settingsVjSessionQrJoin') as HTMLCanvasElement | null;
+  const qrOutputCanvas = panel.querySelector('#settingsVjSessionQrOutput') as HTMLCanvasElement | null;
+  const qrJoinUrlEl = panel.querySelector('#settingsVjSessionQrJoinUrl') as HTMLElement | null;
+  if (vjSessionInput) {
+    vjSessionInput.value = getVjSessionId();
+    const sessionForQr = () => vjSessionInput.value.trim() || getVjSessionId();
+    const refreshHint = () => {
+      void ensureVjTokens(sessionForQr())
+        .then(() => {
+          if (vjSessionHint) {
+            vjSessionHint.textContent = `HDMI / Pi preview (view-only QR): ${buildGigOutputUrl(sessionForQr())}`;
+          }
+          return refreshGigQrPair(qrJoinCanvas, qrOutputCanvas, qrJoinUrlEl, sessionForQr());
+        })
+        .catch(() => {
+          if (vjSessionHint) {
+            vjSessionHint.textContent = 'Could not mint session tokens. Reload and try Apply again.';
+          }
+        });
+    };
+    refreshHint();
+    vjSessionApply?.addEventListener('click', () => {
+      setVjSessionId(vjSessionInput.value);
+      vjSessionInput.value = getVjSessionId();
+      void ensureVjTokens(getVjSessionId()).then(() => {
+        refreshHint();
+        reconnectVjSession();
+      });
+    });
+    panel.querySelector('#settingsVjSessionQrCopyJoin')?.addEventListener('click', () => {
+      void navigator.clipboard?.writeText(buildGigJoinUrl(sessionForQr()));
+    });
+    panel.querySelector('#settingsVjSessionQrCopyOutput')?.addEventListener('click', () => {
+      void navigator.clipboard?.writeText(buildGigAudienceStreamUrl(sessionForQr()));
     });
   }
 

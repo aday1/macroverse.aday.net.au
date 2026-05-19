@@ -27,6 +27,7 @@
 .index-panel { grid-column: 1; }
 .index-resizer { grid-column: 2; }
 .main-content { grid-column: 3; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+#vjDeckContainer.vj-deck-container { flex: 1; flex-direction: column; min-height: 0; overflow: auto; background: var(--amiga-bg); }
 .col-resizer { grid-column: 4; background: var(--amiga-surface); cursor: col-resize; user-select: none; }
 .col-resizer:hover { background: var(--amiga-accent); }
 .right-column { grid-column: 5; display: flex; flex-direction: column; min-width: 0; overflow: hidden; background: var(--amiga-panel); border-left: 1px solid var(--bevel-dark); }

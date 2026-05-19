@@ -1,6 +1,31 @@
 Changelog - Macroverse - Wired Atelier
 ======================================
 
+Version 0.1.9 — First-visit quick start, audience VJ participation
+------------------------------------------------------------------
+
+### Quick start (new computers)
+- First full app load on a browser shows a Quick start dialog (localStorage `macroverse-quick-start-seen-v1`).
+- Skipped for VJ view-only / output URLs. Reopen via command palette: Quick start guide. `?quickstart=1` forces show; `?quickstart=0` skips.
+
+### Audience and co-VJ participation
+- Audience stream (`viewToken`, `audienceUi=1`): touch steers live show on main screens; phone-only interact hint.
+- Co-VJ collaboration (`controlToken`): full deck sync over WebSocket.
+- Projector QR layout: position, scale, rotation, subtle FX (settings + drag on VJ output).
+
+Version 0.1.8 — VJ show sessions, WebSocket deck sync, LAN bridge agent
+-----------------------------------------------------------------------
+
+### Sessions and multi-device VJ
+- Per-gig `sessionId` on VJ output SSE and deck control WebSocket.
+- Settings: VJ Show Session ID + HDMI preview URL hint.
+- Any browser on the same session shares crossfader, mix mode, deck clips, pages.
+
+### LAN bridge (Pi)
+- `macroverse-bridge-agent/`: outbound WSS to `/ws`, Ableton Link clock relay.
+- `POST /api/bridge/token`, `GET /api/bridge/status`, `GET /api/vj-sessions`.
+- Operator guide: `docs/BRIDGE.md`.
+
 Version 0.1.7 — Showcase videos, comprehensive Help refresh, broken-stub fix
 -----------------------------------------------------------------------------
 
