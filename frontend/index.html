@@ -503,6 +503,38 @@
         if (isLiveDeployHost(hostn)) return "live";
         return "live";
       }
+      
+      function bridgeMetaHtml(meta) {
+        if (!meta || !meta.bridge_doc_url) return "";
+        var linkSty =
+          "display:inline-block;border:1px solid rgba(76,255,138,.45);color:#b8ffd1;text-decoration:none;padding:2px 7px;border-radius:2px;font-size:10px";
+        var h =
+          '<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(76,255,138,.22)"><span style="opacity:.85;font-weight:700;font-size:10px">' +
+          esc(meta.bridge_title || "Raspberry Pi LAN bridge") +
+          '</span><span aria-hidden="true" style="opacity:.45"> | </span>';
+        h +=
+          '<a href="' +
+          esc(meta.bridge_doc_url) +
+          '" target="_blank" rel="noopener noreferrer" style="' +
+          linkSty +
+          '">setup guide</a>';
+        if (meta.bridge_agent_url) {
+          h +=
+            '<span aria-hidden="true" style="opacity:.45"> | </span><a href="' +
+            esc(meta.bridge_agent_url) +
+            '" target="_blank" rel="noopener noreferrer" style="' +
+            linkSty +
+            '">Pi agent source</a>';
+        }
+        h += "</div>";
+        return h;
+      }
+      function appendBridgeToSwitcher(meta) {
+        if (!meta || !meta.bridge_doc_url || !switcherStrip) return;
+        var row = bridgeMetaHtml(meta);
+        if (row) switcherStrip.innerHTML += row;
+      }
+
       function renderSwitcher(ds, siteLc) {
         var r = resolvedSwitcher(ds, siteLc);
         var hostn = typeof location !== "undefined" ? location.hostname : "";
@@ -543,50 +575,88 @@
           esc("here: " + cur) +
           "</span></div>";
       }
-      function formatLaneSync(ls) {
-        if (!ls) return "";
+      function laneSyncCounts(ls) {
+        if (!ls) return { ahead: 0, behind: 0, aligned: false, has: false, ls: null };
         var ahead = Number(ls.dev_commits_ahead_of_live || 0);
         var behind = Number(ls.dev_commits_behind_live || 0);
         var aligned =
           ls.branches_aligned === true || ls.aligned === true || (ahead === 0 && behind === 0);
+        return { ahead: ahead, behind: behind, aligned: aligned, has: true, ls: ls };
+        }
+      function laneSyncSummaryHtml(ls) {
+        var c = laneSyncCounts(ls);
+        if (!c.has) return "";
+        if (c.aligned) {
+          return ' <span style="color:#4cff8a;font-weight:800;letter-spacing:.06em" title="dev and main are the same">SYNC 0|0</span>';
+        }
+        var h = ' <span style="font-weight:800;letter-spacing:.04em" title="dev vs live (main)">';
+        if (c.ahead > 0) {
+          h += '<span style="color:#fff4d6;margin-left:4px">+' + c.ahead + " ahead</span>";
+        }
+        if (c.behind > 0) {
+          h += '<span style="color:#ffb4b4;margin-left:4px">-' + c.behind + " behind</span>";
+        }
+        return h + "</span>";
+        }
+      function formatLaneSync(ls) {
+        var c = laneSyncCounts(ls);
+        if (!c.has) return "";
         var html =
-          '<div style="margin:8px 0;padding:8px;border:1px solid rgba(76,255,138,.35);border-radius:4px;background:rgba(76,255,138,.06)">';
-        html += '<div style="font-weight:700;margin-bottom:4px">Dev vs live (main)</div>';
-        if (aligned) {
-          html += '<div style="color:#4cff8a">Aligned: dev and live are the same (0 ahead, 0 behind).</div>';
+          '<div style="margin:0 0 10px;padding:10px 12px;border:2px solid rgba(76,255,138,.55);border-radius:4px;background:rgba(76,255,138,.1)">';
+        html +=
+          '<div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;color:#efffef">Dev vs live (main)</div>';
+        html +=
+          '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-bottom:6px">';
+        html +=
+          '<div style="flex:1;min-width:72px;text-align:center;padding:8px 10px;border-radius:3px;border:1px solid rgba(255,244,214,.45);background:rgba(232,160,32,.12)">' +
+          '<div style="font-size:26px;font-weight:800;line-height:1;color:#fff4d6">' +
+          c.ahead +
+          '</div><div style="font-size:10px;font-weight:700;letter-spacing:.1em;margin-top:4px;opacity:.9">AHEAD</div></div>';
+        html +=
+          '<div style="flex:1;min-width:72px;text-align:center;padding:8px 10px;border-radius:3px;border:1px solid rgba(255,180,180,.45);background:rgba(180,40,40,.15)">' +
+          '<div style="font-size:26px;font-weight:800;line-height:1;color:#ffb4b4">' +
+          c.behind +
+          '</div><div style="font-size:10px;font-weight:700;letter-spacing:.1em;margin-top:4px;opacity:.9">BEHIND</div></div></div>';
+        if (c.aligned) {
+          html +=
+            '<div style="color:#4cff8a;font-weight:700;font-size:12px">Branches aligned — same commits on dev and main.</div>';
         } else {
-          if (ahead > 0) {
-            html += '<div>Dev is <strong>' + ahead + "</strong> commit(s) ahead of live.</div>";
-          }
-          if (behind > 0) {
+          if (c.ahead > 0 && c.behind === 0) {
             html +=
-              '<div style="color:#ffb4b4">Dev is <strong>' +
-              behind +
-              "</strong> commit(s) behind live — merge main into dev before promoting.</div>";
+              '<div style="font-size:11px">Dev has <strong>' +
+              c.ahead +
+              "</strong> commit(s) not on live yet.</div>";
+          }
+          if (c.behind > 0) {
+            html +=
+              '<div style="color:#ffb4b4;font-size:11px;margin-top:4px">Dev is missing <strong>' +
+              c.behind +
+              "</strong> commit(s) from live — merge main into dev first.</div>";
           }
         }
-        if (ls.live_sha_short) {
+        if (c.ls.live_sha_short) {
           html +=
-            '<div style="opacity:.78;font-size:10px;margin-top:4px">Live (main) at: ' +
-            esc(ls.live_sha_short) +
-            "</div>";
+            '<div style="opacity:.82;font-size:10px;margin-top:6px">Live (main) at: <strong>' +
+            esc(c.ls.live_sha_short) +
+            "</strong></div>";
         }
-        if (ls.aday_image_tracks) {
+        if (c.ls.promote_ready) {
           html +=
-            '<div style="opacity:.78;font-size:10px;margin-top:2px">Aday image tracks: <strong>' +
-            esc(ls.aday_image_tracks) +
-            "</strong> (main push tags :live and :aday together).</div>";
+            '<div style="margin-top:8px;padding:6px 8px;border:1px solid rgba(76,255,138,.6);background:rgba(76,255,138,.12);font-size:11px;font-weight:700">Ready to promote: merge dev into main, push main.</div>';
         }
-        if (ls.promote_ready) {
+        if (c.ls.aday_image_tracks) {
           html +=
-            '<div style="margin-top:6px;font-size:10px">Ready to promote: merge dev into main, push main, wait for :live deploy.</div>";
+            '<div style="opacity:.82;font-size:10px;margin-top:6px">Aday image tracks: <strong>' +
+            esc(c.ls.aday_image_tracks) +
+            "</strong></div>";
         }
         html += "</div>";
         return html;
-      }
+        }
       function render(m) {
         var siteLc = (m.site ? String(m.site) : "").toLowerCase();
         renderSwitcher(m.deploy_switcher, siteLc);
+        appendBridgeToSwitcher(m);
         var shaRaw = m.last_git_sha_short || m.version || "?";
         var buildIso = m.last_build_at || m.build_date || "";
         var depIso = m.last_deployed_at || m.last_build_at || m.build_date || "";
@@ -595,7 +665,7 @@
         var siteLab = (m.site ? String(m.site) : "").toUpperCase().replace(/\s+/g, "") || "SITE";
         var sumParts = [siteLab, String(shaRaw)];
         if (ageB) sumParts.push(ageB);
-        summaryEl.textContent = sumParts.join(" | ");
+        summaryEl.innerHTML = esc(sumParts.join(" | ")) + laneSyncSummaryHtml(m.lane_sync);
         var sha = esc(shaRaw);
         var gitHref = esc(m.last_git_url || m.changelog_url || "#");
         var ch = m.changelog_url || "";
@@ -608,7 +678,7 @@
         var note = m.deploy_note ? "<div style=\"opacity:.82;margin-top:6px;font-size:10px;\">" + esc(m.deploy_note) + "</div>" : "";
         var title = document.getElementById("deployMetaTitle");
         if (title) title.textContent = (m.site ? String(m.site).toUpperCase() : "SITE") + " // build info";
-        var html = "";
+        var html = formatLaneSync(m.lane_sync) + bridgeMetaHtml(m);
         html += "<div style=\"margin:4px 0\"><strong>Last git:</strong> <a href=\"" + gitHref + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + sha + "</a></div>";
         html +=
           "<div style=\"margin:4px 0\"><strong>Git branch (built by CI)</strong>: " +
@@ -619,7 +689,6 @@
           esc(trk || "(unknown)") +
           "</div>";
         html +=
-        html += formatLaneSync(m.lane_sync);
           '<div style="opacity:.76;margin:-2px 0 6px;font-size:10px">Deploy track is the GHCR tag Linode pulls (:live|:dev|:aday). Runtime is Linode Docker Compose. Aday is the gated starter-pack lane.</div>';
         var localTz = tzName();
         if (localTz) html += "<div style=\"opacity:.78;margin:0 0 4px;font-size:10px\"><strong>Your timezone:</strong> " + esc(localTz) + "</div>";

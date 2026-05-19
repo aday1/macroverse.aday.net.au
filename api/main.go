@@ -78,9 +78,9 @@ func getDefaultVFXRoot() string {
 	return defaultVFXRootFallback
 }
 
-var buildVersion = "42"
+var buildVersion = "42.1"
 var buildDate = ""
-var releaseTag = "Version 42 \"The Wired Atelier\""
+var releaseTag = "Version 42.1 — Stable hosted release (Forty-Two)"
 
 func thumbnailsPath() string {
 	return filepath.Join(exeDir(), "thumbnails.json")

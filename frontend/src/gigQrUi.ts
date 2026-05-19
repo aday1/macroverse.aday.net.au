@@ -21,6 +21,7 @@ import {
   setGigOutputQrMix,
   setGigOutputQrVisible,
 } from './gigOutputQr.js';
+import { createRichSlider, updateSliderFill } from './ui/richSlider.js';
 
 export interface GigQrUiBlock {
   root: HTMLElement;
@@ -37,29 +38,18 @@ function addLayoutSlider(
   onInput: (v: number) => void,
   format: (v: number) => string
 ): HTMLInputElement {
-  const row = document.createElement('label');
-  row.style.cssText =
-    'display:flex;flex-direction:column;gap:2px;width:100%;font-size:8px;color:var(--crt-dim);';
-  const head = document.createElement('span');
-  const slider = document.createElement('input');
-  slider.type = 'range';
-  slider.min = String(min);
-  slider.max = String(max);
-  slider.step = String(step);
-  slider.value = String(getVal());
-  slider.style.cssText = 'width:100%;cursor:pointer;';
-  const syncLabel = () => {
-    head.textContent = `${labelText}: ${format(Number(slider.value))}`;
-  };
-  syncLabel();
-  slider.addEventListener('input', () => {
-    onInput(Number(slider.value));
-    syncLabel();
+  const rich = createRichSlider({
+    label: labelText,
+    min,
+    max,
+    step,
+    value: getVal(),
+    colorKey: 'gig-qr-' + labelText,
+    formatValue: (v) => format(v),
+    onInput: (v) => onInput(v)
   });
-  row.appendChild(head);
-  row.appendChild(slider);
-  parent.appendChild(row);
-  return slider;
+  parent.appendChild(rich.root);
+  return rich.input;
 }
 
 /** Compact join QR + display controls for the VJ preview area. */
@@ -79,20 +69,20 @@ export function createVjPreviewGigQrBlock(): GigQrUiBlock {
   canvas.style.cssText =
     'background:#fff;padding:4px;border:1px solid var(--bevel-dark);border-radius:4px;width:148px;height:148px;';
 
-  const mixRow = document.createElement('label');
-  mixRow.style.cssText =
-    'display:flex;flex-direction:column;gap:2px;width:100%;font-size:8px;color:var(--crt-dim);';
+  const mixRow = document.createElement('div');
+  mixRow.style.cssText = 'width:100%;';
   mixRow.title = 'Blend shader vs QR on the VJ output canvas';
-  const mixLabel = document.createElement('span');
-  mixLabel.textContent = 'Mix (shader / QR)';
-  const mixSlider = document.createElement('input');
-  mixSlider.type = 'range';
-  mixSlider.min = '0';
-  mixSlider.max = '100';
-  mixSlider.value = String(Math.round(getGigOutputQrMix() * 100));
-  mixSlider.style.cssText = 'width:100%;cursor:pointer;';
-  mixRow.appendChild(mixLabel);
-  mixRow.appendChild(mixSlider);
+  const mixRich = createRichSlider({
+    label: 'Mix (shader / QR)',
+    min: 0,
+    max: 100,
+    step: 1,
+    value: Math.round(getGigOutputQrMix() * 100),
+    colorKey: 'gig-qr-mix',
+    formatValue: (v) => v + '% QR'
+  });
+  const mixSlider = mixRich.input;
+  mixRow.appendChild(mixRich.root);
 
   const audienceRow = document.createElement('label');
   audienceRow.style.cssText =
@@ -121,7 +111,7 @@ export function createVjPreviewGigQrBlock(): GigQrUiBlock {
   });
 
   const onMixEvent = ((e: CustomEvent<{ mix: number }>) => {
-    mixSlider.value = String(Math.round((e.detail?.mix ?? getGigOutputQrMix()) * 100));
+    mixRich.setValue(Math.round((e.detail?.mix ?? getGigOutputQrMix()) * 100));
   }) as EventListener;
   window.addEventListener('macroverse-gig-output-qr-mix', onMixEvent);
   window.addEventListener('macroverse-gig-audience-mix', onMixEvent);
@@ -228,8 +218,9 @@ export function createVjPreviewGigQrBlock(): GigQrUiBlock {
     ];
     sliders.forEach((s, i) => {
       s.value = String(vals[i]);
-      const head = s.parentElement?.querySelector('span');
-      if (head) head.textContent = `${sliderLabels[i]}: ${sliderFormats[i](vals[i])}`;
+      updateSliderFill(s);
+      const valEl = s.closest('.mv-rich-slider')?.querySelector('.mv-rich-slider__value');
+      if (valEl) valEl.textContent = sliderFormats[i](vals[i]);
     });
   };
   window.addEventListener('macroverse-gig-output-qr-layout', syncLayoutSliders as EventListener);

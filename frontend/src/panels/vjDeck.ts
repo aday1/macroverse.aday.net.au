@@ -27,6 +27,7 @@ import {
   setGigOutputQrVisible,
 } from '../gigOutputQr.js';
 import { createVjPreviewGigQrBlock } from '../gigQrUi.js';
+import { createRichSlider, enhanceRangeInput, sliderColorForKey, updateSliderFill } from '../ui/richSlider.js';
 import { connectVjSession, onRemoteVjControl, publishVjControl } from '../vjWs.js';
 
 const CLIPS_PER_PAGE = 40;
@@ -747,11 +748,12 @@ function buildVjDeck(): void {
           sl.step = String(Number.isInteger(p.min) && Number.isInteger(p.max) ? 1 : (p.max - p.min) / 100);
           const v = Number(valuesRef[p.name] ?? p.def);
           sl.value = String(Math.max(p.min, Math.min(p.max, v)));
-          sl.style.cssText = 'flex:1;min-width:36px;accent-color:var(--amiga-accent);';
+          lab.style.color = sliderColorForKey(deckKey + '-' + p.name);
+          row.appendChild(sl);
+          enhanceRangeInput(sl, { colorKey: deckKey + '-' + p.name });
           sl.addEventListener('input', () => {
             valuesRef[p.name] = parseFloat(sl.value);
           });
-          row.appendChild(sl);
         }
         const oscInp = document.createElement('input');
         oscInp.type = 'text';
@@ -814,23 +816,21 @@ function buildVjDeck(): void {
   const crossfaderRow = document.createElement('div');
   crossfaderRow.className = 'vj-crossfader-row';
   crossfaderRow.style.cssText = 'display: flex; align-items: center; gap: 6px;';
-  const crossfaderLabel = document.createElement('label');
-  crossfaderLabel.textContent = 'Xfade';
-  crossfaderLabel.style.cssText = 'color: var(--crt-dim); min-width: 36px; font-size: 9px;';
-  const crossfaderInput = document.createElement('input');
-  crossfaderInput.type = 'range';
-  crossfaderInput.className = 'vj-crossfader';
-  crossfaderInput.min = '0';
-  crossfaderInput.max = '1';
-  crossfaderInput.step = '0.01';
-  crossfaderInput.value = '0';
-  crossfaderInput.style.cssText = 'flex: 1; min-width: 80px; accent-color: var(--amiga-accent);';
-  const crossfaderVal = document.createElement('span');
-  crossfaderVal.style.cssText = 'color: var(--crt-dim); font-size: 9px; min-width: 28px;';
-  crossfaderVal.textContent = '0%';
-  crossfaderRow.appendChild(crossfaderLabel);
-  crossfaderRow.appendChild(crossfaderInput);
-  crossfaderRow.appendChild(crossfaderVal);
+  const xfadeSlider = createRichSlider({
+    label: 'Xfade',
+    min: 0,
+    max: 1,
+    step: 0.01,
+    value: 0,
+    colorKey: 'vj-crossfader',
+    className: 'mv-rich-slider--crossfader',
+    inputClassName: 'vj-crossfader',
+    compact: true,
+    formatValue: (v) => Math.round(v * 100) + '%'
+  });
+  const crossfaderInput = xfadeSlider.input;
+  const crossfaderVal = xfadeSlider.valueEl!;
+  crossfaderRow.appendChild(xfadeSlider.root);
 
   const mixModeRow = document.createElement('div');
   mixModeRow.style.cssText = 'display: flex; align-items: center; gap: 6px;';
@@ -1161,23 +1161,20 @@ function buildVjDeck(): void {
   audioToggleBtn.type = 'button';
   audioToggleBtn.textContent = audioEngine.active ? 'Stop' : 'Start';
   audioToggleBtn.style.cssText = 'font-size: 9px; padding: 2px 8px; background: var(--amiga-bg); color: var(--crt-fg); border: 1px solid var(--bevel-dark); cursor: pointer;';
-  const audioGainLabel = document.createElement('span');
-  audioGainLabel.style.cssText = 'font-size: 9px; color: var(--crt-dim);';
-  audioGainLabel.textContent = 'Gain';
-  const audioGainSlider = document.createElement('input');
-  audioGainSlider.type = 'range';
-  audioGainSlider.min = '0';
-  audioGainSlider.max = '3';
-  audioGainSlider.step = '0.1';
-  audioGainSlider.value = String(audioEngine.gain);
-  audioGainSlider.style.cssText = 'width: 60px; accent-color: var(--amiga-accent);';
-  const audioGainVal = document.createElement('span');
-  audioGainVal.style.cssText = 'font-size: 9px; color: var(--crt-dim); min-width: 24px;';
-  audioGainVal.textContent = audioEngine.gain.toFixed(1);
+  const vjGainSlider = createRichSlider({
+    label: 'Gain',
+    min: 0,
+    max: 3,
+    step: 0.1,
+    value: audioEngine.gain,
+    colorKey: 'vj-audio-gain',
+    compact: true,
+    formatValue: (v) => v.toFixed(1)
+  });
+  const audioGainSlider = vjGainSlider.input;
+  const audioGainVal = vjGainSlider.valueEl!;
   audioControlRow.appendChild(audioToggleBtn);
-  audioControlRow.appendChild(audioGainLabel);
-  audioControlRow.appendChild(audioGainSlider);
-  audioControlRow.appendChild(audioGainVal);
+  audioControlRow.appendChild(vjGainSlider.root);
   audioSection.appendChild(audioControlRow);
 
   const audioDeviceLabel = document.createElement('div');
@@ -1856,6 +1853,7 @@ function buildVjDeck(): void {
         const smooth = 0.5 - 0.5 * Math.cos(t * Math.PI);
         crossfader = autoVjCrossfadeStartVal + (autoVjCrossfadeTarget - autoVjCrossfadeStartVal) * smooth;
         crossfaderInput.value = String(crossfader);
+        updateSliderFill(crossfaderInput);
         crossfaderVal.textContent = Math.round(crossfader * 100) + '%';
       }
       autoVjParamPhase += dt * (autoVjBpm / 60) * Math.PI * 0.5;
@@ -2126,6 +2124,7 @@ function buildVjDeck(): void {
   vjController.register('vj/crossfader', (v) => {
     crossfader = v;
     crossfaderInput.value = String(v);
+    updateSliderFill(crossfaderInput);
     crossfaderVal.textContent = Math.round(v * 100) + '%';
   });
   vjController.register('vj/autoVj', (v) => setAutoVjEnabled(v > 0.5));
@@ -2188,6 +2187,7 @@ function buildVjDeck(): void {
       if (typeof ctrl.crossfader === 'number') {
         crossfader = ctrl.crossfader;
         crossfaderInput.value = String(crossfader);
+        updateSliderFill(crossfaderInput);
         crossfaderVal.textContent = Math.round(crossfader * 100) + '%';
       }
       if (ctrl.mixMode && MIX_MODES.some((m) => m.value === ctrl.mixMode)) {
