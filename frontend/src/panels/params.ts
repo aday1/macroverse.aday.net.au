@@ -13,6 +13,7 @@ import { setVjMouseFromRoliblock, setVjMouseForDeckA, setVjMouseForDeckB, setPer
 import { setGalleryRoliblockMouse } from './gallery.js';
 import { vjController } from '../engines/vjController.js';
 import type { IndexEntry } from '../types.js';
+import { enhanceRangeInput, sliderColorForKey, updateSliderFill } from '../ui/richSlider.js';
 
 export interface ParamDef {
   id: string;
@@ -698,10 +699,15 @@ export function buildParamsPanel(entry: IndexEntry | null): void {
         rangePresetHtml + valuePresetHtml +
         '<input type="range" data-param="' + escapeAttr(p.id) + '" min="' + p.min + '" max="' + p.max + '" step="' + rangeStep + '" value="' + val + '">' +
         '<span class="val">' + val.toFixed(2) + '</span>' + oscHtml;
-      const sl = row.querySelector('input[type="range"]');
+      const sl = row.querySelector('input[type="range"]') as HTMLInputElement | null;
       const minInp = row.querySelector('.param-min') as HTMLInputElement;
       const maxInp = row.querySelector('.param-max') as HTMLInputElement;
       const valEl = row.querySelector('.val') as HTMLElement;
+      const rowLabel = row.querySelector('label') as HTMLElement | null;
+      if (rowLabel) rowLabel.style.color = sliderColorForKey(p.id);
+      if (sl) {
+        enhanceRangeInput(sl, { colorKey: p.id, valueEl: valEl, formatValue: (v) => v.toFixed(2) });
+      }
       const applyRange = (newMin: number, newMax: number) => {
         if (newMin >= newMax) return;
         p.min = newMin;
@@ -712,21 +718,25 @@ export function buildParamsPanel(entry: IndexEntry | null): void {
         if (minInp) minInp.value = String(newMin);
         if (maxInp) maxInp.value = String(newMax);
         if (sl) {
-          (sl as HTMLInputElement).min = String(newMin);
-          (sl as HTMLInputElement).max = String(newMax);
-          (sl as HTMLInputElement).value = String(clamped);
+          sl.min = String(newMin);
+          sl.max = String(newMax);
+          sl.value = String(clamped);
+          updateSliderFill(sl);
         }
         if (valEl) valEl.textContent = clamped.toFixed(2);
       };
       const applyValue = (v: number) => {
         const clamped = Math.max(p.min, Math.min(p.max, v));
         paramValues[p.id] = clamped;
-        if (sl) (sl as HTMLInputElement).value = String(clamped);
+        if (sl) {
+          sl.value = String(clamped);
+          updateSliderFill(sl);
+        }
         if (valEl) valEl.textContent = clamped.toFixed(2);
       };
       if (sl) {
         sl.oninput = () => {
-          const v = parseFloat((sl as HTMLInputElement).value);
+          const v = parseFloat(sl.value);
           paramValues[p.id] = v;
           if (valEl) valEl.textContent = v.toFixed(2);
         };
@@ -1491,15 +1501,26 @@ function initExternalSections(): void {
       });
     });
     roliblockDeviceList.querySelectorAll('.roli-dev-led-slider').forEach((slider) => {
-      slider.addEventListener('input', () => {
-        const id = (slider as HTMLElement).dataset.devId!;
-        const key = (slider as HTMLElement).dataset.ledKey!;
+      const inp = slider as HTMLInputElement;
+      const id = inp.dataset.devId!;
+      const key = inp.dataset.ledKey!;
+      const valSpan = roliblockDeviceList!.querySelector(
+        '.roli-dev-led-val[data-dev-id="' + id + '"][data-led-key="' + key + '"]'
+      ) as HTMLElement | null;
+      const ledLabel = inp.closest('.external-row')?.querySelector('label') as HTMLElement | null;
+      const colorKey = 'roli-' + key;
+      if (ledLabel) ledLabel.style.color = sliderColorForKey(colorKey);
+      enhanceRangeInput(inp, {
+        colorKey,
+        valueEl: valSpan,
+        formatValue: (v) => (key === 'posterize' ? (v === 0 ? 'Off' : String(v)) : v.toFixed(v === Math.round(v) ? 1 : 2))
+      });
+      inp.addEventListener('input', () => {
         const dev = mgr.getDevice(id);
         if (!dev) return;
-        const v = parseFloat((slider as HTMLInputElement).value);
+        const v = parseFloat(inp.value);
         (dev.ledSettings as Record<string, number | boolean | string>)[key] = v;
         mgr.saveAll();
-        const valSpan = roliblockDeviceList!.querySelector('.roli-dev-led-val[data-dev-id="' + id + '"][data-led-key="' + key + '"]');
         if (valSpan) valSpan.textContent = key === 'posterize' ? (v === 0 ? 'Off' : String(v)) : v.toFixed(v === Math.round(v) ? 1 : 2);
       });
     });
@@ -1655,8 +1676,16 @@ function initExternalSections(): void {
     });
   }
   if (audioGain) {
-    (audioGain as HTMLInputElement).addEventListener('input', () => {
-      const v = parseFloat((audioGain as HTMLInputElement).value);
+    const gainInp = audioGain as HTMLInputElement;
+    const gainLabel = gainInp.closest('.external-row')?.querySelector('label') as HTMLElement | null;
+    if (gainLabel) gainLabel.style.color = sliderColorForKey('audioGain');
+    enhanceRangeInput(gainInp, {
+      colorKey: 'audioGain',
+      valueEl: audioGainVal as HTMLElement | null,
+      formatValue: (v) => v.toFixed(1)
+    });
+    gainInp.addEventListener('input', () => {
+      const v = parseFloat(gainInp.value);
       audioEngine.setGain(v);
       if (audioGainVal) audioGainVal.textContent = v.toFixed(1);
     });

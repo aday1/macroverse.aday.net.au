@@ -1,6 +1,23 @@
 Changelog - Macroverse - Wired Atelier
 ======================================
 
+Version 42.0 — Official hosted release (Forty-Two)
+--------------------------------------------------
+
+First release under controlled **dev** / **live** / **aday** lanes on Linode (GHCR).
+Product identity **Macroverse 42** and semver **42.0** now align.
+
+### Shipping in 42.0
+
+- Rich gradient sliders with per-control colors and touch-friendly sizing.
+- Dev vs live lane sync in deploy-meta and build-info UI.
+- LAN bridge operator docs; VJ sessions, audience QR, quick-start guide (relic-era
+  features consolidated from pre-release development).
+
+## Pre-release relics (development archaeology)
+
+Interim 0.1.x version numbers below were never official shipping tags.
+
 Version 0.1.9 — First-visit quick start, audience VJ participation
 ------------------------------------------------------------------
 

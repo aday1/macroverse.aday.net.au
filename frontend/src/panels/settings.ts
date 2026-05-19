@@ -16,6 +16,7 @@ import { getVjSessionId, setVjSessionId } from '../vjSession.js';
 import { ensureVjTokens } from '../vjTokens.js';
 import { reconnectVjSession } from '../vjWs.js';
 import { oscEngine } from '../engines/osc.js';
+import { enhanceRangeInput } from '../ui/richSlider.js';
 
 let panelEl: HTMLElement | null = null;
 let overlayEl: HTMLElement | null = null;
@@ -365,9 +366,15 @@ async function renderPanel(): Promise<void> {
       (window as unknown as { __themeDraft: Record<string, string> }).__themeDraft = draft;
       applyTheme({ ...mergeTheme(appSettings.themeColors), ...draft } as Partial<ThemeColors>);
     };
-    row.querySelector('.theme-h')?.addEventListener('input', update);
-    row.querySelector('.theme-s')?.addEventListener('input', update);
-    row.querySelector('.theme-v')?.addEventListener('input', update);
+    const hInp = row.querySelector('.theme-h') as HTMLInputElement | null;
+    const sInp = row.querySelector('.theme-s') as HTMLInputElement | null;
+    const vInp = row.querySelector('.theme-v') as HTMLInputElement | null;
+    if (hInp) enhanceRangeInput(hInp, { colorKey: key + '-h' });
+    if (sInp) enhanceRangeInput(sInp, { colorKey: key + '-s' });
+    if (vInp) enhanceRangeInput(vInp, { colorKey: key + '-v' });
+    hInp?.addEventListener('input', update);
+    sInp?.addEventListener('input', update);
+    vInp?.addEventListener('input', update);
     parent.appendChild(row);
   }
 
@@ -558,6 +565,11 @@ async function renderPanel(): Promise<void> {
   if (transitionDurationSlider) {
     transitionDurationSlider.value = String((appSettings as Record<string, unknown>).transitionDuration || 400);
     if (transitionDurationVal) transitionDurationVal.textContent = transitionDurationSlider.value + 'ms';
+    enhanceRangeInput(transitionDurationSlider, {
+      colorKey: 'settingsTransitionDuration',
+      valueEl: transitionDurationVal,
+      formatValue: (v) => String(Math.round(v)) + 'ms'
+    });
     transitionDurationSlider.addEventListener('input', () => {
       if (transitionDurationVal) transitionDurationVal.textContent = transitionDurationSlider.value + 'ms';
     });
@@ -690,6 +702,10 @@ async function renderPanel(): Promise<void> {
   }
   if (thumbQualityVal && thumbQualitySlider) {
     thumbQualityVal.textContent = thumbQualitySlider.value;
+    enhanceRangeInput(thumbQualitySlider, {
+      colorKey: 'settingsThumbnailQuality',
+      valueEl: thumbQualityVal
+    });
   }
   if (thumbMaxSizeSelect) {
     const s = appSettings.thumbnailMaxSize ?? 120;

@@ -77,6 +77,9 @@ jobs:
               "dev_url": "https://macroverse-test.aday.net.au/",
               "aday_url": "https://macroverse-aday.aday.net.au/"
             },
+            "bridge_title": "Raspberry Pi LAN bridge (VJ / Ableton Link)",
+            "bridge_doc_url": "https://github.com/aday1/macroverse.aday.net.au/blob/main/docs/BRIDGE.md",
+            "bridge_agent_url": "https://github.com/aday1/macroverse.aday.net.au/tree/main/macroverse-bridge-agent",
             "run_id": "${GITHUB_RUN_ID}",
             "run_number": "${GITHUB_RUN_NUMBER}"
           }
