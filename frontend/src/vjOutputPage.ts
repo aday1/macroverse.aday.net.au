@@ -1,5 +1,4 @@
 // VJ Output - standalone pop-out renderer
-import { getVjSessionId, vjSessionQuery } from './vjSession.js';
 // Receives state from main window via BroadcastChannel and renders independently.
 // This page has its own WebGL contexts and animation loop so it keeps rendering
 // even when the main browser tab is in the background.
@@ -271,8 +270,8 @@ function setStatus(text: string): void {
 function connectRemoteStream(): void {
   setStatus('Connecting to stream...');
   const url = (typeof window !== 'undefined' && window.location.origin)
-    ? `${window.location.origin}/api/vj-output/stream?${vjSessionQuery()}`
-    : `/api/vj-output/stream?${vjSessionQuery()}`;
+    ? window.location.origin + '/api/vj-output/stream'
+    : '/api/vj-output/stream';
   let es = new EventSource(url);
   let receivedAny = false;
   let reconnectAttempts = 0;

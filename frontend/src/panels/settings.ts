@@ -11,8 +11,6 @@ import type { Settings } from '../types.js';
 import type { ThemeColors } from '../themeUtils.js';
 import { midiEngine } from '../engines/midi.js';
 import { VJ_ACTION_IDS } from '../engines/vjController.js';
-import { getVjSessionId, setVjSessionId, vjSessionQuery } from '../vjSession.js';
-import { reconnectVjSession } from '../vjWs.js';
 import { oscEngine } from '../engines/osc.js';
 
 let panelEl: HTMLElement | null = null;
@@ -259,15 +257,6 @@ async function renderPanel(): Promise<void> {
         <div id="themeEditorColors" style="margin-bottom:8px;"></div>
       </div>
     </div>
-    <div class="settings-section" style="margin-bottom:20px;" id="settingsVjSessionSection">
-      <div style="color:var(--amiga-copper); font-size:11px; text-transform:uppercase; margin-bottom:8px;">VJ show session</div>
-      <div style="font-size:10px; color:var(--crt-dim); margin-bottom:8px;">Same session ID on tablets, cloud UI, and Pi HDMI output. Default: default</div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
-        <input id="settingsVjSessionId" type="text" placeholder="default" style="flex:1; min-width:140px; padding:6px 8px; font-size:10px; background:var(--amiga-bg); color:var(--crt-fg); border:1px solid var(--bevel-dark); font-family:inherit;" />
-        <button type="button" id="settingsVjSessionApply" style="font-size:10px; padding:6px 10px; background:var(--amiga-surface); color:var(--amiga-copper); border:1px solid var(--bevel-dark); cursor:pointer;">Apply session</button>
-      </div>
-      <div id="settingsVjSessionHint" style="font-size:9px; color:var(--crt-dim);"></div>
-    </div>
     <div class="settings-section" style="margin-bottom:20px;" id="settingsVjControllerSection">
       <div style="color:var(--amiga-copper); font-size:11px; text-transform:uppercase; margin-bottom:8px;">MIDI / OSC - VJ controller</div>
       <div style="font-size:10px; color:var(--crt-dim); margin-bottom:8px;">Map hardware (e.g. APC40 MK2) to crossfader, deck params, clip launch, and page. OSC uses the same actions.</div>
@@ -407,26 +396,6 @@ async function renderPanel(): Promise<void> {
       const isHidden = themeCustomizeWrap.style.display === 'none';
       themeCustomizeWrap.style.display = isHidden ? 'block' : 'none';
       themeCustomizeToggle.textContent = isHidden ? 'Hide customization' : 'Customize colors';
-    });
-  }
-
-  const vjSessionInput = panel.querySelector('#settingsVjSessionId') as HTMLInputElement | null;
-  const vjSessionApply = panel.querySelector('#settingsVjSessionApply') as HTMLButtonElement | null;
-  const vjSessionHint = panel.querySelector('#settingsVjSessionHint') as HTMLElement | null;
-  if (vjSessionInput) {
-    vjSessionInput.value = getVjSessionId();
-    const refreshHint = () => {
-      if (!vjSessionHint) return;
-      const sid = getVjSessionId();
-      const base = typeof window !== 'undefined' ? window.location.origin : '';
-      vjSessionHint.textContent = `HDMI / Pi preview: ${base}/vj-output.html?remote=1&${vjSessionQuery()}`;
-    };
-    refreshHint();
-    vjSessionApply?.addEventListener('click', () => {
-      setVjSessionId(vjSessionInput.value);
-      vjSessionInput.value = getVjSessionId();
-      refreshHint();
-      reconnectVjSession();
     });
   }
 

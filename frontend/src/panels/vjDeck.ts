@@ -8,8 +8,6 @@ import { midiEngine } from '../engines/midi.js';
 import { vjController } from '../engines/vjController.js';
 import { roliblockManager, sendStretchedLed } from '../engines/roliblock.js';
 import type { IndexEntry } from '../types.js';
-import { vjSessionQuery } from '../vjSession.js';
-import { connectVjSession, onRemoteVjControl, publishVjControl } from '../vjWs.js';
 
 const CLIPS_PER_PAGE = 40;
 
@@ -31,7 +29,7 @@ function sendVJMessage(msg: unknown): void {
     if (now - lastRelayPost < RELAY_THROTTLE_MS) return;
     lastRelayPost = now;
   }
-  fetch(`/api/vj-output/state?${vjSessionQuery()}`, {
+  fetch('/api/vj-output/state', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(msg)
@@ -266,9 +264,6 @@ export function initVJDeck(): void {
   let mixMode: MixMode = 'crossfade';
   let currentPageA = 0;
   let currentPageB = 0;
-  let deckAGlobalIndex = -1;
-  let deckBGlobalIndex = -1;
-  let applyingRemoteControl = false;
   let outputFlipV = false;
   let outputFlipH = false;
   let outputRotation: 0 | 90 | 180 | 270 = 0;
@@ -1352,11 +1347,9 @@ export function initVJDeck(): void {
   const outputUrlInput = document.createElement('input');
   outputUrlInput.type = 'text';
   outputUrlInput.readOnly = true;
-  const vjOutputUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}/vj-output.html?remote=1&${vjSessionQuery()}`
-    : '';
+  const vjOutputUrl = typeof window !== 'undefined' ? window.location.origin + '/vj-output.html' : '';
   outputUrlInput.value = vjOutputUrl;
-  outputUrlInput.title = 'Pi HDMI / OBS: open this URL on the projector machine for this gig session';
+  outputUrlInput.title = 'Same URL on another machine: add ?remote=1 to use stream over network';
   outputUrlInput.style.cssText = 'flex: 1; min-width: 120px; font-size: 9px; padding: 2px 6px; background: var(--amiga-bg); color: var(--crt-fg); border: 1px solid var(--bevel-dark); font-family: inherit;';
   const outputUrlCopy = document.createElement('button');
   outputUrlCopy.type = 'button';
@@ -1381,7 +1374,7 @@ export function initVJDeck(): void {
       popOutWin.focus();
       return;
     }
-    popOutWin = window.open(`/vj-output.html?remote=1&${vjSessionQuery()}`, 'macroverse-vj-output');
+    popOutWin = window.open('/vj-output.html', 'macroverse-vj-output');
     if (!popOutWin) {
       console.warn('[VJ] Pop-out blocked by browser. Allow popups for this site.');
       return;
@@ -1800,12 +1793,10 @@ export function initVJDeck(): void {
   crossfaderInput.addEventListener('input', () => {
     crossfader = parseFloat(crossfaderInput.value);
     crossfaderVal.textContent = Math.round(crossfader * 100) + '%';
-    if (!applyingRemoteControl) publishVjControl({ crossfader });
   });
 
   mixModeSelect.addEventListener('change', () => {
     mixMode = mixModeSelect.value as MixMode;
-    if (!applyingRemoteControl) publishVjControl({ mixMode });
   });
 
   function setAutoVjEnabled(en: boolean): void {
@@ -1892,8 +1883,6 @@ export function initVJDeck(): void {
     const list = getShaderList();
     if (list.length === 0) return;
     const idx = Math.max(0, Math.min(list.length - 1, Math.floor(globalIndex)));
-    deckAGlobalIndex = idx;
-    if (!applyingRemoteControl) publishVjControl({ deckAGlobalIndex: idx });
     const entry = list[idx];
     if (!entry?.path) return;
     deckAEntry.value = entry;
@@ -1913,8 +1902,6 @@ export function initVJDeck(): void {
     const list = getShaderList();
     if (list.length === 0) return;
     const idx = Math.max(0, Math.min(list.length - 1, Math.floor(globalIndex)));
-    deckBGlobalIndex = idx;
-    if (!applyingRemoteControl) publishVjControl({ deckBGlobalIndex: idx });
     const entry = list[idx];
     if (!entry?.path) return;
     deckBEntry.value = entry;
@@ -1955,54 +1942,10 @@ export function initVJDeck(): void {
   }
   vjController.register('vj/loadClipA', (v) => loadDeckABySlot(v));
   vjController.register('vj/loadClipB', (v) => loadDeckBBySlot(v));
-  vjController.register('vj/deckA/pageUp', () => {
-    currentPageA++;
-    if (!applyingRemoteControl) publishVjControl({ pageA: currentPageA });
-  });
-  vjController.register('vj/deckA/pageDown', () => {
-    currentPageA = Math.max(0, currentPageA - 1);
-    if (!applyingRemoteControl) publishVjControl({ pageA: currentPageA });
-  });
-  vjController.register('vj/deckB/pageLeft', () => {
-    currentPageB = Math.max(0, currentPageB - 1);
-    if (!applyingRemoteControl) publishVjControl({ pageB: currentPageB });
-  });
-  vjController.register('vj/deckB/pageRight', () => {
-    currentPageB++;
-    if (!applyingRemoteControl) publishVjControl({ pageB: currentPageB });
-  });
-
-  connectVjSession();
-  onRemoteVjControl((ctrl) => {
-    applyingRemoteControl = true;
-    try {
-      if (typeof ctrl.crossfader === 'number') {
-        crossfader = ctrl.crossfader;
-        crossfaderInput.value = String(crossfader);
-        crossfaderVal.textContent = Math.round(crossfader * 100) + '%';
-      }
-      if (ctrl.mixMode && MIX_MODES.some((m) => m.value === ctrl.mixMode)) {
-        mixMode = ctrl.mixMode as MixMode;
-        mixModeSelect.value = mixMode;
-      }
-      if (typeof ctrl.pageA === 'number') currentPageA = ctrl.pageA;
-      if (typeof ctrl.pageB === 'number') currentPageB = ctrl.pageB;
-      if (typeof ctrl.deckAGlobalIndex === 'number' && ctrl.deckAGlobalIndex >= 0 && ctrl.deckAGlobalIndex !== deckAGlobalIndex) {
-        loadDeckAByGlobalIndex(ctrl.deckAGlobalIndex);
-      }
-      if (typeof ctrl.deckBGlobalIndex === 'number' && ctrl.deckBGlobalIndex >= 0 && ctrl.deckBGlobalIndex !== deckBGlobalIndex) {
-        loadDeckBByGlobalIndex(ctrl.deckBGlobalIndex);
-      }
-      if (ctrl.paramsA) {
-        for (const [k, v] of Object.entries(ctrl.paramsA)) deckAParamValues[k] = v;
-      }
-      if (ctrl.paramsB) {
-        for (const [k, v] of Object.entries(ctrl.paramsB)) deckBParamValues[k] = v;
-      }
-    } finally {
-      applyingRemoteControl = false;
-    }
-  });
+  vjController.register('vj/deckA/pageUp', () => { currentPageA++; });
+  vjController.register('vj/deckA/pageDown', () => { currentPageA = Math.max(0, currentPageA - 1); });
+  vjController.register('vj/deckB/pageLeft', () => { currentPageB = Math.max(0, currentPageB - 1); });
+  vjController.register('vj/deckB/pageRight', () => { currentPageB++; });
 
   runVJFrame();
 }
