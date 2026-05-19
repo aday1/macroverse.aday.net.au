@@ -22,7 +22,7 @@ const dirOrder = ['shaders/glsl', 'shaders/isf', 'shaders/core', 'shaders/debug'
 const exts = ['.fs', '.frag', '.glsl'];
 const baseDirs = new Set(['core', 'debug', 'glsl', 'isf']);
 
-// Put TextureFX-ChromaWarp first as the Fly.io demo default
+// Put TextureFX-ChromaWarp first as the public demo default
 const preferFirst = 'shaders/isf/TextureFX-ChromaWarp.fs';
 
 let entries = [];

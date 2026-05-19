@@ -3,7 +3,7 @@
 ## Roliblock LED Processing Controls + Light Theme + VJ Bug Fixes
 
 **Commit:** `c773bb6` on `main`
-**Deployment:** Fly.io `macroverse42` (LHR region)
+**Deployment (historical):** Fly.io `macroverse42` (LHR region) — production is now Linode
 
 ---
 

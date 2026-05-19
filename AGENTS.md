@@ -13,6 +13,12 @@ Macroverse 42 - The Wired Atelier is a shader preview tool for Resolume Wire. Tw
 
 The Vite dev server proxies `/api` requests to the Go backend on port 8765.
 
+### Deployment
+
+Production app (not Fly.io): push `main` / `dev` -> `macroverse-image` (GHCR) ->
+`deploy-linode` on the Linode Macroverse compose stack. Live at
+https://macroverse.aday.net.au/
+
 ### Gotchas
 
 - The Go backend uses `exeDir()` (directory of the executable) to locate `shader-preview-settings.json`, `shader-index.json`, and the `shaders/` directory. When using `go run .`, the binary lands in a temp directory and file resolution fails. Always build with `go build -o /workspace/Macroverse42 .` from `api/` and run the binary from the workspace root.

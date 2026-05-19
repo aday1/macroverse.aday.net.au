@@ -4,7 +4,7 @@
 
 A GLSL/ISF shader lab and VJ tool. Two ways in — one binary.
 
-**[Try it live →](https://macroverse42.fly.dev/)** &nbsp;|&nbsp; **[Showcase →](https://aday1.github.io/Macroverse/)** &nbsp;|&nbsp; **[Download →](https://github.com/aday1/Macroverse/releases)**
+**[Try it live →](https://macroverse.aday.net.au/)** &nbsp;|&nbsp; **[Showcase →](https://aday1.github.io/Macroverse/)** &nbsp;|&nbsp; **[Download →](https://github.com/aday1/Macroverse/releases)**
 
 ---
 
@@ -372,6 +372,20 @@ Six procedural demo loops live in `docs/videos/`:
 All deterministic; rebuild with `bash docs/videos/build-videos.sh` (requires ffmpeg 6+ with libx264 + libwebp). Each MP4 caps at ~1.5 MB.
 
 See them live on the [showcase page](https://aday1.github.io/Macroverse/#demos).
+
+---
+
+## Production deploy (Linode)
+
+The hosted app runs on Linode Docker Compose, not Fly.io. Push `main` (or
+`dev` / tagged releases for other tracks) triggers `macroverse-image`, which
+pushes `ghcr.io/aday1/macroverse.aday.net.au/macroverse:live` (or `:dev`,
+`:aday`). `deploy-linode` refreshes `~/compose/macroverse.aday.net.au` on the
+VPS.
+
+- Live: https://macroverse.aday.net.au/
+- Dev: https://dev.macroverse.aday.net.au/
+- Gated starter pack: https://macroverse-aday.aday.net.au/
 
 ---
 

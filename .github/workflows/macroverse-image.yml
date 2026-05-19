@@ -67,7 +67,7 @@ jobs:
             "changelog_md_url": "https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/changelog.md",
             "releases_url": "https://github.com/${GITHUB_REPOSITORY}/releases",
             "workflow_run_url": "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}",
-            "deploy_note": "Image build CI time matches git head; VPS pull may lag seconds.",
+            "deploy_note": "GHCR image built in CI; Linode compose pull (deploy-linode) may lag a few seconds.",
             "deploy_switcher": {
               "live_url": "https://macroverse.aday.net.au/",
               "dev_url": "https://dev.macroverse.aday.net.au/",

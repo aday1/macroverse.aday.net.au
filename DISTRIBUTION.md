@@ -31,8 +31,8 @@ Public image/release jobs must fail when:
 
 ## Starter Pack Cap
 
-- Target cap: 25 shader files maximum.
-- Current baseline: 10 files in `shaders/starter-pack/`.
+- Target cap: 55 shader files maximum.
+- Current baseline: 50 files in `shaders/starter-pack/` (10 legacy root + 40 curated by type).
 
 ## Ownership Boundary
 

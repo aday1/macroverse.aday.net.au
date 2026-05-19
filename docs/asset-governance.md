@@ -21,5 +21,5 @@
 ## CI controls
 
 - Public jobs fail if blocked directories are detected.
-- Public jobs fail if starter-pack exceeds cap.
+- Public jobs fail if starter-pack exceeds cap (55 files).
 - Aday-private jobs are isolated and do not publish public release bundles.

@@ -525,7 +525,7 @@
           esc(trk || "(unknown)") +
           "</div>";
         html +=
-          '<div style="opacity:.76;margin:-2px 0 6px;font-size:10px">Deploy track is the GHCR tag (:live|:dev|:aday). Aday hosts the gated starter-pack lane.</div>';
+          '<div style="opacity:.76;margin:-2px 0 6px;font-size:10px">Deploy track is the GHCR tag Linode pulls (:live|:dev|:aday). Runtime is not on Fly.io. Aday is the gated starter-pack lane.</div>';
         var localTz = tzName();
         if (localTz) html += "<div style=\"opacity:.78;margin:0 0 4px;font-size:10px\"><strong>Your timezone:</strong> " + esc(localTz) + "</div>";
         html += "<div style=\"margin:4px 0\"><strong>Last build (CI):</strong> " + esc(fmt(buildIso));

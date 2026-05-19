@@ -187,7 +187,7 @@ func (w *agentOutputWriter) Write(p []byte) (n int, err error) {
 }
 
 // readonlyMode blocks all write/mutate API calls when set.
-// Set via READONLY=true environment variable (used for the Fly.io demo instance).
+// Set via READONLY=true environment variable (used for public read-only demo hosts).
 var readonlyMode = os.Getenv("READONLY") == "true"
 
 // noExternalLLM blocks all outbound LLM calls (Ollama, Cursor) when set.
@@ -214,44 +214,6 @@ var oscState struct {
 	port    int
 	running bool
 	clients map[chan string]bool
-}
-
-var vjOutputState struct {
-	sync.Mutex
-	clients     map[chan string]bool
-	lastShaderA string
-	lastShaderB string
-	lastFrame   string
-}
-
-func vjOutputInit() {
-	vjOutputState.clients = make(map[chan string]bool)
-}
-
-func vjOutputBroadcast(msg string) {
-	vjOutputState.Lock()
-	if strings.Contains(msg, `"type":"shader"`) {
-		if strings.Contains(msg, `"deck":"A"`) {
-			vjOutputState.lastShaderA = msg
-		} else if strings.Contains(msg, `"deck":"B"`) {
-			vjOutputState.lastShaderB = msg
-		}
-	} else if strings.Contains(msg, `"type":"frame"`) {
-		vjOutputState.lastFrame = msg
-	} else if strings.Contains(msg, `"type":"clear"`) {
-		if strings.Contains(msg, `"deck":"A"`) {
-			vjOutputState.lastShaderA = ""
-		} else if strings.Contains(msg, `"deck":"B"`) {
-			vjOutputState.lastShaderB = ""
-		}
-	}
-	for ch := range vjOutputState.clients {
-		select {
-		case ch <- msg:
-		default:
-		}
-	}
-	vjOutputState.Unlock()
 }
 
 func oscInit() {
@@ -9224,6 +9186,11 @@ Shader to refactor:
 
 	oscInit()
 	vjOutputInit()
+	wsHubInit()
+
+	http.HandleFunc("/ws", wsHandleConnection)
+	http.HandleFunc("/api/bridge/token", handleBridgeToken)
+	http.HandleFunc("/api/bridge/status", handleBridgeStatus)
 
 	http.HandleFunc("/api/osc/start", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -9297,20 +9264,33 @@ Shader to refactor:
 		}
 	})
 
+	http.HandleFunc("/api/vj-sessions", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "method not allowed", 405)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"sessions":          listAllSessions(),
+			"defaultSessionId": defaultVJSessionID,
+		})
+	})
+
 	http.HandleFunc("/api/vj-output/state", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "method not allowed", 405)
 			return
 		}
+		sessionID := vjSessionIDFromRequest(r.URL.Query().Get("sessionId"), "")
 		body, err := io.ReadAll(r.Body)
 		r.Body.Close()
 		if err != nil || len(body) == 0 {
 			http.Error(w, "body required", 400)
 			return
 		}
-		vjOutputBroadcast(string(body))
+		vjOutputBroadcast(sessionID, string(body))
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"ok":true}`))
+		json.NewEncoder(w).Encode(map[string]interface{}{"ok": true, "sessionId": sessionID})
 	})
 
 	http.HandleFunc("/api/vj-output/stream", func(w http.ResponseWriter, r *http.Request) {
@@ -9319,39 +9299,14 @@ Shader to refactor:
 			http.Error(w, "streaming not supported", 500)
 			return
 		}
+		sessionID := vjSessionIDFromRequest(r.URL.Query().Get("sessionId"), "")
 		w.Header().Set("Content-Type", "text/event-stream")
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Connection", "keep-alive")
 		w.Header().Set("X-Accel-Buffering", "no")
 
-		ch := make(chan string, 128)
-		vjOutputState.Lock()
-		vjOutputState.clients[ch] = true
-		if vjOutputState.lastShaderA != "" {
-			select {
-			case ch <- vjOutputState.lastShaderA:
-			default:
-			}
-		}
-		if vjOutputState.lastShaderB != "" {
-			select {
-			case ch <- vjOutputState.lastShaderB:
-			default:
-			}
-		}
-		if vjOutputState.lastFrame != "" {
-			select {
-			case ch <- vjOutputState.lastFrame:
-			default:
-			}
-		}
-		vjOutputState.Unlock()
-
-		defer func() {
-			vjOutputState.Lock()
-			delete(vjOutputState.clients, ch)
-			vjOutputState.Unlock()
-		}()
+		ch, unsub := vjOutputStreamSubscribe(sessionID)
+		defer unsub()
 
 		ctx := r.Context()
 		for {
@@ -9472,7 +9427,7 @@ Shader to refactor:
 		start := time.Now()
 		rec := &statusRecorder{ResponseWriter: w, status: 200}
 
-		// Hard enforcement: in read-only mode (READONLY=true, used for Fly.io demo)
+		// Hard enforcement: in read-only mode (READONLY=true, used for public demo hosts)
 		// block every mutating HTTP method on any /api/ path before the handler runs.
 		// This is the single authoritative gate — individual handler writeBlocked()
 		// calls are belt-and-suspenders on top of this.

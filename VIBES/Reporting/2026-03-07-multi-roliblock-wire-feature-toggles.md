@@ -1,10 +1,13 @@
 # Macroverse Session Report: 2026-03-07
 
+> Historical note: production is now on Linode at https://macroverse.aday.net.au/
+> (Fly.io `macroverse42` retired).
+
 ## Multi-Roliblock Support, Per-Deck Assignment, LED Filters, Wire Feature Toggles
 
 **Commit:** `f3f79d3` on `main`
-**Deployment:** Fly.io `macroverse42` (LHR region)
-**Live URL:** https://macroverse42.fly.dev/
+**Deployment (historical):** Fly.io `macroverse42` (LHR region)
+**Live URL (historical):** https://macroverse42.fly.dev/
 
 ---
 

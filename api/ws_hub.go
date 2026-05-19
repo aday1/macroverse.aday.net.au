@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
 	"sync"
 	"time"
 
@@ -15,13 +14,12 @@ var wsUpgrader = websocket.Upgrader{
 }
 
 type wsConn struct {
-	conn       *websocket.Conn
-	role       string
-	sessionID  string
-	bridgeID   string
-	leader     bool
-	canControl bool
-	send       chan []byte
+	conn      *websocket.Conn
+	role      string
+	sessionID string
+	bridgeID  string
+	leader    bool
+	send      chan []byte
 }
 
 type vjControlState struct {
@@ -205,8 +203,6 @@ func (c *wsConn) handleMessage(data []byte) {
 		c.claimLeader()
 	case "vj:control":
 		c.handleVjControl(envelope.Payload)
-	case "vj:config":
-		c.handleVjConfig(envelope.Payload)
 	case "vj:frame", "vj:shader", "vj:clear":
 		c.relayVjOutput(envelope.Type, data)
 	case "bridge:hello":
@@ -232,27 +228,15 @@ func (c *wsConn) handleAuth(token, role, sessionID string) {
 		c.role = "bridge"
 		c.bridgeID = payload.BridgeID
 		c.sessionID = payload.SessionID
-		c.canControl = false
-	} else if strings.TrimSpace(token) != "" {
-		payload, err := verifyVjToken(strings.TrimSpace(token), vjRoleOperator)
-		if err != nil {
-			c.sendJSON(map[string]interface{}{"type": "auth:error", "message": "invalid control token"})
-			return
-		}
-		c.role = "client"
-		c.sessionID = payload.SessionID
-		c.canControl = true
 	} else {
 		c.role = "client"
 		c.sessionID = normalizeVJSessionID(sessionID)
-		c.canControl = !vjRequireControlToken()
 	}
 	c.joinSession(c.sessionID)
 	c.sendJSON(map[string]interface{}{
-		"type":       "auth:ok",
-		"role":       c.role,
-		"sessionId":  c.sessionID,
-		"canControl": c.canControl,
+		"type":      "auth:ok",
+		"role":      c.role,
+		"sessionId": c.sessionID,
 	})
 }
 
@@ -274,17 +258,15 @@ func (c *wsConn) joinSession(sessionID string) {
 	wsHub.Unlock()
 
 	c.sendJSON(map[string]interface{}{
-		"type":                  "session:joined",
-		"sessionId":             c.sessionID,
-		"leader":                c.leader,
-		"canControl":            c.canControl,
-		"control":               ctrl,
-		"audienceParticipation": getAudienceParticipation(c.sessionID),
+		"type":      "session:joined",
+		"sessionId": c.sessionID,
+		"leader":    c.leader,
+		"control":   ctrl,
 	})
 }
 
 func (c *wsConn) claimLeader() {
-	if c.role != "client" || c.sessionID == "" || !c.canControl {
+	if c.role != "client" || c.sessionID == "" {
 		return
 	}
 	room := getRoom(c.sessionID)
@@ -298,40 +280,8 @@ func (c *wsConn) claimLeader() {
 	room.broadcast(c.sessionID, map[string]interface{}{"type": "vj:leader", "socketId": c.conn.RemoteAddr().String()}, nil)
 }
 
-func (c *wsConn) handleVjConfig(raw json.RawMessage) {
-	if c.sessionID == "" || !c.canControl {
-		return
-	}
-	var cfg struct {
-		AudienceParticipation *bool `json:"audienceParticipation"`
-	}
-	if err := json.Unmarshal(raw, &cfg); err != nil {
-		return
-	}
-	if cfg.AudienceParticipation == nil {
-		return
-	}
-	setAudienceParticipation(c.sessionID, *cfg.AudienceParticipation)
-	room := getRoom(c.sessionID)
-	room.broadcast(c.sessionID, map[string]interface{}{
-		"type":                  "vj:config",
-		"sessionId":             c.sessionID,
-		"audienceParticipation": *cfg.AudienceParticipation,
-	}, c)
-}
-
-func broadcastVjAudienceMouse(sessionID string, mouseX, mouseY float64) {
-	room := getRoom(sessionID)
-	room.broadcast(sessionID, map[string]interface{}{
-		"type":      "vj:audience-mouse",
-		"sessionId": sessionID,
-		"mouseX":    mouseX,
-		"mouseY":    mouseY,
-	}, nil)
-}
-
 func (c *wsConn) handleVjControl(raw json.RawMessage) {
-	if c.sessionID == "" || !c.canControl {
+	if c.sessionID == "" {
 		return
 	}
 	var patch vjControlPatch
@@ -403,7 +353,7 @@ func mergeVjControlPatch(dst *vjControlState, src *vjControlPatch) {
 }
 
 func (c *wsConn) relayVjOutput(msgType string, data []byte) {
-	if c.sessionID == "" || !c.canControl {
+	if c.sessionID == "" {
 		return
 	}
 	room := getRoom(c.sessionID)

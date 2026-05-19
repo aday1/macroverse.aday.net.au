@@ -251,9 +251,9 @@ Mobile / responsive UI
 - Force-mobile CSS class mirrors the @media mobile rules on any device/viewport.
 - Gallery grid drops to 2 columns; sidebar hidden on mobile.
 
-Fly.io demo instance
+Read-only demo mode
 - READONLY=true env var blocks save, delete, rename, factory-reset API endpoints
-  with a 403 JSON response — Fly.io demo can VJ but cannot mutate the library.
+  with a 403 JSON response — public demo can VJ but cannot mutate the library.
 - DEMO_BANNER=true shows a persistent orange banner: "Read-only demo instance".
 - /api/config endpoint returns { readonly, demo } for frontend feature-gating.
 
