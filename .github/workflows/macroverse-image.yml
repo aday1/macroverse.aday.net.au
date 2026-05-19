@@ -2,14 +2,14 @@ name: macroverse-image
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
     tags: [ "v*" ]
   workflow_dispatch:
     inputs:
       track:
-        description: "Deploy track (test|live|aday)"
+        description: "Deploy track (dev|live|aday)"
         required: true
-        default: "test"
+        default: "dev"
 
 permissions:
   contents: read
@@ -28,8 +28,10 @@ jobs:
             TRACK="${{ github.event.inputs.track }}"
           elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
             TRACK="live"
+          elif [ "${GITHUB_REF}" = "refs/heads/dev" ]; then
+            TRACK="dev"
           else
-            TRACK="test"
+            TRACK="live"
           fi
           echo "track=$TRACK" >> "$GITHUB_OUTPUT"
 
@@ -42,6 +44,39 @@ jobs:
         if: steps.track.outputs.track == 'aday'
         run: |
           test -d shaders/starter-pack
+
+      - name: Write deploy metadata
+        run: |
+          SHORT_SHA="$(echo "$GITHUB_SHA" | cut -c1-12)"
+          BUILD_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          mkdir -p frontend/public
+          cat > frontend/public/deploy-meta.json <<EOF
+          {
+            "site": "macroverse.aday.net.au",
+            "branch": "${GITHUB_REF_NAME}",
+            "track": "${{ steps.track.outputs.track }}",
+            "version": "${SHORT_SHA}",
+            "build_date": "${BUILD_DATE}",
+            "last_git_sha_short": "${SHORT_SHA}",
+            "last_git_sha": "${GITHUB_SHA}",
+            "last_git_url": "https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}",
+            "last_build_at": "${BUILD_DATE}",
+            "last_deployed_at": "${BUILD_DATE}",
+            "changelog_url": "https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}",
+            "commits_history_url": "https://github.com/${GITHUB_REPOSITORY}/commits/${GITHUB_REF_NAME}",
+            "changelog_md_url": "https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/changelog.md",
+            "releases_url": "https://github.com/${GITHUB_REPOSITORY}/releases",
+            "workflow_run_url": "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}",
+            "deploy_note": "Image build CI time matches git head; VPS pull may lag seconds.",
+            "deploy_switcher": {
+              "live_url": "https://macroverse.aday.net.au/",
+              "dev_url": "https://dev.macroverse.aday.net.au/",
+              "aday_url": "https://macroverse-aday.aday.net.au/"
+            },
+            "run_id": "${GITHUB_RUN_ID}",
+            "run_number": "${GITHUB_RUN_NUMBER}"
+          }
+          EOF
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

@@ -1227,6 +1227,11 @@ export function initListFilters(): void {
       window.addEventListener('thumbnails-loading-start', () => { stopThumbsBtn.classList.add('loading'); updateThumbBtns(); });
       window.addEventListener('thumbnails-loading-done', () => { stopThumbsBtn.classList.remove('loading'); updateThumbBtns(); });
       window.addEventListener('thumbnails-progress', updateThumbCounter);
+      // updateThumbBtns is block-scoped; bind the thumbnail-captured
+      // listener here (inside the if(toolbar) block) so the closure
+      // can resolve it at runtime. Previously this was below and threw
+      // ReferenceError: updateThumbBtns is not defined.
+      window.addEventListener('thumbnail-captured', () => { buildList(); updateThumbBtns(); });
     }
     updateThumbBtns();
   }
@@ -1313,7 +1318,6 @@ export function initListFilters(): void {
   document.querySelectorAll('.list-view-btn').forEach((b) => {
     (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.view === mode);
   });
-  window.addEventListener('thumbnail-captured', () => { buildList(); updateThumbBtns(); });
 }
 
 function escapeHtml(s: string): string {

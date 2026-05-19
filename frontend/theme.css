@@ -1,15 +1,17 @@
 :root {
-  /* ─── Wired Atelier dark palette ─────────────────────────────────────────── */
-  --amiga-bg:          #06040f;   /* deep signal void */
-  --amiga-surface:     #0d0820;   /* dark indigo surface */
-  --amiga-panel:       #110c28;   /* slightly lifted panel */
-  --amiga-border-light:#2a1a66;   /* electric indigo edge */
-  --amiga-border-dark: #030208;   /* near void */
-  --amiga-text:        #ccc0e8;   /* lavender white */
-  --amiga-text-dim:    #55448a;   /* dim purple */
-  --amiga-accent:      #4488cc;   /* electric blue */
-  --amiga-copper:      #ee8833;   /* copper — unchanged */
-  --glitch-blue:       rgba(68, 136, 204, 0.35);
+  /* ─── Wired Atelier palette - lifted from "void black" to "twilight    */
+  /*   indigo" so the UI is readable without losing the synthwave/Amiga  */
+  /*   atmosphere. Old values kept in comments for reference.            */
+  --amiga-bg:          #1a1530;   /* twilight indigo (was #06040f) */
+  --amiga-surface:     #251c44;   /* lifted indigo  (was #0d0820)  */
+  --amiga-panel:       #2d2350;   /* clear panel    (was #110c28)  */
+  --amiga-border-light:#5a48a0;   /* electric edge  (was #2a1a66)  */
+  --amiga-border-dark: #110a25;   /* visible bevel  (was #030208)  */
+  --amiga-text:        #ece4f8;   /* near-white lavender (was #ccc0e8) */
+  --amiga-text-dim:    #9c8cc8;   /* readable dim   (was #55448a)  */
+  --amiga-accent:      #6aa6e6;   /* brighter blue  (was #4488cc)  */
+  --amiga-copper:      #ffa044;   /* brighter copper(was #ee8833)  */
+  --glitch-blue:       rgba(106, 166, 230, 0.35);
 
   /* derived aliases used in layout/components */
   --crt-fg:   var(--amiga-text);
@@ -17,18 +19,18 @@
   --bevel-dark:  var(--amiga-border-dark);
   --bevel-light: var(--amiga-border-light);
 
-  /* ─── Code editor colours ──────────────────────────────────────────────── */
-  --theme-editor-bg:         #040210;   /* void black */
-  --theme-editor-fg:         #c8bce8;   /* lavender */
-  --theme-editor-keyword:    #cc44ff;   /* electric violet */
-  --theme-editor-string:     #44ffaa;   /* DMT teal */
-  --theme-editor-comment:    #445588;   /* dim indigo */
-  --theme-editor-number:     #ff8844;   /* copper */
-  --theme-editor-punctuation:#9988cc;   /* mid purple */
-  --theme-editor-operator:   #cc44ff;   /* violet */
-  --theme-editor-function:   #44ddff;   /* electric cyan */
-  --theme-editor-caret:      #c8bce8;
-  --theme-editor-selection:  rgba(136, 0, 255, 0.22);
+  /* ─── Code editor colours - lifted in tandem with the app palette */
+  --theme-editor-bg:         #14102a;   /* was #040210 */
+  --theme-editor-fg:         #e0d6f2;   /* was #c8bce8 */
+  --theme-editor-keyword:    #d870ff;   /* was #cc44ff */
+  --theme-editor-string:     #5cffba;   /* was #44ffaa */
+  --theme-editor-comment:    #7a8cb8;   /* was #445588 - now legible */
+  --theme-editor-number:     #ff9c5c;   /* was #ff8844 */
+  --theme-editor-punctuation:#b0a0d8;   /* was #9988cc */
+  --theme-editor-operator:   #d870ff;   /* was #cc44ff */
+  --theme-editor-function:   #5cdfff;   /* was #44ddff */
+  --theme-editor-caret:      #e0d6f2;
+  --theme-editor-selection:  rgba(136, 0, 255, 0.30);
   --theme-editor-glow:       rgba(136, 0, 255, 0.07);
 }
 
@@ -87,7 +89,7 @@ body::before {
   position: fixed; inset: 0; z-index: 99998; pointer-events: none;
   background: repeating-linear-gradient(0deg,
     transparent 0px, transparent 2px,
-    rgba(0,0,12,0.06) 2px, rgba(0,0,12,0.06) 4px);
+    rgba(0,0,12,0.04) 2px, rgba(0,0,12,0.04) 4px);
 }
 
 /* ─── Subtle purple ambient bloom at the top ─────────────────────────────── */
@@ -96,7 +98,7 @@ body::after {
   position: fixed; top: 0; left: 0; right: 0; height: 35vh;
   z-index: 99997; pointer-events: none;
   background: radial-gradient(ellipse 100% 100% at 50% -20%,
-    rgba(100, 40, 200, 0.07) 0%, transparent 70%);
+    rgba(120, 60, 220, 0.10) 0%, transparent 70%);
 }
 
 /* ─── Global glow on active interactive elements ─────────────────────────── */

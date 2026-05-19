@@ -46,7 +46,7 @@
 .right-panel.active { display: flex; }
 .view-tabs { display: flex; gap: 2px; padding: 4px 8px; background: repeating-linear-gradient(90deg, var(--amiga-surface) 0px, var(--amiga-surface) 2px, var(--amiga-panel) 2px, var(--amiga-panel) 4px); border-bottom: 2px solid var(--bevel-dark); border-top: 1px solid var(--bevel-light); flex-shrink: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
 .view-tabs::-webkit-scrollbar { display: none; }
-.view-tab { padding: 4px 10px; font-size: 11px; background: var(--amiga-panel); border: 1px solid var(--bevel-dark); border-top-color: var(--bevel-light); border-left-color: var(--bevel-light); color: var(--crt-dim); cursor: pointer; flex-shrink: 0; white-space: nowrap; }
+.view-tab { padding: 8px 16px; font-size: 13px; min-height: 36px; background: var(--amiga-panel); border: 1px solid var(--bevel-dark); border-top-color: var(--bevel-light); border-left-color: var(--bevel-light); color: var(--crt-dim); cursor: pointer; flex-shrink: 0; white-space: nowrap; }
 .view-tab:hover { color: var(--crt-fg); background: var(--amiga-surface); }
 .view-tab.active { background: var(--amiga-accent); color: var(--amiga-bg); border-color: var(--amiga-accent); }
 .view-tab-orient { padding: 2px 6px; font-size: 10px; background: var(--amiga-panel); color: var(--crt-fg); border: 1px solid var(--bevel-dark); margin-left: 0; font-family: inherit; cursor: pointer; }

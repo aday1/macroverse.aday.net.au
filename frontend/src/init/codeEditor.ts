@@ -1,5 +1,5 @@
 import { el, status, clampContextMenuToViewport } from '../dom.js';
-import { currentSource, currentPath, currentEntry, setCurrentSource, setLastSaved, appSettings, getPendingAgentReload, setPendingAgentReload, getCursorApiKey } from '../state.js';
+import { currentSource, currentPath, currentEntry, setCurrentSource, setLastSaved, appSettings, getPendingAgentReload, setPendingAgentReload, getCursorApiKey, getGithubToken } from '../state.js';
 import { postShaderSave, postOpenInCursor, postOpenAgent, postOpenInExplorer, postOpenInNotepad, postCursorSuggestParamsStream, postCursorRefactorParams, postCursorAssist, postCursorAssistVisual, fetchShader, postGitRollback, fetchAgentStatus } from '../api.js';
 import { setCursorApiThinking, startCooldownCountdown } from './bootstrap.js';
 import * as render from '../render.js';
@@ -9,6 +9,7 @@ import { EditorState, StateField, StateEffect, RangeSetBuilder } from '@codemirr
 import { basicSetup } from 'codemirror';
 import { cpp } from '@codemirror/lang-cpp';
 import { undo } from '@codemirror/commands';
+import { isCodeViewEnabled, toggleCodeView } from './codeViewEffect.js';
 
 const DEBOUNCE_MS = 200;
 
@@ -802,6 +803,15 @@ export function initCodeEditor(): void {
     document.body.appendChild(ctxMenu);
     clampContextMenuToViewport(ctxMenu);
 
+    const codeViewOn = isCodeViewEnabled();
+    addCtxItem(ctxMenu, codeViewOn ? 'Disable code view' : 'Enable code view', () => {
+      const on = toggleCodeView();
+      status(on ? 'Code view on' : 'Code view off');
+    });
+    const codeViewSep = document.createElement('div');
+    codeViewSep.style.cssText = 'border-top:1px solid var(--bevel-dark);margin:4px 0;';
+    ctxMenu.appendChild(codeViewSep);
+
     if (numAt) {
       addCtxItem(ctxMenu, 'Expose number as slider (' + numAt.value + ')', () => {
         const { newSrc, paramName } = render.exposeLiteralInSource(text, numAt.value, numAt.start, numAt.end);
@@ -1108,7 +1118,11 @@ export function initCodeEditor(): void {
           (vibeGithubBtn as HTMLButtonElement).disabled = true;
           const { postGithubAiFix } = await import('../api.js');
           const prompt = 'Apply this visual change to the GLSL/ISF shader. Describe exactly what to change: ' + trimmed + '. Return only the complete shader source, no explanation.';
-          const { content: newContent } = await postGithubAiFix({ content, prompt });
+          const { content: newContent } = await postGithubAiFix({
+            content,
+            prompt,
+            token: getGithubToken() || undefined
+          });
           if (newContent) {
             setCurrentSource(newContent);
             setCode(newContent);

@@ -1,6 +1,6 @@
 import { status, hideSplash, el } from '../dom.js';
 import { fetchSettings, fetchVersion, fetchAgentStatus, fetchShader, fetchUpdateCheck, postUpdateApply } from '../api.js';
-import { setAppSettings, getPendingCursorConfirm, setPendingCursorConfirm, setPendingAgentReload, lastCompileError, lastCompileErrorPath, setLastCompileError, clearLastCompileError, currentEntry, currentSource, setCurrentSource, appSettings, setCurrentEntry, entries, getCursorApiKey } from '../state.js';
+import { setAppSettings, getPendingCursorConfirm, setPendingCursorConfirm, setPendingAgentReload, lastCompileError, lastCompileErrorPath, setLastCompileError, clearLastCompileError, currentEntry, currentSource, setCurrentSource, appSettings, setCurrentEntry, entries, getCursorApiKey, getGithubToken, setLocalCursorApiKey, setLocalGithubToken, getLocalCursorKeyStored, getLocalGithubTokenStored } from '../state.js';
 import { applyTheme } from '../themeUtils.js';
 import { loadSequence } from './loadSequence.js';
 import * as render from '../render.js';
@@ -13,6 +13,7 @@ import { initCommandPalette } from './commandPalette.js';
 import { registerCoreCommands } from './coreCommands.js';
 import { initDockSystem } from './dockSystem.js';
 import { initBottomTabBar } from './bottomTabBar.js';
+import { CODE_VIEW_STORAGE_KEY, applyCodeViewState, toggleCodeView } from './codeViewEffect.js';
 
 let cooldownTimerId: ReturnType<typeof setInterval> | null = null;
 
@@ -126,8 +127,22 @@ export async function run(): Promise<void> {
       if (tagEl && v) tagEl.textContent = (v.gitRev || v.version || 'dev') + (v.gitDirty ? ' [dirty]' : '');
       const verEl = el('statusVersion');
       if (verEl && v) verEl.textContent = 'v' + (v.gitRev || v.version || 'dev') + (v.gitDirty ? '+dirty' : '');
+      // App-bar "Last build" badge.
+      const tEl = el('appBarBuildTime');
+      const sEl = el('appBarBuildSha');
+      const bEl = el('appBarBuild');
+      if (tEl) {
+        const raw = (v && v.buildDate) ? v.buildDate : '';
+        tEl.textContent = raw || (new Date()).toISOString().slice(0, 16).replace('T', ' ');
+        if (bEl) bEl.title = 'Last build ' + (raw || 'unknown') +
+          (v?.gitRev ? '\nCommit ' + v.gitRev + (v.gitDirty ? ' (dirty)' : '') : '');
+      }
+      if (sEl && v && v.gitRev) sEl.textContent = v.gitRev.slice(0, 7) + (v.gitDirty ? '+' : '');
     })
-    .catch(() => {});
+    .catch(() => {
+      const tEl = el('appBarBuildTime');
+      if (tEl) tEl.textContent = (new Date()).toISOString().slice(0, 16).replace('T', ' ');
+    });
 
   const canvas = el('canvas');
   if (!canvas) {
@@ -495,7 +510,48 @@ export function startAgentReloadPoll(entry: typeof currentEntry, maxMs = 120000)
   setTimeout(poll, 3000);
 }
 
+function initCompileOverlayApiKeys(): void {
+  const cur = document.getElementById('previewOverlayCursorKey') as HTMLInputElement | null;
+  const gh = document.getElementById('previewOverlayGithubToken') as HTMLInputElement | null;
+  const hint = document.getElementById('previewErrorApiKeyHint');
+  if (cur) {
+    cur.value = getLocalCursorKeyStored();
+    const saveC = () => {
+      setLocalCursorApiKey(cur.value);
+      if (hint) {
+        const parts: string[] = [];
+        if (getLocalCursorKeyStored()) parts.push('Cursor key stored in this browser');
+        if (getLocalGithubTokenStored()) parts.push('GitHub token stored in this browser');
+        hint.textContent = parts.length ? parts.join('. ') + '.' : '';
+      }
+    };
+    cur.addEventListener('blur', saveC);
+    cur.addEventListener('change', saveC);
+  }
+  if (gh) {
+    gh.value = getLocalGithubTokenStored();
+    const saveG = () => {
+      setLocalGithubToken(gh.value);
+      if (hint) {
+        const parts: string[] = [];
+        if (getLocalCursorKeyStored()) parts.push('Cursor key stored in this browser');
+        if (getLocalGithubTokenStored()) parts.push('GitHub token stored in this browser');
+        hint.textContent = parts.length ? parts.join('. ') + '.' : '';
+      }
+    };
+    gh.addEventListener('blur', saveG);
+    gh.addEventListener('change', saveG);
+  }
+  if (hint) {
+    const parts: string[] = [];
+    if (getLocalCursorKeyStored()) parts.push('Cursor key stored in this browser');
+    if (getLocalGithubTokenStored()) parts.push('GitHub token stored in this browser');
+    hint.textContent = parts.length ? parts.join('. ') + '.' : 'Values here are saved only in this browser. Settings app still has server-backed keys if you use them.';
+  }
+}
+
 function initFixButton(): void {
+  initCompileOverlayApiKeys();
   const btn = el('fixBtn');
   const previewFixBtn = el('previewFixBtn');
   const previewDismissBtn = el('previewDismissBtn');
@@ -537,6 +593,10 @@ function initFixButton(): void {
   const previewFixGithubBtn = document.getElementById('previewFixGithubBtn');
   if (previewFixGithubBtn) {
     previewFixGithubBtn.addEventListener('click', async () => {
+      const oc = document.getElementById('previewOverlayCursorKey') as HTMLInputElement | null;
+      const og = document.getElementById('previewOverlayGithubToken') as HTMLInputElement | null;
+      if (oc) setLocalCursorApiKey(oc.value);
+      if (og) setLocalGithubToken(og.value);
       const path = (lastCompileErrorPath || '').replace(/\\/g, '|');
       const err = lastCompileError || '';
       const content = currentSource || '';
@@ -551,7 +611,8 @@ function initFixButton(): void {
         status('Fix with GitHub...');
         (previewFixGithubBtn as HTMLButtonElement).disabled = true;
         const { postGithubAiFix } = await import('../api.js');
-        const { content: newContent } = await postGithubAiFix({ content, prompt, path });
+        const tok = getGithubToken();
+        const { content: newContent } = await postGithubAiFix({ content, prompt, path, token: tok || undefined });
         if (!newContent) {
           status('GitHub returned no content', true);
           return;
@@ -568,7 +629,7 @@ function initFixButton(): void {
         const msg = e instanceof Error ? e.message : String(e);
         status('GitHub fix: ' + msg, true);
         if (msg.includes('401') || msg.includes('token')) {
-          status('Add GitHub token in Settings (GitHub section)', true);
+          status('Add a GitHub token in this overlay or Settings (GitHub section)', true);
         }
       } finally {
         (previewFixGithubBtn as HTMLButtonElement).disabled = false;
@@ -600,6 +661,10 @@ function initFixButton(): void {
   (btn as HTMLButtonElement).onclick = () => {
     const b = btn as HTMLButtonElement;
     if (b.disabled) return;
+    const oc = document.getElementById('previewOverlayCursorKey') as HTMLInputElement | null;
+    const og = document.getElementById('previewOverlayGithubToken') as HTMLInputElement | null;
+    if (oc) setLocalCursorApiKey(oc.value);
+    if (og) setLocalGithubToken(og.value);
     b.classList.remove('fix-escalate');
     clearFixingState();
     const agentOut = document.getElementById('agentOutput');
@@ -822,29 +887,38 @@ function initFixButton(): void {
 
 const SCANLINE_STORAGE_KEY = 'macroverse-scanline';
 const VIGNETTE_STORAGE_KEY = 'macroverse-vignette';
-const CRT_STORAGE_KEY = 'macroverse-crt-code';
+
+/** Toggle a display effect by storage key and reapply state.
+ *  Exposed on globalThis so the command palette / commands can fire
+ *  these without relying on a checkbox being present in the DOM.
+ *  After Phase 7, the checkboxes live in the Settings panel which is
+ *  only built on first open, so reaching for getElementById would
+ *  be a no-op until the user opens Settings. */
+function toggleEffectByKey(key: string): void {
+  const cur = localStorage.getItem(key) === 'true';
+  localStorage.setItem(key, String(!cur));
+  applyDisplayEffectState();
+}
+(globalThis as unknown as Record<string, unknown>).toggleDisplayEffect = (name: 'scanline' | 'vignette' | 'crt') => {
+  if (name === 'scanline') toggleEffectByKey(SCANLINE_STORAGE_KEY);
+  else if (name === 'vignette') toggleEffectByKey(VIGNETTE_STORAGE_KEY);
+  else if (name === 'crt') toggleCodeView();
+};
 
 /** Apply persisted display-effect state to the DOM. Idempotent. */
 function applyDisplayEffectState(): void {
   const area = document.querySelector('.preview-area');
-  const wrap = document.getElementById('codeWrap');
   if (area) {
     area.classList.toggle('scanline-on',
       localStorage.getItem(SCANLINE_STORAGE_KEY) === 'true');
     area.classList.toggle('vignette-on',
       localStorage.getItem(VIGNETTE_STORAGE_KEY) === 'true');
   }
-  if (wrap) {
-    wrap.classList.toggle('crt-on',
-      localStorage.getItem(CRT_STORAGE_KEY) === 'true');
-  }
-  // Sync any checkboxes (status bar or Settings panel) to current state.
+  applyCodeViewState();
   const sn = document.getElementById('scanlineToggle') as HTMLInputElement | null;
   const vg = document.getElementById('vignetteToggle') as HTMLInputElement | null;
-  const cr = document.getElementById('crtCodeToggle') as HTMLInputElement | null;
   if (sn) sn.checked = localStorage.getItem(SCANLINE_STORAGE_KEY) === 'true';
   if (vg) vg.checked = localStorage.getItem(VIGNETTE_STORAGE_KEY) === 'true';
-  if (cr) cr.checked = localStorage.getItem(CRT_STORAGE_KEY) === 'true';
 }
 
 /** Wire all three display-effect toggles using event delegation so it
@@ -860,7 +934,7 @@ function initScanlineToggle(): void {
     } else if (t.id === 'vignetteToggle') {
       localStorage.setItem(VIGNETTE_STORAGE_KEY, String(t.checked));
     } else if (t.id === 'crtCodeToggle') {
-      localStorage.setItem(CRT_STORAGE_KEY, String(t.checked));
+      localStorage.setItem(CODE_VIEW_STORAGE_KEY, String(t.checked));
     } else {
       return;
     }

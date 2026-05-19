@@ -9,11 +9,9 @@
 
 import { registerCommand } from './commandRegistry.js';
 
-function clickById(id: string): boolean {
+function clickById(id: string): void {
   const el = document.getElementById(id);
-  if (!el) return false;
-  (el as HTMLElement).click();
-  return true;
+  if (el) (el as HTMLElement).click();
 }
 
 function clickViewTab(view: string): void {
@@ -27,6 +25,18 @@ function toggleClass(id: string): void {
     cb.checked = !cb.checked;
     cb.dispatchEvent(new Event('change', { bubbles: true }));
   }
+}
+
+/** Toggle a display effect via the global helper exposed by
+ *  bootstrap.ts. Falls back to clicking a checkbox if the global
+ *  isn't installed yet (defensive). */
+function toggleEffect(name: 'scanline' | 'vignette' | 'crt', fallbackId: string): void {
+  const fn = (globalThis as unknown as { toggleDisplayEffect?: (n: string) => void }).toggleDisplayEffect;
+  if (typeof fn === 'function') {
+    fn(name);
+    return;
+  }
+  toggleClass(fallbackId);
 }
 
 export function registerCoreCommands(): void {
@@ -248,7 +258,7 @@ export function registerCoreCommands(): void {
     label: 'Toggle scanlines',
     description: 'Horizontal scanline overlay on preview',
     category: 'Display effects',
-    run: () => toggleClass('scanlineToggle'),
+    run: () => toggleEffect('scanline', 'scanlineToggle'),
     keywords: ['crt', 'retro']
   });
   registerCommand({
@@ -256,14 +266,14 @@ export function registerCoreCommands(): void {
     label: 'Toggle vignette',
     description: 'Darkened corners on preview',
     category: 'Display effects',
-    run: () => toggleClass('vignetteToggle')
+    run: () => toggleEffect('vignette', 'vignetteToggle')
   });
   registerCommand({
     id: 'effects.crt-code',
-    label: 'Toggle CRT code effect',
-    description: 'Phosphor glow on the code editor',
+    label: 'Toggle code view',
+    description: 'Green terminal CRT look on the code editor',
     category: 'Display effects',
-    run: () => toggleClass('crtCodeToggle')
+    run: () => toggleEffect('crt', 'crtCodeToggle')
   });
   registerCommand({
     id: 'effects.fullscreen',

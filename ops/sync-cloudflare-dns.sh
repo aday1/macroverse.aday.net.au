@@ -58,14 +58,14 @@ fi
 
 if [ "$SYNC_MODE" = "dev-only" ]; then
   REQUIRED_NAMES=(
-    macroverse-dev.aday.net.au
-    artbastard-dev.aday.net.au
+    dev.macroverse.aday.net.au
+    dev.artbastard.aday.net.au
   )
   OPTIONAL_NAMES=()
 else
   REQUIRED_NAMES=(
-    macroverse-dev.aday.net.au
-    artbastard-dev.aday.net.au
+    dev.macroverse.aday.net.au
+    dev.artbastard.aday.net.au
   )
   OPTIONAL_NAMES=(
     macroverse.aday.net.au

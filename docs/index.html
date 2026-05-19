@@ -1,27 +1,3 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>macroverse.aday.net.au</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 2rem; background: #0d1117; color: #e6edf3; }
-    a { color: #7db4ff; }
-    code { background: #1f2937; padding: 2px 6px; border-radius: 4px; }
-  </style>
-</head>
-<body>
-  <h1>Macroverse GitHub Showcase Page</h1>
-  <p>This is the project showcase/overview page, not the primary live runtime.</p>
-  <ul>
-    <li>Live: <a href="https://macroverse.aday.net.au">macroverse.aday.net.au</a></li>
-    <li>Test: <a href="https://macroverse-test.aday.net.au">macroverse-test.aday.net.au</a></li>
-    <li>Aday private: <code>macroverse-aday.aday.net.au</code> (basic auth required)</li>
-    <li>ArtBastard live: <a href="https://artbastard.aday.net.au">artbastard.aday.net.au</a></li>
-    <li>ArtBastard test: <a href="https://artbastard-test.aday.net.au">artbastard-test.aday.net.au</a></li>
-  </ul>
-</body>
-</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -340,6 +316,72 @@
     #glsl-lab button {
       font-family: inherit; letter-spacing: .08em; cursor: pointer;
     }
+    /* ─── Live deployments mini-block ─────────────────────────────────────── */
+    .deployments {
+      margin: 1.4rem auto 0; max-width: 640px;
+      background: rgba(13,8,32,0.65); backdrop-filter: blur(6px);
+      border: 1px solid rgba(68,136,204,0.18);
+      padding: 0.8rem 1rem; font-size: 0.78rem;
+    }
+    .deployments .dep-row { display: grid; grid-template-columns: 110px 1fr; gap: 0.5rem 1rem; align-items: baseline; }
+    .deployments .dep-row > .dep-label { color: var(--copper); letter-spacing: .12em; text-transform: uppercase; font-size: 0.7rem; }
+    .deployments .dep-row > .dep-val { color: var(--text); }
+    .deployments .dep-row > .dep-val a { color: var(--teal); text-decoration: none; }
+    .deployments .dep-row > .dep-val a:hover { color: #00ffcc; text-shadow: 0 0 8px var(--glow-t); }
+    .deployments .dep-note { color: var(--dim); font-size: 0.7rem; margin-top: 0.5rem; letter-spacing: .04em; }
+
+    /* ─── Demo loops grid ─────────────────────────────────────────────────── */
+    .demos {
+      display: grid; gap: 1rem; margin-top: 1.2rem;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    }
+    .demo {
+      background: rgba(13,8,32,0.7); border: 1px solid rgba(68,136,204,0.18);
+      padding: 0; overflow: hidden; display: flex; flex-direction: column;
+    }
+    .demo video {
+      width: 100%; height: auto; display: block;
+      background: var(--void);
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    .demo figcaption {
+      padding: 0.6rem 0.9rem; font-size: 0.78rem; color: var(--text);
+      border-top: 1px solid rgba(68,136,204,0.10);
+      letter-spacing: .03em;
+    }
+    .demo .demo-tag {
+      display: inline-block; margin-right: 0.5rem;
+      color: var(--copper); letter-spacing: .12em; text-transform: uppercase;
+      font-size: 0.65rem;
+    }
+    .demos-caveat {
+      margin-top: 1rem; font-size: 0.74rem; color: var(--dim);
+      letter-spacing: .04em; line-height: 1.6;
+    }
+    .demos-caveat code { background: rgba(13,8,32,0.7); padding: 1px 5px; }
+
+    /* ─── Help section helpers ────────────────────────────────────────────── */
+    h3.help-h3 {
+      color: var(--teal); margin: 1.1rem 0 .6rem; font-size: .95rem;
+      text-transform: uppercase; letter-spacing: .05em;
+      font-family: 'Orbitron', sans-serif; font-weight: 700;
+    }
+    table.help-table {
+      width: 100%; border-collapse: collapse;
+      font-size: .85rem; color: var(--text);
+    }
+    table.help-table tr { border-bottom: 1px solid rgba(68,136,204,0.10); }
+    table.help-table tr:last-child { border-bottom: none; }
+    table.help-table td { padding: .42rem .6rem; vertical-align: top; }
+    table.help-table td.k { color: var(--violet); white-space: nowrap; min-width: 160px; }
+    table.help-table td kbd {
+      display: inline-block; padding: 1px 6px; border-radius: 3px;
+      background: rgba(68,136,204,0.10); border: 1px solid rgba(68,136,204,0.25);
+      color: var(--blue); font-family: 'Share Tech Mono', monospace;
+      font-size: 0.78rem;
+    }
+
     /* ─── Footer ───────────────────────────────────────────────────────────── */
     footer {
       text-align: center; padding: 2.5rem 0; font-size: 0.78rem; color: var(--dim);
@@ -365,11 +407,29 @@
       <p class="lain-quote">your whole library, live — search it, tag it, perform it</p>
       <div class="glow-line"></div>
       <div class="cta">
-        <a class="btn btn-live" href="https://macroverse42.fly.dev/">Try it live</a>
+        <a class="btn btn-live" href="https://macroverse.aday.net.au/">Try it live</a>
         <a class="btn btn-primary" href="https://github.com/aday1/Macroverse/releases">Download</a>
         <a class="btn btn-secondary" href="https://github.com/aday1/Macroverse">Source on GitHub</a>
+        <a class="btn btn-secondary" href="https://macroverse.aday.net.au/about.html">About MacroVerse</a>
+        <a class="btn btn-secondary" href="#origin">Origin story</a>
+        <a class="btn btn-secondary" href="#demos">Demo loops</a>
         <a class="btn btn-secondary" href="#help">Help &amp; Shortcuts</a>
       </div>
+
+      <div class="deployments" aria-label="Live deployments">
+        <div class="dep-row">
+          <span class="dep-label">Live</span>
+          <span class="dep-val"><a href="https://macroverse.aday.net.au">macroverse.aday.net.au</a></span>
+          <span class="dep-label">Test</span>
+          <span class="dep-val"><a href="https://dev.macroverse.aday.net.au">dev.macroverse.aday.net.au</a></span>
+          <span class="dep-label">Aday</span>
+          <span class="dep-val"><code>macroverse-aday.aday.net.au</code> &mdash; basic auth</span>
+          <span class="dep-label">ArtBastard</span>
+          <span class="dep-val"><a href="https://artbastard.aday.net.au">artbastard.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://artbastard-test.aday.net.au">artbastard-test.aday.net.au</a></span>
+        </div>
+        <p class="dep-note">// this is the GitHub showcase page &mdash; the live runtimes above serve the actual app</p>
+      </div>
+
       <div class="shader-controls">
         <div class="ctrl-row">
           <label>
@@ -397,18 +457,90 @@
       </div>
     </header>
 
+    <section id="origin">
+      <h2>Origin story</h2>
+      <p>
+        MacroVerse began at
+        <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Melbourne Fringe</a>
+        as a live sonic and visual interpretation of the evolution of the universe &mdash; from energy stasis to heat-death dissipation.
+        Reductionist (Nick Wilson) performed on battery-powered micro-instruments; Aday (Adrian Richardson) ran live video projection improv
+        that bent time and energy flow. Both are longtime Clan Analogue artists; the show ran at Abbotsford Convent&rsquo;s experimental art program
+        (free exhibition 12&ndash;4pm daily, ticketed hour-long performance sessions from 7pm).
+      </p>
+      <p class="dim">
+        <a href="https://macroverse.aday.net.au/about.html">Full about page on the live app</a>
+        &nbsp;&middot;&nbsp;
+        <a href="https://blog.aday.net.au">Timeline on blog.aday.net.au</a>
+      </p>
+    </section>
+
     <section>
       <h2>Two ways in</h2>
       <div class="use-cases">
         <div class="use-case uc-vj">
           <h3>Standalone VJ Tool</h3>
-          <p>Browse and perform with your full GLSL/ISF library. A/B crossfader, mix modes, MIDI/OSC mapping. MJPEG stream to OBS or virtual webcam. Tag, search, revert. All signals, one window.</p>
+          <p>Browse and perform with your full GLSL/ISF library. A/B crossfader, mix modes, MIDI/OSC mapping, BLE/USB Roli Lightpad blocks, MJPEG stream to OBS or virtual webcam. Tag, search, revert. All signals, one window.</p>
         </div>
         <div class="use-case uc-wire">
           <h3>Resolume Wire Pipeline</h3>
-          <p>Load any GLSL file, check Wire compatibility, expose magic-number literals as ISF sliders, run the shader fix chain (regex → Ollama → AI), and push the finished macro straight into Resolume Wire with working parameters.</p>
+          <p>Load any GLSL file, check Wire compatibility, expose magic-number literals as ISF sliders, run the shader fix chain (regex &rarr; Ollama &rarr; AI), and push the finished macro straight into Resolume Wire with working parameters.</p>
         </div>
       </div>
+    </section>
+
+    <section id="demos">
+      <h2>Live demo loops</h2>
+      <p class="dim">Six short loops covering the core feature areas. Procedural placeholders rendered with ffmpeg &mdash; the live app draws real WebGL shaders.</p>
+
+      <div class="demos">
+        <figure class="demo">
+          <video src="videos/hero-loop.mp4" poster="videos/hero-loop-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="Domain warp hero loop"></video>
+          <figcaption><span class="demo-tag">Hero</span>Domain-warp FBM loop &mdash; the ambient field that backs every panel.</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <video src="videos/vj-crossfade.mp4" poster="videos/vj-crossfade-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="VJ deck A/B crossfade"></video>
+          <figcaption><span class="demo-tag">VJ deck</span>A/B crossfade between two live decks. Mix modes: crossfade, alpha, add, multiply.</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <video src="videos/pipeline-flow.mp4" poster="videos/pipeline-flow-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="GLSL to ISF to Wire pipeline"></video>
+          <figcaption><span class="demo-tag">Pipeline</span>GLSL &rarr; ISF JSON &rarr; <code>.wire</code> &rarr; Resolume. One binary, no installer.</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <video src="videos/gallery-grid.mp4" poster="videos/gallery-grid-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="Gallery grid running 8 shaders"></video>
+          <figcaption><span class="demo-tag">Gallery</span>Eight live shaders running at once. 1, 4, 8, 14, 24-cell layouts. Arrow keys to focus.</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <video src="videos/expose-params.mp4" poster="videos/expose-params-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="Expose magic numbers as ISF sliders"></video>
+          <figcaption><span class="demo-tag">Expose</span>Turn magic-number GLSL literals into ISF parameter sliders for Wire &mdash; one click.</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <video src="videos/fix-chain.mp4" poster="videos/fix-chain-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="Shader fix chain"></video>
+          <figcaption><span class="demo-tag">Fix chain</span>Broken shader? Local regex &rarr; Ollama &rarr; AI. Stop at the first success.</figcaption>
+        </figure>
+      </div>
+
+      <p class="demos-caveat">
+        Loops are deterministic procedural placeholders generated by <code>docs/videos/build-videos.sh</code>.
+        Re-run it any time to rebuild &mdash; ffmpeg <code>mandelbrot</code>, <code>life</code>, <code>cellauto</code>, and <code>gradients</code> sources, capped at ~1.5&nbsp;MB each.
+        For the real renderer in motion, hit <a href="https://macroverse42.fly.dev/">the live demo</a>.
+      </p>
     </section>
 
     <section>
@@ -441,30 +573,84 @@
 
     <section>
       <h2>Screenshots</h2>
-      <p class="dim">Add your own to <code>docs/screenshots/</code> to populate this gallery.</p>
+      <p class="dim">Live screenshots of the desktop UI. See the <a href="#demos">Demo loops</a> section above for procedural feature loops.</p>
       <div class="screenshots">
         <div class="slot ph" data-label="full-ui-layout.webp"><img src="screenshots/full-ui-layout.webp" alt="Full UI" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
         <div class="slot ph" data-label="context-menu.webp"><img src="screenshots/context-menu.webp" alt="Context menu" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
         <div class="slot ph" data-label="grid-view.webp"><img src="screenshots/grid-view.webp" alt="Grid view" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
+        <div class="slot ph" data-label="emoji-picker.webp"><img src="screenshots/emoji-picker.webp" alt="Emoji picker" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
       </div>
     </section>
 
     <section id="help">
-      <h2>Help &amp; Keyboard Shortcuts</h2>
+      <h2>Help, Keyboard Shortcuts &amp; Feature Reference</h2>
+      <p class="dim">A comprehensive tour. Mirrors the in-app Help modal (Settings &raquo; <code>?</code> Help button).</p>
+
+      <h3 class="help-h3">1. Getting started</h3>
+      <table class="help-table">
+        <tr><td class="k">1.</td><td>Click a shader in the index list (left panel) to preview it.</td></tr>
+        <tr><td class="k">2.</td><td>Use the view tabs (Preview / Code / Split / VJ / Gallery / Pipeline / Wire) to switch focus.</td></tr>
+        <tr><td class="k">3.</td><td>Adjust parameter sliders in the right panel.</td></tr>
+        <tr><td class="k">4.</td><td>Click <b>Save</b> (or <kbd>Ctrl+S</kbd>) to persist. Auto-commits to git if enabled.</td></tr>
+      </table>
+
+      <h3 class="help-h3">2. View tabs</h3>
+      <table class="help-table">
+        <tr><td class="k">Preview</td><td>Live WebGL render of the current shader. Right-click for output options (Spout/NDI on Windows, browser fallbacks elsewhere).</td></tr>
+        <tr><td class="k">Code</td><td>GLSL editor with syntax highlighting, gold dashed underlines on exposable literals (sweet spots), Ctrl+Z undo.</td></tr>
+        <tr><td class="k">Split</td><td>Side-by-side or stacked code + preview (configurable in Settings &rarr; Default View).</td></tr>
+        <tr><td class="k">VJ</td><td>A/B deck mixer: Decks A and B with crossfader, mix modes (Crossfade / Alpha Layer / Add / Multiply), Auto VJ cycling, MIDI/OSC, pop-out output.</td></tr>
+        <tr><td class="k">Gallery</td><td>Live grid of every cell running its own shader. 1, 4, 8, 14, 24-cell layouts. Full keyboard navigation.</td></tr>
+        <tr><td class="k">Pipeline</td><td>Signal-flow diagram: shader source &rarr; backend &rarr; renderer &rarr; ISF &rarr; Wire export. Click nodes to jump.</td></tr>
+        <tr><td class="k">Wire Hub</td><td>Wire-side controls: Check ISF Wire, Clipboard to Wire, push to Wire, batch export.</td></tr>
+      </table>
+
+      <h3 class="help-h3">3. Top app bar</h3>
+      <table class="help-table">
+        <tr><td class="k">Logo (M42)</td><td>Opens Settings panel.</td></tr>
+        <tr><td class="k">Shader name</td><td>Current loaded shader. A copper dot appears when there are unsaved changes.</td></tr>
+        <tr><td class="k">View dropdown</td><td>Mirrors the .view-tabs strip - useful when the strip is hidden on phone.</td></tr>
+        <tr><td class="k">Last build</td><td>Build date + git short-SHA from <code>/api/version</code>. Hidden under 900px.</td></tr>
+        <tr><td class="k">Save (disk)</td><td>Saves current shader; flashes when dirty.</td></tr>
+        <tr><td class="k">Palette (&gt;_)</td><td>Opens the command palette. Same as <kbd>Ctrl+K</kbd>.</td></tr>
+        <tr><td class="k">Hamburger</td><td>Opens the More sheet (mobile) or Settings (desktop fallback).</td></tr>
+      </table>
+
+      <h3 class="help-h3">4. Mobile bottom tab bar</h3>
+      <p class="dim">Visible automatically on viewports under 640px. Five fixed tabs:</p>
+      <table class="help-table">
+        <tr><td class="k">Library</td><td>Toggles the left dock (shader index).</td></tr>
+        <tr><td class="k">Preview</td><td>Switches to Preview view (or Split if currently in Code).</td></tr>
+        <tr><td class="k">Code</td><td>Switches to Code view, closes side docks.</td></tr>
+        <tr><td class="k">Params</td><td>Toggles the right dock (parameter sliders).</td></tr>
+        <tr><td class="k">More</td><td>Opens the More sheet: VJ deck, Gallery, Pipeline, Wire Hub, Split view, Commands, Settings, Help, Paths, Rescan.</td></tr>
+      </table>
+
+      <h3 class="help-h3">5. Command palette</h3>
+      <table class="help-table">
+        <tr><td class="k">Open</td><td><kbd>Ctrl+K</kbd> or <kbd>Cmd+K</kbd> &mdash; toggles the palette open/closed.</td></tr>
+        <tr><td class="k">Quick open</td><td><kbd>/</kbd> when no input is focused (Slack/Discord style).</td></tr>
+        <tr><td class="k">Navigate</td><td><kbd>Up</kbd> / <kbd>Down</kbd> to move, <kbd>Home</kbd> / <kbd>End</kbd> for first/last.</td></tr>
+        <tr><td class="k">Run</td><td><kbd>Enter</kbd> to execute selected command.</td></tr>
+        <tr><td class="k">Close</td><td><kbd>Esc</kbd> or click outside.</td></tr>
+        <tr><td class="k">Categories</td><td>Editor &middot; Parameters &middot; Wire &middot; External &middot; View &middot; App &middot; Display effects &middot; Panels.</td></tr>
+      </table>
+
+      <h3 class="help-h3">6. Gallery shortcuts</h3>
       <div class="feat-grid" style="margin-bottom:1.5rem;">
-        <div class="feat"><div class="tag">Gallery</div><div class="label">← → ↑ ↓ — navigate between shader cells</div></div>
-        <div class="feat"><div class="tag">Gallery</div><div class="label">Alt+← / Alt+→ — previous / next page</div></div>
-        <div class="feat"><div class="tag">Gallery</div><div class="label">1–9 — toggle preset tag on focused shader (same key removes it)</div></div>
-        <div class="feat"><div class="tag">Gallery</div><div class="label">Shift+1–9 — toggle preset VJ Set on focused shader</div></div>
-        <div class="feat"><div class="tag">Gallery</div><div class="label">A — set-toggle prompt (shows all sets, current membership)</div></div>
-        <div class="feat"><div class="tag">Gallery</div><div class="label">F — toggle favourite</div></div>
-        <div class="feat"><div class="tag">Gallery</div><div class="label">R — rename focused shader</div></div>
-        <div class="feat"><div class="tag">Gallery</div><div class="label">? — show / hide keyboard shortcut HUD</div></div>
-        <div class="feat"><div class="tag">Gallery</div><div class="label">Space — toggle auto-advance (cycles focus automatically)</div></div>
-        <div class="feat"><div class="tag">Export</div><div class="label">Export ▾ menu: CSV · JSON · paths (.txt, one per line → Resolume Avenue)</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>&uarr;</kbd> <kbd>&darr;</kbd> &mdash; navigate between cells</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>Alt+&larr;</kbd> / <kbd>Alt+&rarr;</kbd> &mdash; previous / next page</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>1</kbd>&ndash;<kbd>9</kbd> &mdash; toggle preset tag (same key removes it)</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>Shift+1</kbd>&ndash;<kbd>Shift+9</kbd> &mdash; toggle preset VJ Set</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>A</kbd> &mdash; set-toggle prompt (all sets + membership)</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>F</kbd> &mdash; toggle favourite</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>R</kbd> &mdash; rename focused shader</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>?</kbd> &mdash; show / hide shortcut HUD</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>Space</kbd> &mdash; toggle auto-advance</div></div>
+        <div class="feat"><div class="tag">Export</div><div class="label">Export &#9662; menu: CSV &middot; JSON &middot; paths (.txt &mdash; load directly into Resolume Avenue)</div></div>
       </div>
 
-      <h3 style="color:var(--teal);margin-bottom:.75rem;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;">Preset VJ Sets (Shift+1 through Shift+9)</h3>
+      <h3 class="help-h3">7. Preset VJ Sets (<kbd>Shift+1</kbd> &ndash; <kbd>Shift+9</kbd>)</h3>
       <div class="feat-grid" style="margin-bottom:1.5rem;">
         <div class="feat"><div class="tag">1</div><div class="label">vj-ambient</div></div>
         <div class="feat"><div class="tag">2</div><div class="label">vj-techno</div></div>
@@ -476,37 +662,141 @@
         <div class="feat"><div class="tag">8</div><div class="label">vj-dark</div></div>
         <div class="feat"><div class="tag">9</div><div class="label">vj-colour</div></div>
       </div>
+      <p class="dim" style="margin-top:-0.5rem;">Hit <b>Seed VJ Sets</b> in Gallery to auto-assign shaders to all 9 sets by name/format heuristics.</p>
 
-      <h3 style="color:var(--teal);margin-bottom:.75rem;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;">Common Actions</h3>
-      <table style="width:100%;border-collapse:collapse;font-size:.85rem;color:#c0c0d0;">
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Preview shader</td><td style="padding:.4rem .6rem;">Click it in the list</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Search</td><td style="padding:.4rem .6rem;">Type in the filter box (name, tag, category)</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Rename</td><td style="padding:.4rem .6rem;">Double-click name, or right-click → Rename</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Move category</td><td style="padding:.4rem .6rem;">Right-click → Move to category</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Add tags</td><td style="padding:.4rem .6rem;">Click + next to tags, or right-click → Edit tags</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Expose parameters</td><td style="padding:.4rem .6rem;">Click Expose in the code toolbar</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Send to Wire</td><td style="padding:.4rem .6rem;">Click Clipboard to Wire (after Expose)</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Version history</td><td style="padding:.4rem .6rem;">Right-click → See versions → click any to revert</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">A/B VJ deck</td><td style="padding:.4rem .6rem;">Click the VJ tab</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Gallery browse</td><td style="padding:.4rem .6rem;">Click the Gallery tab</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Webcam input</td><td style="padding:.4rem .6rem;">Right panel → Texture inputs → Webcam</td></tr>
-        <tr><td style="padding:.4rem .6rem;color:#9966ff;">Full screen</td><td style="padding:.4rem .6rem;">Click Full Screen in status bar, or press F11</td></tr>
+      <h3 class="help-h3">8. Common actions</h3>
+      <table class="help-table">
+        <tr><td class="k">Preview shader</td><td>Click it in the list, or drag and drop on the preview / code area.</td></tr>
+        <tr><td class="k">Search</td><td>Type in the filter box: name, tags, category, format.</td></tr>
+        <tr><td class="k">Rename</td><td>Double-click name, or right-click &rarr; Rename.</td></tr>
+        <tr><td class="k">Move category</td><td>Right-click &rarr; Move to category.</td></tr>
+        <tr><td class="k">Add tags</td><td>Click <b>+</b> next to tags, or right-click &rarr; Edit tags.</td></tr>
+        <tr><td class="k">Trash / restore</td><td>Right-click &rarr; Move to trash. Show/hide trash via the trash badge.</td></tr>
+        <tr><td class="k">Mark dead</td><td>Auto-fix gives up &rarr; tagged DEAD. Show/hide via the dead badge.</td></tr>
+        <tr><td class="k">Sets</td><td>Manage sets, filter by set, rename / remove via the Sets menu.</td></tr>
+        <tr><td class="k">List views</td><td>List &middot; Compact &middot; Grid (with thumbnail previews).</td></tr>
+        <tr><td class="k">Version history</td><td>Right-click &rarr; See versions &rarr; click any to revert.</td></tr>
       </table>
 
-      <h3 style="color:var(--teal);margin:.75rem 0 .5rem;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;">Settings Reference</h3>
-      <table style="width:100%;border-collapse:collapse;font-size:.85rem;color:#c0c0d0;">
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Source paths</td><td style="padding:.4rem .6rem;">Add / remove folders to scan. Default: shaders/</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">LLM Provider Chain</td><td style="padding:.4rem .6rem;">Enable/disable Local regex · Ollama · Cursor per-provider</td></tr>
-        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Hard Reset (git)</td><td style="padding:.4rem .6rem;">Zip the configured target folder and restore it from git. Target path configurable in Settings → Hard Reset Path.</td></tr>
-        <tr><td style="padding:.4rem .6rem;color:#9966ff;">NUKE</td><td style="padding:.4rem .6rem;">Backup DB → clear index → rescan disk. Shader files unchanged.</td></tr>
+      <h3 class="help-h3">9. Expose parameters &amp; Wire export</h3>
+      <table class="help-table">
+        <tr><td class="k">Expose (instant)</td><td>Click <b>Expose</b> in the code toolbar. Regex-based literal detection. Local-first, zero tokens, zero latency.</td></tr>
+        <tr><td class="k">Search params</td><td>Click <b>Search</b>. Popover lists every literal + named value. Click <b>Expose</b> next to any to make it a slider.</td></tr>
+        <tr><td class="k">Sweet spots</td><td>Gold dashed underlines in the code = exposable values. Right-click one to expose just that literal.</td></tr>
+        <tr><td class="k">Refactor (AI)</td><td><b>Refactor</b> button: deeper LLM-based discovery and structural improvements via Ollama or Cursor.</td></tr>
+        <tr><td class="k">Visual modify (Vibe)</td><td><b>Vibe</b> sends screenshot + your description to the AI agent (Cursor or GitHub Copilot variant).</td></tr>
+        <tr><td class="k">Format written</td><td><code>uniform float name; // @expose min max</code> &mdash; emitted into the ISF JSON block as well.</td></tr>
+        <tr><td class="k">Check ISF Wire</td><td>Validates ISF block compatibility with Resolume Wire (params, sampler2D handling).</td></tr>
+        <tr><td class="k">Clipboard to Wire</td><td>Copies the ISF (with INPUTS array, useFrameIndex toggle, fps, timeScale, mouseX/Y) to the system clipboard for paste into Wire.</td></tr>
+        <tr><td class="k">Texture handling</td><td>sampler2D uniforms become ISF image INPUTS; texture2D() rewritten to IMG_NORM_PIXEL().</td></tr>
       </table>
 
-      <h3 style="color:var(--teal);margin:.75rem 0 .5rem;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;">OBS / Streaming</h3>
-      <pre><code><span class="cm"># MJPEG stream for OBS Browser Source:</span>
+      <h3 class="help-h3">10. Vibe Station (create new shaders)</h3>
+      <table class="help-table">
+        <tr><td class="k">Modify current</td><td>Screenshot + your prompt &rarr; AI rewrites the active shader.</td></tr>
+        <tr><td class="k">Create new</td><td>Pick a name, choose a genre, optionally describe the vision. Click <b>Create</b>.</td></tr>
+        <tr><td class="k">Genres</td><td>Particles &middot; Fractal &middot; 3D Sphere / Cube / Torus (raymarched SDFs) &middot; Tunnel &middot; Kaleidoscope &middot; Audio &middot; Gradient.</td></tr>
+        <tr><td class="k">3D objects</td><td>3D genres scaffold a real raymarcher with SDF helpers in a single fragment shader.</td></tr>
+      </table>
+
+      <h3 class="help-h3">11. VJ deck</h3>
+      <table class="help-table">
+        <tr><td class="k">Open</td><td>Click the <b>VJ</b> tab.</td></tr>
+        <tr><td class="k">Decks A and B</td><td>Load different shaders, tweak params independently, swap with a click.</td></tr>
+        <tr><td class="k">Crossfader</td><td>Smooth blend between decks. Mappable to MIDI fader / OSC.</td></tr>
+        <tr><td class="k">Mix modes</td><td>Crossfade &middot; Alpha Layer &middot; Add &middot; Multiply.</td></tr>
+        <tr><td class="k">Auto VJ</td><td>Auto-cycles shaders with configurable timing.</td></tr>
+        <tr><td class="k">FFT A/B</td><td>Audio FFT on each deck independently.</td></tr>
+        <tr><td class="k">OSC A/B</td><td>OSC routing per deck.</td></tr>
+        <tr><td class="k">Pop-out output</td><td>Open VJ output in its own window for full-screen on a second display. Uses BroadcastChannel for low-latency sync.</td></tr>
+        <tr><td class="k">Text templates</td><td>Built-in neon, dotmatrix, LCD, 16-segment text overlays.</td></tr>
+        <tr><td class="k">Mouse XY pad</td><td>Drag in the preview to drive mouseX/Y uniforms.</td></tr>
+      </table>
+
+      <h3 class="help-h3">12. Roliblock (multi-device, BLE / USB)</h3>
+      <table class="help-table">
+        <tr><td class="k">Multi-device</td><td>N simultaneous Roli Lightpad blocks, each with independent MIDI in/out, handshake, LED buffer, and per-device settings.</td></tr>
+        <tr><td class="k">Deck assign</td><td>Per-device: auto / deckA / deckB / shared. Auto-detect for Roli USB devices.</td></tr>
+        <tr><td class="k">BLE MIDI</td><td>Web Bluetooth pairing. Device A can be BLE while Device B is USB. 250ms handshake / 80ms LED stream on BLE; 150ms / 50ms on USB. SysEx chunked for BLE MTU.</td></tr>
+        <tr><td class="k">LED filters</td><td>Per-device contrast, brightness, saturation, gamma, grayscale, invert, posterize, channel isolation.</td></tr>
+        <tr><td class="k">Stretched mode</td><td>Sample 30x15 from the output canvas, split left/right to two devices for a wide LED display.</td></tr>
+        <tr><td class="k">Debug page</td><td>Dual-device debug with independent shaders, mouse XY pads, WebGL preview, and per-device LED stream. Library cycling: Prev / Next / Random / Auto.</td></tr>
+        <tr><td class="k">View modes</td><td>A Only &middot; B Only &middot; Both (default) &middot; Combined (30x15 side-by-side LED preview).</td></tr>
+        <tr><td class="k">Background render</td><td>LED streaming continues when the browser tab is hidden (setInterval fallback).</td></tr>
+      </table>
+
+      <h3 class="help-h3">13. External controls</h3>
+      <table class="help-table">
+        <tr><td class="k">OSC Listen</td><td>Right panel &rarr; OSC &rarr; set port, click <b>Listen</b>. Send UDP messages to <code>/shader/&lt;paramName&gt;</code>.</td></tr>
+        <tr><td class="k">MIDI Learn</td><td>Right panel &rarr; MIDI &rarr; <b>Enable</b>. Click <b>Learn</b> next to any param, then move a CC knob.</td></tr>
+        <tr><td class="k">Audio FFT</td><td>Right panel &rarr; Audio &rarr; <b>Start</b>. Map frequency bands (Sub-Brilliance) to params.</td></tr>
+        <tr><td class="k">Texture inputs</td><td>Right panel &rarr; Texture inputs &rarr; <b>Add sampler2D</b> &rarr; <b>Webcam</b> or <b>Image</b>.</td></tr>
+        <tr><td class="k">Webcam input</td><td>Right panel &rarr; Texture inputs &rarr; <b>Webcam</b>. Resolume Avenue / OBS can chain to this.</td></tr>
+      </table>
+
+      <h3 class="help-h3">14. Output &amp; streaming</h3>
+      <pre><code><span class="cm"># MJPEG stream (MacroCam) for OBS Browser Source:</span>
 http://localhost:8765/api/output/macrocam/stream
 
 <span class="cm"># Linux virtual webcam (requires v4l2loopback):</span>
-ffmpeg -i http://localhost:8765/api/output/macrocam/stream -f v4l2 /dev/video0</code></pre>
+ffmpeg -i http://localhost:8765/api/output/macrocam/stream -f v4l2 /dev/video0
+
+<span class="cm"># Spout / NDI: right-click the preview canvas (Windows / where supported)</span></code></pre>
+
+      <h3 class="help-h3">15. Display effects</h3>
+      <table class="help-table">
+        <tr><td class="k">Scanlines</td><td><b>Scan</b> in status bar (or <code>effects.scanlines</code> in palette). Horizontal scan-line overlay on preview.</td></tr>
+        <tr><td class="k">Vignette</td><td><b>Vignette</b> in status bar. Darkens preview corners.</td></tr>
+        <tr><td class="k">CRT code</td><td><b>CRT</b> in status bar. Phosphor glow on the code editor.</td></tr>
+        <tr><td class="k">Full screen</td><td><b>Full Screen</b> in status bar, or <kbd>F11</kbd>.</td></tr>
+        <tr><td class="k">Theme</td><td>Settings &rarr; HSV sliders for full theme customisation. Light theme preset available.</td></tr>
+      </table>
+
+      <h3 class="help-h3">16. Update button</h3>
+      <p class="dim">Auto-pull, rebuild, and relaunch from GitHub - no manual git step.</p>
+      <table class="help-table">
+        <tr><td class="k">Background check</td><td>5 seconds after launch the app silently runs <code>git fetch</code> + <code>git log HEAD..origin/HEAD</code>.</td></tr>
+        <tr><td class="k">Indicator</td><td>If the remote is ahead, the toolbar Update button turns amber and shows <code>Update (N)</code>.</td></tr>
+        <tr><td class="k">Apply &amp; Restart</td><td>Click Update &rarr; modal lists incoming commits &rarr; <b>Apply &amp; Restart</b> writes a temp script that runs <code>git pull origin</code> + <code>build.bat</code> / <code>build.sh</code>, launches the new binary, and exits the current process.</td></tr>
+        <tr><td class="k">Cross-platform</td><td>Windows uses build.bat, Linux/macOS uses build.sh. Gracefully no-ops outside a git repo.</td></tr>
+      </table>
+
+      <h3 class="help-h3">17. Settings reference</h3>
+      <table class="help-table">
+        <tr><td class="k">Source paths</td><td>Add / remove folders to scan. Default: <code>shaders/</code> next to the binary.</td></tr>
+        <tr><td class="k">LLM Provider Chain</td><td>Local regex &rarr; Ollama &rarr; Cursor. Enable / disable / reorder per provider. Per-provider model + endpoint config.</td></tr>
+        <tr><td class="k">Hard Reset (git)</td><td>Zips the configured target folder, then restores it from the first git commit on main. Target path configurable in Settings &rarr; Hard Reset Path. Always creates a timestamped <code>.zip</code> backup first.</td></tr>
+        <tr><td class="k">NUKE</td><td>BACKUP the index &rarr; CLEAR all DB tables &rarr; RESCAN every source path. Files on disk untouched.</td></tr>
+        <tr><td class="k">READONLY mode</td><td>Set <code>READONLY=true</code> env var on the binary. Save / delete / rename / factory-reset return 403. Used by the public Fly.io demo.</td></tr>
+        <tr><td class="k">DEMO_BANNER</td><td>Set <code>DEMO_BANNER=true</code> for the persistent orange "Read-only demo instance" banner.</td></tr>
+        <tr><td class="k">Default view</td><td>Preview / Code / Split V / Split H / VJ. Persists across sessions.</td></tr>
+        <tr><td class="k">Mobile / Desktop</td><td>Status-bar toggle to force-mobile CSS on any device. Persisted to localStorage.</td></tr>
+        <tr><td class="k">Graveyard log</td><td><code>unrecoverable-shaders.json</code> next to <code>macroverse.db</code>. Path shown in Settings.</td></tr>
+      </table>
+
+      <h3 class="help-h3">18. Master keyboard shortcuts</h3>
+      <table class="help-table">
+        <tr><td class="k"><kbd>Ctrl+S</kbd></td><td>Save shader (auto git-commit if enabled)</td></tr>
+        <tr><td class="k"><kbd>Ctrl+Z</kbd></td><td>Undo in editor</td></tr>
+        <tr><td class="k"><kbd>Ctrl+K</kbd> / <kbd>Cmd+K</kbd></td><td>Toggle command palette</td></tr>
+        <tr><td class="k"><kbd>/</kbd></td><td>Open command palette (when no input focused)</td></tr>
+        <tr><td class="k"><kbd>F11</kbd></td><td>Toggle full screen</td></tr>
+        <tr><td class="k"><kbd>?</kbd></td><td>Show / hide Gallery shortcut HUD (in Gallery)</td></tr>
+        <tr><td class="k"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>&uarr;</kbd> <kbd>&darr;</kbd></td><td>Gallery navigation</td></tr>
+        <tr><td class="k"><kbd>Alt+&larr;</kbd> / <kbd>Alt+&rarr;</kbd></td><td>Gallery: previous / next page</td></tr>
+        <tr><td class="k"><kbd>1</kbd> &ndash; <kbd>9</kbd></td><td>Gallery: toggle preset tag</td></tr>
+        <tr><td class="k"><kbd>Shift+1</kbd> &ndash; <kbd>Shift+9</kbd></td><td>Gallery: toggle preset VJ Set</td></tr>
+        <tr><td class="k"><kbd>A</kbd></td><td>Gallery: set-toggle prompt</td></tr>
+        <tr><td class="k"><kbd>F</kbd></td><td>Gallery: toggle favourite</td></tr>
+        <tr><td class="k"><kbd>R</kbd></td><td>Gallery: rename focused shader</td></tr>
+        <tr><td class="k"><kbd>Space</kbd></td><td>Gallery: toggle auto-advance</td></tr>
+        <tr><td class="k">Right-click preview</td><td>Output options (Spout / NDI on Windows)</td></tr>
+        <tr><td class="k">Right-click code</td><td>AI actions (Explain, Enhance, Refactor, Generate)</td></tr>
+        <tr><td class="k">Right-click shader</td><td>Rename / Move / Tags / Trash / Versions</td></tr>
+        <tr><td class="k">Drag &amp; drop</td><td>Drag a shader from the list onto the preview or code area to load it</td></tr>
+        <tr><td class="k"><kbd>~</kbd> / <kbd>`</kbd></td><td><b>Showcase only:</b> open the GLSL Lab on this page</td></tr>
+        <tr><td class="k">Triple-click title</td><td><b>Showcase only:</b> open the GLSL Lab</td></tr>
+      </table>
     </section>
 
     <div class="nodes">

@@ -95,8 +95,8 @@ async function renderPanel(): Promise<void> {
         </label>
         <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:12px;">
           <input type="checkbox" id="crtCodeToggle" autocomplete="off" />
-          <span>CRT phosphor on code</span>
-          <span style="font-size:10px; color:var(--crt-dim); margin-left:auto;">Glow effect on the code editor</span>
+          <span>Code view (terminal CRT)</span>
+          <span style="font-size:10px; color:var(--crt-dim); margin-left:auto;">Green phosphor editor while editing</span>
         </label>
       </div>
       <div style="font-size:10px; color:var(--crt-dim); margin-top:8px;">Toggle retro-CRT visual effects. Settings are remembered between sessions.</div>
@@ -130,7 +130,7 @@ async function renderPanel(): Promise<void> {
     <div class="settings-section" style="margin-bottom:20px;">
       <div style="color:var(--amiga-copper); font-size:11px; text-transform:uppercase; margin-bottom:8px;">Cursor API Key</div>
       <input type="password" id="settingsCursorApiKey" placeholder="key_xxx or leave blank if agent login done" style="width:100%; padding:8px; background:var(--amiga-bg); color:var(--crt-fg); border:1px solid var(--bevel-dark); font-family:inherit;" />
-      <div style="font-size:10px; color:var(--crt-dim); margin-top:4px;">Authenticate: run <code style="background:var(--amiga-bg); padding:0 4px;">agent login</code> in a terminal (opens browser), or paste a key from Cursor IDE Settings. Saved to settings.</div>
+      <div style="font-size:10px; color:var(--crt-dim); margin-top:4px;">Authenticate: run <code style="background:var(--amiga-bg); padding:0 4px;">agent login</code> in a terminal (opens browser), or paste a key from Cursor IDE Settings. Saved to settings. Optional: compile error overlay can store a browser-only key in localStorage (overrides this when set).</div>
       <div style="font-size:10px; color:var(--crt-dim); margin-top:6px;">If you get rate limited or "verify human" errors: wait a few minutes between agent calls, or use Open in Cursor and run Agent from Cursor IDE.</div>
     </div>
     <div class="settings-section" style="margin-bottom:20px;" id="settingsGithubSection">
@@ -139,7 +139,7 @@ async function renderPanel(): Promise<void> {
       <div style="font-size:10px; color:var(--crt-dim); margin-bottom:8px;">Run <code style="background:var(--amiga-bg); padding:0 4px;">gh auth login</code> in a terminal to authenticate. No token stored for CLI.</div>
       <div style="color:var(--amiga-copper); font-size:11px; text-transform:uppercase; margin-bottom:8px;">GitHub / Copilot token (for Fix/Vibe)</div>
       <input type="password" id="settingsGithubToken" placeholder="Optional: token for GitHub API / Copilot" style="width:100%; padding:8px; background:var(--amiga-bg); color:var(--crt-fg); border:1px solid var(--bevel-dark); font-family:inherit;" />
-      <div style="font-size:10px; color:var(--crt-dim); margin-top:4px;">Optional. Use a GitHub token or Copilot token to use GitHub AI for Fix/Vibe when enabled.</div>
+      <div style="font-size:10px; color:var(--crt-dim); margin-top:4px;">Optional. Use a GitHub or Copilot token for Fix/Vibe. Optional: compile error overlay can store a browser-only token in localStorage (overrides this when set).</div>
     </div>
     <div class="settings-section" style="margin-bottom:20px;">
       <div style="color:var(--amiga-copper); font-size:11px; text-transform:uppercase; margin-bottom:8px;">LLM Provider Chain</div>

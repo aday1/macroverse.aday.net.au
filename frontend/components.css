@@ -73,11 +73,11 @@
 .param-row:nth-child(4n+4) { border-color: #9b59b6; border-bottom-color: rgba(155,89,182,0.5); }
 .param-row.param-ref--highlight { background: rgba(204,119,68,0.2); box-shadow: 0 0 0 2px var(--amiga-copper); }
 .param-row label { flex: 0 0 72px; color: var(--crt-dim); font-size: 10px; overflow: hidden; text-overflow: ellipsis; }
-input[type="range"] { flex: 1; min-width: 60px; height: 20px; margin: 0; -webkit-appearance: none; appearance: none; background: transparent; }
-input[type="range"]::-webkit-slider-runnable-track { height: 6px; background: var(--amiga-bg); border: 1px solid var(--bevel-dark); }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: var(--amiga-copper); border: 1px solid var(--bevel-light); margin-top: -3px; cursor: pointer; }
-input[type="range"]::-moz-range-track { height: 6px; background: var(--amiga-bg); border: 1px solid var(--bevel-dark); }
-input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; background: var(--amiga-copper); border: 1px solid var(--bevel-light); cursor: pointer; }
+input[type="range"] { flex: 1; min-width: 60px; height: 22px; margin: 0; -webkit-appearance: none; appearance: none; background: transparent; }
+input[type="range"]::-webkit-slider-runnable-track { height: 7px; background: var(--amiga-bg); border: 1px solid var(--bevel-dark); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; background: var(--amiga-copper); border: 1px solid var(--bevel-light); margin-top: -4px; cursor: pointer; }
+input[type="range"]::-moz-range-track { height: 7px; background: var(--amiga-bg); border: 1px solid var(--bevel-dark); }
+input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; background: var(--amiga-copper); border: 1px solid var(--bevel-light); cursor: pointer; }
 .param-row .val { flex: 0 0 36px; font-size: 10px; text-align: right; font-variant-numeric: tabular-nums; }
 .param-row input[type="checkbox"] { margin: 0; }
 .params-external-control { margin-top:12px; border-top:1px solid var(--bevel-dark); padding-top:8px; font-size:10px; overflow-y:auto; min-height:0; }
@@ -109,8 +109,46 @@ input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; background: v
 .param-row label.param-label-find:hover { color: var(--amiga-copper); text-decoration: underline; }
 .param-use-count { font-size: 9px; color: var(--amiga-copper); margin-left: 4px; opacity: 0.9; }
 .param-row .osc-addr { width:90px; font-size:9px; background:var(--amiga-bg); border:1px solid var(--bevel-dark); color:var(--crt-dim); margin-left:4px; }
-.preview-compile-error-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 100; }
-.preview-error-box { background: var(--amiga-panel); border: 2px solid #aa4444; padding: 20px; max-width: 90%; max-height: 80%; overflow: auto; }
+.preview-compile-error-overlay {
+  position: absolute;
+  inset: 0;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.preview-error-box { background: var(--amiga-panel); border: 2px solid #aa4444; padding: 20px; max-width: 92%; width: min(560px, 92vw); max-height: 85vh; overflow: auto; box-sizing: border-box; }
+.preview-error-api-keys {
+  margin: 10px 0 12px;
+  padding: 10px 12px;
+  background: var(--amiga-bg);
+  border: 1px solid var(--bevel-dark);
+  border-radius: 3px;
+}
+.preview-error-api-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.preview-error-api-row:last-of-type { margin-bottom: 6px; }
+.preview-error-api-row label { font-size: 10px; color: var(--crt-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+.preview-error-api-row input[type="password"],
+.preview-error-api-row input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  font-size: 13px;
+  background: var(--amiga-surface);
+  color: var(--crt-fg);
+  border: 1px solid var(--bevel-dark);
+  font-family: inherit;
+}
+.preview-error-api-hint { font-size: 9px; color: var(--crt-dim); line-height: 1.35; margin-top: 2px; }
 .preview-error-title { color: #ff8888; font-size: 14px; margin-bottom: 10px; font-weight: bold; }
 #previewCompileErrorOverlay[data-unrecoverable] .preview-error-title::after { content: " [UNRECOVERABLE]"; color: var(--crt-dim); font-weight: bold; margin-left: 6px; }
 .preview-error-msg { color: var(--crt-fg); font-size: 12px; font-family: monospace; white-space: pre-wrap; max-height: 200px; overflow-y: auto; margin-bottom: 12px; }
@@ -120,9 +158,120 @@ input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; background: v
 .preview-fix-btn.btn-ai-ollama:hover { background: rgba(68,136,204,0.2); color: #88bbff; }
 .preview-area.scanline-on::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px); z-index: 50; }
 .preview-area.vignette-on::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0.7) 100%); z-index: 51; }
-.code-wrap.crt-on { position: relative; }
-.code-wrap.crt-on::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.25) 85%, rgba(0,0,0,0.6) 100%); z-index: 10; }
-.code-wrap.crt-on::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,255,136,0.015) 3px, rgba(0,255,136,0.015) 6px); z-index: 11; }
+/* Code view: green terminal CRT (codepen.io/cauners/pen/ExMaqOW) */
+.code-wrap.code-view-on,
+.code-wrap.crt-on {
+  position: relative;
+  background: #000;
+}
+
+.code-wrap.code-view-on #codeEditorContainer .cm-editor,
+.code-wrap.crt-on #codeEditorContainer .cm-editor {
+  background: #000 !important;
+  box-shadow:
+    inset 0 0 70px rgba(0, 255, 0, 0.07),
+    inset 0 0 140px rgba(0, 60, 0, 0.18);
+  filter: url(#mv-code-view-filter);
+}
+
+.code-wrap.code-view-on #codeEditorContainer .cm-scroller,
+.code-wrap.crt-on #codeEditorContainer .cm-scroller {
+  font-family: Consolas, "Lucida Console", "Courier New", monospace;
+}
+
+.code-wrap.code-view-on #codeEditorContainer .cm-content,
+.code-wrap.code-view-on #codeEditorContainer .cm-line,
+.code-wrap.crt-on #codeEditorContainer .cm-content,
+.code-wrap.crt-on #codeEditorContainer .cm-line {
+  color: #00ff00;
+  text-shadow: 0 0 3px rgba(0, 255, 0, 0.9), 0 0 12px rgba(0, 255, 0, 0.35);
+  caret-color: #00ff00;
+}
+
+.code-wrap.code-view-on #codeEditorContainer .cm-gutters,
+.code-wrap.crt-on #codeEditorContainer .cm-gutters {
+  background: #000;
+  border-right: 1px solid rgba(0, 255, 0, 0.35);
+  color: rgba(0, 200, 0, 0.55);
+}
+
+.code-wrap.code-view-on #codeEditorContainer .cm-keyword,
+.code-wrap.code-view-on #codeEditorContainer .cm-operator,
+.code-wrap.code-view-on #codeEditorContainer .cm-punctuation,
+.code-wrap.code-view-on #codeEditorContainer .cm-variableName,
+.code-wrap.code-view-on #codeEditorContainer .cm-def,
+.code-wrap.crt-on #codeEditorContainer .cm-keyword,
+.code-wrap.crt-on #codeEditorContainer .cm-operator,
+.code-wrap.crt-on #codeEditorContainer .cm-punctuation,
+.code-wrap.crt-on #codeEditorContainer .cm-variableName,
+.code-wrap.crt-on #codeEditorContainer .cm-def {
+  color: #00ff00;
+}
+
+.code-wrap.code-view-on #codeEditorContainer .cm-number,
+.code-wrap.crt-on #codeEditorContainer .cm-number {
+  color: #ff4444;
+  text-shadow: 0 0 4px rgba(255, 60, 60, 0.75);
+}
+
+.code-wrap.code-view-on #codeEditorContainer .cm-string,
+.code-wrap.crt-on #codeEditorContainer .cm-string {
+  color: #88ff88;
+}
+
+.code-wrap.code-view-on #codeEditorContainer .cm-comment,
+.code-wrap.crt-on #codeEditorContainer .cm-comment {
+  color: rgba(0, 180, 0, 0.62);
+  font-style: italic;
+}
+
+.code-wrap.code-view-on #codeEditorContainer .cm-content .param-ref,
+.code-wrap.crt-on #codeEditorContainer .cm-content .param-ref {
+  color: #e8ff66;
+  background: rgba(0, 90, 0, 0.35);
+  border-bottom-color: rgba(255, 255, 120, 0.55);
+}
+
+.code-wrap.code-view-on #codeEditorContainer .cm-content .exposable-hint,
+.code-wrap.crt-on #codeEditorContainer .cm-content .exposable-hint {
+  background: rgba(255, 60, 60, 0.12);
+  border-bottom-color: #ff6666;
+}
+
+.code-wrap.code-view-on::after,
+.code-wrap.crt-on::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 48%, rgba(0, 40, 0, 0.2) 72%, rgba(0, 0, 0, 0.72) 100%);
+  z-index: 10;
+}
+
+.code-wrap.code-view-on::before,
+.code-wrap.crt-on::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.14) 2px,
+    rgba(0, 0, 0, 0.14) 4px
+  );
+  z-index: 11;
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .code-wrap.code-view-on #codeEditorContainer .cm-editor,
+  .code-wrap.crt-on #codeEditorContainer .cm-editor {
+    filter: none;
+  }
+}
 .status { padding: 4px 12px; font-size: 11px; color: var(--crt-dim); background: repeating-linear-gradient(90deg, var(--amiga-panel) 0px, var(--amiga-panel) 2px, var(--amiga-surface) 2px, var(--amiga-surface) 4px); border-top: 2px solid var(--bevel-light); display: flex; align-items: center; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
 .status .status-text { flex: 1; min-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .status.status-error .status-text { color: #ff8888; font-weight: bold; }
@@ -414,20 +563,23 @@ code[class*="language-"], pre[class*="language-"] { background: var(--theme-edit
   }
   /* Big enough to grab with a finger */
   input[type="range"] {
-    height: 36px;
+    height: 44px;
   }
   input[type="range"]::-webkit-slider-runnable-track {
-    height: 8px;
+    height: 10px;
   }
   input[type="range"]::-webkit-slider-thumb {
-    width: 24px;
-    height: 24px;
-    margin-top: -8px;
+    width: 28px;
+    height: 28px;
+    margin-top: -9px;
     border-radius: 50%;
   }
+  input[type="range"]::-moz-range-track {
+    height: 10px;
+  }
   input[type="range"]::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
   }
   .list-item { min-height: 44px; padding: 10px 12px; }
@@ -441,7 +593,7 @@ code[class*="language-"], pre[class*="language-"] { background: var(--theme-edit
   /* Code-toolbar and tiny inline controls keep their own sizing
      where explicitly set inline (style="font-size:9px"). Add a
      larger hit area without changing visual size. */
-  .code-toolbar .wire-btn { min-height: 32px; padding: 6px 10px; }
+  .code-toolbar .wire-btn { min-height: 40px; padding: 8px 12px; font-size: 12px; }
   /* Icon-only or tag-pill style buttons need bigger taps */
   .tag-pill, .set-pill { min-height: 24px; padding: 4px 8px; font-size: 11px; }
   .midi-badge, .midi-forget, .param-remove, .param-rename {
@@ -458,6 +610,30 @@ code[class*="language-"], pre[class*="language-"] { background: var(--theme-edit
   }
   /* Toolbar group spacing tighter so the rows still fit */
   .toolbar-group { padding: 2px 6px; }
+}
+
+/* Narrow viewports: match touch-sized sliders and code toolbar even when
+   the browser reports a fine pointer (simulators, some foldables). */
+@media (max-width: 640px) {
+  input[type="range"] { height: 44px; }
+  input[type="range"]::-webkit-slider-runnable-track { height: 10px; }
+  input[type="range"]::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+    margin-top: -9px;
+    border-radius: 50%;
+  }
+  input[type="range"]::-moz-range-track { height: 10px; }
+  input[type="range"]::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+  }
+  .code-toolbar .wire-btn {
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 }
 
 /* Hover-only effects: gate the noisy hover styles to devices that
@@ -879,8 +1055,9 @@ code[class*="language-"], pre[class*="language-"] { background: var(--theme-edit
     background: var(--amiga-surface) !important;
     border: 1px solid var(--bevel-dark) !important;
     color: var(--amiga-copper) !important;
-    padding: 4px 10px !important;
-    font-size: 11px !important;
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+    min-height: 40px;
   }
 }
 
@@ -946,10 +1123,16 @@ code[class*="language-"], pre[class*="language-"] { background: var(--theme-edit
     height: auto !important;
   }
 }
-@media (pointer: coarse) {
-  /* Fat crossfader for thumbs */
+@media (pointer: coarse), (max-width: 1024px) {
+  /* Fat crossfader for thumbs and tablet-sized touch targets */
   input[type="range"].vj-crossfader { height: 48px !important; }
   input[type="range"].vj-crossfader::-webkit-slider-runnable-track {
+    height: 10px;
+    background: var(--amiga-bg);
+    border: 1px solid var(--bevel-dark);
+    border-radius: 5px;
+  }
+  input[type="range"].vj-crossfader::-moz-range-track {
     height: 10px;
     background: var(--amiga-bg);
     border: 1px solid var(--bevel-dark);
@@ -1012,4 +1195,307 @@ code[class*="language-"], pre[class*="language-"] { background: var(--theme-edit
     border-top: 2px solid var(--amiga-copper);
     box-shadow: 0 -10px 28px rgba(0,0,0,0.6);
   }
+}
+
+/* ============================================================== */
+/* Pipeline + Wire Hub responsive (Phase 10)                      */
+/* ============================================================== */
+@media (max-width: 768px) {
+  /* Pipeline: stack the row of cards vertically */
+  .pipe-row { flex-direction: column !important; gap: 8px !important; }
+  .pipe-node { max-width: 100% !important; min-width: 0 !important; }
+  .pipe-arrow-right { transform: rotate(90deg); padding: 4px 0 !important; }
+  .pipe-status-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .pipe-dashboard { padding: 10px; }
+
+  /* Wire Hub: stack the three columns vertically */
+  .wire-hub-columns { flex-direction: column !important; }
+  .wire-browser-col,
+  .wire-builder-col,
+  .wire-library-col {
+    width: 100% !important;
+    min-width: 0 !important;
+    border: none !important;
+    border-bottom: 1px solid var(--bevel-dark) !important;
+  }
+  .wire-library-col { border-bottom: none !important; }
+  .wire-browser-col,
+  .wire-library-col {
+    min-height: 28vh;
+    max-height: min(46vh, 420px);
+    overflow: auto;
+  }
+  .wire-builder-col { flex: 1; min-height: 40vh; }
+  .wire-hub-toolbar-inner { flex-wrap: wrap; }
+  .wire-browser-tab {
+    min-height: 40px;
+    padding: 8px 14px;
+    font-size: 11px;
+  }
+  .wire-browser-row {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Tablet: keep all three columns but tighten widths */
+  .wire-browser-col { width: 220px; }
+  .wire-library-col { width: 240px; }
+  .pipe-dashboard { max-width: 100%; padding: 12px; }
+}
+
+/* html.force-mobile: wide desktop with Mobile/DM toggle; width queries
+   do not apply, so stack Wire Hub and enlarge controls to match phones. */
+html.force-mobile .pipe-row { flex-direction: column !important; gap: 8px !important; }
+html.force-mobile .pipe-node { max-width: 100% !important; min-width: 0 !important; }
+html.force-mobile .pipe-arrow-right { transform: rotate(90deg); padding: 4px 0 !important; }
+html.force-mobile .pipe-status-grid { grid-template-columns: repeat(2, 1fr) !important; }
+html.force-mobile .pipe-dashboard { padding: 10px; }
+html.force-mobile .wire-hub-columns { flex-direction: column !important; }
+html.force-mobile .wire-browser-col,
+html.force-mobile .wire-builder-col,
+html.force-mobile .wire-library-col {
+  width: 100% !important;
+  min-width: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid var(--bevel-dark) !important;
+}
+html.force-mobile .wire-library-col { border-bottom: none !important; }
+html.force-mobile .wire-browser-col,
+html.force-mobile .wire-library-col {
+  min-height: 28vh;
+  max-height: min(46vh, 420px);
+  overflow: auto;
+}
+html.force-mobile .wire-builder-col { flex: 1; min-height: 40vh; }
+html.force-mobile .wire-hub-toolbar-inner { flex-wrap: wrap; }
+html.force-mobile .wire-browser-tab {
+  min-height: 40px;
+  padding: 8px 14px;
+  font-size: 11px;
+}
+html.force-mobile .wire-browser-row {
+  min-height: 44px;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+html.force-mobile input[type="range"] { height: 44px; }
+html.force-mobile input[type="range"]::-webkit-slider-runnable-track { height: 10px; }
+html.force-mobile input[type="range"]::-webkit-slider-thumb {
+  width: 28px;
+  height: 28px;
+  margin-top: -9px;
+  border-radius: 50%;
+}
+html.force-mobile input[type="range"]::-moz-range-track { height: 10px; }
+html.force-mobile input[type="range"]::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+html.force-mobile .code-toolbar .wire-btn {
+  min-height: 40px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+html.force-mobile .toolbar-more-btn {
+  padding: 8px 14px !important;
+  font-size: 12px !important;
+  min-height: 40px;
+}
+
+/* ============================================================== */
+/* Polish (Phase 11)                                              */
+/* ============================================================== */
+
+/* Splash overlay text scales down on narrow screens */
+@media (max-width: 480px) {
+  .splash-title { font-size: 20px; }
+  .splash-tagline { font-size: 11px; }
+  .splash-version { font-size: 9px; }
+}
+
+/* Demo banner: tighter on phone, "Get Macroverse" link gets its own line if needed */
+@media (max-width: 640px) {
+  #demoBanner {
+    font-size: 10px !important;
+    padding: 4px 8px !important;
+    gap: 6px !important;
+    line-height: 1.3 !important;
+  }
+}
+
+/* Settings panel: full-width on narrow phones so the close X is reachable */
+@media (max-width: 480px) {
+  #settingsPanel {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    border-left: none !important;
+  }
+}
+
+/* Pop-out preview button: bigger tap target on touch */
+@media (pointer: coarse) {
+  .canvas-wrap > button {
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+    top: 10px !important;
+    right: 10px !important;
+  }
+}
+
+/* Help / paths-info modals: full-screen on narrow phones */
+@media (max-width: 480px) {
+  #helpOverlay > div,
+  #pathsInfoOverlay > div {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* Make the in-page "Pop out" button on the canvas not float on top
+   of the close-drawer scrim (keep it below dock-scrim's z=8000) */
+.canvas-wrap > button { z-index: 60; }
+
+/* Code editor: prevent double-tap zoom on the editor area on iOS by
+   reinforcing touch-action manipulation on CodeMirror's content. */
+.cm-editor, .cm-content, .cm-scroller { touch-action: manipulation; }
+
+/* Bottom-tab-bar: a tiny safe-area inset when the iOS home bar is
+   present (already in the .bottom-tab-bar rule via env(); this just
+   widens the bottom space for the dock drawers so they sit ABOVE
+   the home bar correctly). */
+@media (max-width: 640px) {
+  body.dock-left-open .index-panel,
+  body.dock-right-open .right-column {
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+  /* And the bottom of the body padding so the status bar doesn't
+     sit under the tab bar */
+  body { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* The "Mobile" status button text changes in JS to "Desktop" when
+   force-mobile is on. On desktop monitors viewing a phone-emulated
+   layout, keep the label readable. */
+.status-mobile-btn { white-space: nowrap; }
+
+/* Params panel touch-friendliness */
+@media (pointer: coarse) {
+  .params-panel { padding: 14px 14px 24px; font-size: 13px; }
+  .param-row { padding: 12px 12px; gap: 10px; }
+  .param-row label { font-size: 12px; flex: 0 0 90px; }
+  .param-row .val { font-size: 12px; }
+  .external-header { padding: 10px 0; font-size: 12px; }
+  .external-body { padding: 8px 0; }
+  .external-body .external-row { gap: 8px; margin-bottom: 8px; }
+}
+
+/* Splash overlay: easier to dismiss on phone (the existing onclick
+   already calls hideSplash; just hint it visually). */
+@media (max-width: 640px) {
+  .splash-content { padding: 0 16px; }
+  .splash-content::after {
+    content: 'Tap to continue';
+    display: block;
+    margin-top: 16px;
+    color: var(--crt-dim);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    animation: app-bar-dirty-pulse 2s ease-in-out infinite;
+  }
+}
+
+/* Index panel on tablet/phone: when promoted to drawer, make the
+   sticky header more prominent so the user knows it's a panel. */
+@media (max-width: 1024px) {
+  body.dock-left-open .index-panel .index-header,
+  body.dock-right-open .right-column .right-col-header {
+    background: var(--amiga-copper);
+    color: var(--amiga-bg);
+    text-shadow: none;
+    padding: 10px 14px;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+  }
+  body.dock-left-open .index-panel .index-header span,
+  body.dock-right-open .right-column .right-col-header span {
+    color: var(--amiga-bg);
+  }
+}
+
+/* Drawer drag handle (visual) */
+@media (max-width: 640px) {
+  body.dock-left-open .index-panel::before,
+  body.dock-right-open .right-column::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--bevel-light);
+    z-index: 10;
+  }
+}
+
+/* Status bar Fix button: proper tap size on touch (it appears
+   when the current shader has a compile error and the user needs
+   to act on it - definitely a touch target). */
+@media (pointer: coarse) {
+  .status .fix-btn {
+    min-height: 32px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+/* ============================================================== */
+/* App-bar 'Last build' badge                                     */
+/* ============================================================== */
+.app-bar-build {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 2px 8px;
+  margin-right: 4px;
+  background: var(--amiga-bg);
+  border: 1px solid var(--bevel-dark);
+  border-top-color: var(--bevel-light);
+  border-left-color: var(--bevel-light);
+  font-size: 10px;
+  color: var(--crt-dim);
+  white-space: nowrap;
+  font-family: inherit;
+  letter-spacing: 0.04em;
+}
+.app-bar-build-label {
+  text-transform: uppercase;
+  color: var(--amiga-copper);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+.app-bar-build-time {
+  color: var(--crt-fg);
+  font-variant-numeric: tabular-nums;
+}
+.app-bar-build-sha {
+  color: var(--amiga-accent);
+  font-size: 9px;
+  opacity: 0.85;
+}
+.app-bar-build-sha:empty { display: none; }
+
+/* Hide on small viewports - the same info still lives in the splash
+   and Settings; the app bar in 375px should stay tight. */
+@media (max-width: 900px) {
+  .app-bar-build { display: none; }
 }

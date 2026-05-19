@@ -8,6 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Macroverse">
   <meta name="format-detection" content="telephone=no">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23110c28'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='monospace' font-size='28' font-weight='bold' fill='%23ee8833'%3EM42%3C/text%3E%3C/svg%3E">
   <title>Macroverse 42 - The Wired Atelier</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&family=JetBrains+Mono:wght@400&family=Source+Code+Pro:wght@400&display=swap" rel="stylesheet">
@@ -45,6 +46,11 @@
         <option value="pipeline">Pipeline</option>
         <option value="wire">Wire Hub</option>
       </select>
+    </div>
+    <div class="app-bar-build" id="appBarBuild" title="Last build">
+      <span class="app-bar-build-label">Last build</span>
+      <span class="app-bar-build-time" id="appBarBuildTime">--</span>
+      <span class="app-bar-build-sha"  id="appBarBuildSha"></span>
     </div>
     <div class="app-bar-actions">
       <button type="button" class="app-bar-btn app-bar-tablet-only" id="appBarLibraryBtn" title="Library" aria-label="Open shader library">&#9776; Lib</button>
@@ -130,7 +136,18 @@
                   <div id="previewErrorPath" class="preview-error-path" style="font-size:11px;color:var(--amiga-copper);margin-bottom:8px;word-break:break-all"></div>
                   <div id="previewErrorIrrep" class="preview-error-irrep" style="display:none;color:#ff6666;font-weight:bold;margin-bottom:8px">Cannot auto-resolve</div>
                   <div class="preview-error-msg" id="previewErrorMsg"></div>
-                  <div style="font-size:10px;color:var(--crt-dim);margin:8px 0 4px">Click Fix to auto-repair. If auto-fix fails, it escalates to Cursor AI agent.</div>
+                  <div style="font-size:10px;color:var(--crt-dim);margin:8px 0 4px">Fix shader runs free local rules and Ollama (if installed) first. Cursor API is optional for escalation. Keys below are stored only in this browser (localStorage).</div>
+                  <div id="previewErrorApiKeys" class="preview-error-api-keys">
+                    <div class="preview-error-api-row">
+                      <label for="previewOverlayCursorKey">Cursor API key (optional, for agent / escalate)</label>
+                      <input type="password" id="previewOverlayCursorKey" name="macroverse-overlay-cursor-key" autocomplete="off" spellcheck="false" placeholder="Paste key — saved in this browser only" />
+                    </div>
+                    <div class="preview-error-api-row">
+                      <label for="previewOverlayGithubToken">GitHub / Copilot token (optional, for Fix with GitHub)</label>
+                      <input type="password" id="previewOverlayGithubToken" name="macroverse-overlay-github-token" autocomplete="off" spellcheck="false" placeholder="ghp_… or Copilot token — saved in this browser only" />
+                    </div>
+                    <div class="preview-error-api-hint" id="previewErrorApiKeyHint"></div>
+                  </div>
                   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
                     <button type="button" id="previewRevertBtn" class="wire-btn" style="background:var(--amiga-surface);color:var(--amiga-copper)" title="Revert to last saved (e.g. undo Expose that broke the shader)">Revert to saved</button>
                     <button type="button" id="previewFixBtn" class="wire-btn preview-fix-btn btn-ai-ollama" title="Tries local + Ollama first; Cursor only if needed"><span class="btn-ollama-icon" aria-hidden="true">&#x1F9D9;</span> Fix shader</button>
@@ -184,6 +201,18 @@
                 <div id="agentOutput" style="display:none;flex:1;min-height:0;overflow-y:auto"></div>
               </div>
               <div class="agent-code-resizer" id="agentCodeResizer" title="TLDR: Drag to resize agent output vs code"></div>
+              <svg class="mv-code-view-svg" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;overflow:hidden;pointer-events:none">
+                <defs>
+                  <filter id="mv-code-view-filter" color-interpolation-filters="sRGB">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="1.4" result="blur" />
+                    <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 0.5 0" result="greenBloom" />
+                    <feMerge>
+                      <feMergeNode in="greenBloom" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+              </svg>
               <div class="code-wrap" id="codeWrap">
                 <div id="codeEditorContainer" class="code-input-wrap"></div>
               </div>
@@ -214,6 +243,319 @@
       </div>
     </div>
   </div>
+  <div id="deployMetaDock" style="position:fixed;right:10px;bottom:10px;z-index:9999;max-width:min(420px,calc(100vw - 20px));font:11px/1.45 ui-monospace,Consolas,monospace;">
+    <div id="deployMetaRestore" hidden style="margin-bottom:6px;text-align:right;">
+      <button type="button" id="deployMetaShowBtn" style="font:inherit;cursor:pointer;padding:4px 10px;border:1px solid #4cff8a;background:rgba(0,0,0,.88);color:#b8ffd1;border-radius:3px;box-shadow:0 2px 10px rgba(0,0,0,.45);">build info</button>
+    </div>
+    <div id="deployMetaPanel" role="region" aria-label="Build metadata" style="border:1px solid #4cff8a;background:rgba(0,0,0,.92);color:#b8ffd1;box-sizing:border-box;border-radius:3px;box-shadow:0 4px 18px rgba(0,0,0,.55);">
+      <div id="deployMetaBar" tabindex="0" role="button" aria-expanded="false" style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 8px;cursor:pointer;user-select:none;">
+        <span id="deployMetaSummary" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Loading...</span>
+        <span id="deployMetaExpandGlyph" style="opacity:.85;flex-shrink:0;font-weight:700;">[+]</span>
+        <button type="button" id="deployMetaHideBtn" style="flex-shrink:0;font:inherit;cursor:pointer;padding:2px 6px;margin:0;border:1px solid rgba(76,255,138,.55);background:transparent;color:#b8ffd1;border-radius:2px;">hide</button>
+      </div>
+      <div id="deploySwitcherStrip" style="border-top:1px solid rgba(76,255,138,.28);padding:6px 8px;background:rgba(0,0,0,.52);cursor:default;"></div>
+      <div id="deployMetaDetail" hidden style="padding:0 12px 10px;">
+        <div id="deployMetaTitle" style="font-weight:700;color:#fff;margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid rgba(76,255,138,.35);letter-spacing:.06em;text-transform:uppercase;">build info</div>
+        <div id="deployMetaBody">Loading deploy metadata...</div>
+        <div style="margin-top:8px;">
+          <button type="button" id="deployMetaCollapseBtn" style="font:inherit;cursor:pointer;padding:3px 8px;border:1px solid rgba(76,255,138,.55);background:transparent;color:#b8ffd1;border-radius:2px;">collapse</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var META_URL = "/deploy-meta.json";
+      var LS_KEY = "deployMetaDock:" + (typeof location !== "undefined" ? location.hostname : "");
+      var bodyEl = document.getElementById("deployMetaBody");
+      var panel = document.getElementById("deployMetaPanel");
+      var dock = document.getElementById("deployMetaDock");
+      var bar = document.getElementById("deployMetaBar");
+      var summaryEl = document.getElementById("deployMetaSummary");
+      var detailEl = document.getElementById("deployMetaDetail");
+      var expandGlyph = document.getElementById("deployMetaExpandGlyph");
+      var hideBtn = document.getElementById("deployMetaHideBtn");
+      var collapseBtn = document.getElementById("deployMetaCollapseBtn");
+      var restoreWrap = document.getElementById("deployMetaRestore");
+      var showBtn = document.getElementById("deployMetaShowBtn");
+      var switcherStrip = document.getElementById("deploySwitcherStrip");
+      if (!bodyEl || !panel || !dock || !bar || !summaryEl || !detailEl || !expandGlyph || !hideBtn || !collapseBtn || !restoreWrap || !showBtn || !switcherStrip) return;
+      switcherStrip.addEventListener(
+        "click",
+        function (ev) {
+          ev.stopPropagation();
+        },
+        true
+      );
+      function uiLoad() {
+        try {
+          var v = localStorage.getItem(LS_KEY);
+          if (v === "hidden") return "hidden";
+          if (v === "expanded") return "expanded";
+        } catch (eU) {}
+        return "collapsed";
+      }
+      function uiSave(mode) {
+        try { localStorage.setItem(LS_KEY, mode); } catch (eS) {}
+      }
+      function syncUi(mode) {
+        if (mode === "hidden") {
+          restoreWrap.hidden = false;
+          panel.hidden = true;
+        } else {
+          restoreWrap.hidden = true;
+          panel.hidden = false;
+          if (mode === "expanded") {
+            detailEl.hidden = false;
+            bar.setAttribute("aria-expanded", "true");
+            expandGlyph.textContent = "[-]";
+          } else {
+            detailEl.hidden = true;
+            bar.setAttribute("aria-expanded", "false");
+            expandGlyph.textContent = "[+]";
+          }
+        }
+      }
+      function expand() {
+        uiSave("expanded");
+        syncUi("expanded");
+      }
+      function collapse() {
+        uiSave("collapsed");
+        syncUi("collapsed");
+      }
+      function hideDock() {
+        uiSave("hidden");
+        syncUi("hidden");
+      }
+      function showDock() {
+        uiSave("collapsed");
+        syncUi("collapsed");
+      }
+      bar.addEventListener("click", function (ev) {
+        if (ev.target && ev.target.closest && ev.target.closest("#deployMetaHideBtn")) return;
+        if (detailEl.hidden) expand(); else collapse();
+      });
+      bar.addEventListener("keydown", function (ev) {
+        if (ev.key !== "Enter" && ev.key !== " ") return;
+        if (ev.target && ev.target.closest && ev.target.closest("#deployMetaHideBtn")) return;
+        ev.preventDefault();
+        if (detailEl.hidden) expand(); else collapse();
+      });
+      hideBtn.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        hideDock();
+      });
+      collapseBtn.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        collapse();
+      });
+      showBtn.addEventListener("click", showDock);
+      syncUi(uiLoad());
+      function esc(s) {
+        return String(s === null || s === undefined ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+      }
+      function tzName() {
+        try {
+          return Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+        } catch (eTz) {
+          return "";
+        }
+      }
+      function fmt(iso) {
+        if (!iso) return "(unknown)";
+        try {
+          var d = new Date(iso);
+          if (Number.isNaN(d.getTime())) return String(iso);
+          var main = d.toLocaleString(undefined, {
+            dateStyle: "medium",
+            timeStyle: "short",
+            timeZoneName: "short",
+          });
+          var iana = tzName();
+          if (iana) return main + " (" + iana + ")";
+          return main;
+        } catch (err) {
+          return String(iso);
+        }
+      }
+      function age(iso, kind) {
+        if (!iso) return "";
+        var tag = kind === "deploy" ? "deploy" : "build";
+        var t = new Date(iso).getTime();
+        if (Number.isNaN(t)) return "";
+        var sec = Math.round((Date.now() - t) / 1000);
+        if (sec < -120) return "";
+        if (sec < 45) return "now";
+        if (sec < 3600) return Math.round(sec / 60) + "m since " + tag;
+        if (sec < 86400) return Math.round(sec / 3600) + "h since " + tag;
+        if (sec < 604800) return Math.round(sec / 86400) + "d since " + tag;
+        if (sec < 4233600) return Math.round(sec / 604800) + "wk since " + tag;
+        var mo = Math.round(sec / (30.4375 * 86400));
+        if (mo < 24) return mo + "mo since " + tag;
+        return Math.round(sec / (365.2425 * 86400)) + "yr since " + tag;
+      }
+      function resolvedSwitcher(ds, siteLc) {
+        if (ds && ds.live_url && ds.dev_url) return ds;
+        if (siteLc.indexOf("artbastard") >= 0) {
+          return {
+            live_url: "https://artbastard.aday.net.au/",
+            dev_url: "https://dev.artbastard.aday.net.au/",
+          };
+        }
+        return {
+          live_url: "https://macroverse.aday.net.au/",
+          dev_url: "https://dev.macroverse.aday.net.au/",
+          aday_url: "https://macroverse-aday.aday.net.au/",
+        };
+      }
+      function samePathHref(upstream) {
+        try {
+          var u = new URL(upstream);
+          u.pathname = location.pathname;
+          u.search = location.search;
+          u.hash = location.hash;
+          return u.href;
+        } catch (eL) {
+          return upstream;
+        }
+      }
+      function isDevDeployHost(hostn) {
+        var h = String(hostn || "").toLowerCase();
+        return (
+          /^dev\.(macroverse|artbastard)\.aday\.net\.au$/.test(h) ||
+          /^(macroverse|artbastard)-test\.aday\.net\.au$/.test(h) ||
+          /^test\.(macroverse|artbastard)\.aday\.net\.au$/.test(h)
+        );
+      }
+      function isLiveDeployHost(hostn) {
+        var h = String(hostn || "").toLowerCase();
+        return /^macroverse\.aday\.net\.au$/.test(h) || /^artbastard\.aday\.net\.au$/.test(h);
+      }
+      function switcherLane(hostn, ds) {
+        try {
+          if (hostn === new URL(ds.live_url).hostname) return "live";
+        } catch (eA) {}
+        try {
+          if (hostn === new URL(ds.dev_url).hostname) return "dev";
+        } catch (eB) {}
+        if (ds.aday_url) {
+          try {
+            if (hostn === new URL(ds.aday_url).hostname) return "aday";
+          } catch (eC) {}
+        }
+        var hl = hostn.toLowerCase();
+        if (/macroverse-aday|^aday\.macroverse/i.test(hl)) return "aday";
+        if (isDevDeployHost(hostn)) return "dev";
+        if (isLiveDeployHost(hostn)) return "live";
+        return "live";
+      }
+      function renderSwitcher(ds, siteLc) {
+        var r = resolvedSwitcher(ds, siteLc);
+        var hostn = typeof location !== "undefined" ? location.hostname : "";
+        var cur = switcherLane(hostn, r);
+        var defs = [["live", "Live", "live_url"], ["dev", "Dev", "dev_url"], ["aday", "Aday", "aday_url"]];
+        var parts = [];
+        for (var ix = 0; ix < defs.length; ix++) {
+          var k = defs[ix][0];
+          var label = defs[ix][1];
+          var uk = defs[ix][2];
+          var raw = r[uk];
+          if (!raw || (k === "aday" && !r.aday_url)) continue;
+          var hrefRaw = samePathHref(raw);
+          var on = cur === k;
+          var sty = on
+            ? "display:inline-block;border:1px solid #4cff8a;background:rgba(76,255,138,.14);font-weight:700;color:#efffef;text-decoration:none;padding:3px 8px;border-radius:2px"
+            : "display:inline-block;border:1px solid rgba(76,255,138,.4);opacity:.92;color:#b8ffd1;text-decoration:none;padding:3px 8px;border-radius:2px";
+          parts.push(
+            '<a href="' +
+              esc(hrefRaw) +
+              '" rel="noopener noreferrer" style="' +
+              sty +
+              '" title="Same URL path on ' +
+              esc(label) +
+              '">' +
+              esc(label) +
+              "</a>"
+          );
+        }
+        if (!parts.length) {
+          switcherStrip.innerHTML = "";
+          return;
+        }
+        switcherStrip.innerHTML =
+          '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px"><span style="opacity:.82;font-weight:700">Switch site</span><span aria-hidden="true" style="opacity:.45">:</span>' +
+          parts.join('<span aria-hidden="true" style="opacity:.4"> </span>|<span aria-hidden="true" style="opacity:.4"> </span>') +
+          '<span aria-hidden="true" style="flex:1"></span><span style="opacity:.65;font-size:10px">' +
+          esc("here: " + cur) +
+          "</span></div>";
+      }
+      function render(m) {
+        var siteLc = (m.site ? String(m.site) : "").toLowerCase();
+        renderSwitcher(m.deploy_switcher, siteLc);
+        var shaRaw = m.last_git_sha_short || m.version || "?";
+        var buildIso = m.last_build_at || m.build_date || "";
+        var depIso = m.last_deployed_at || m.last_build_at || m.build_date || "";
+        var ageB = age(buildIso, "build");
+        var ageD = age(depIso, "deploy");
+        var siteLab = (m.site ? String(m.site) : "").toUpperCase().replace(/\s+/g, "") || "SITE";
+        var sumParts = [siteLab, String(shaRaw)];
+        if (ageB) sumParts.push(ageB);
+        summaryEl.textContent = sumParts.join(" | ");
+        var sha = esc(shaRaw);
+        var gitHref = esc(m.last_git_url || m.changelog_url || "#");
+        var ch = m.changelog_url || "";
+        var hist = m.commits_history_url || "";
+        var md = m.changelog_md_url || "";
+        var rel = m.releases_url || "";
+        var run = m.workflow_run_url || "";
+        var gb = m.branch ? String(m.branch) : "";
+        var trk = m.track ? String(m.track) : "";
+        var note = m.deploy_note ? "<div style=\"opacity:.82;margin-top:6px;font-size:10px;\">" + esc(m.deploy_note) + "</div>" : "";
+        var title = document.getElementById("deployMetaTitle");
+        if (title) title.textContent = (m.site ? String(m.site).toUpperCase() : "SITE") + " // build info";
+        var html = "";
+        html += "<div style=\"margin:4px 0\"><strong>Last git:</strong> <a href=\"" + gitHref + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + sha + "</a></div>";
+        html +=
+          "<div style=\"margin:4px 0\"><strong>Git branch (built by CI)</strong>: " +
+          esc(gb || "(unknown)") +
+          "</div>";
+        html +=
+          "<div style=\"margin:4px 0\"><strong>Image / deploy track</strong>: " +
+          esc(trk || "(unknown)") +
+          "</div>";
+        html +=
+          '<div style="opacity:.76;margin:-2px 0 6px;font-size:10px">Deploy track is the GHCR tag (:live|:dev|:aday). Aday hosts the gated starter-pack lane.</div>';
+        var localTz = tzName();
+        if (localTz) html += "<div style=\"opacity:.78;margin:0 0 4px;font-size:10px\"><strong>Your timezone:</strong> " + esc(localTz) + "</div>";
+        html += "<div style=\"margin:4px 0\"><strong>Last build (CI):</strong> " + esc(fmt(buildIso));
+        if (ageB) html += " <span style=\"opacity:.82\">" + esc(ageB) + "</span>";
+        html += "</div>";
+        html += "<div style=\"margin:4px 0\"><strong>Last deployed (CI push):</strong> " + esc(fmt(depIso));
+        if (ageD) html += " <span style=\"opacity:.82\">" + esc(ageD) + "</span>";
+        if (run) html += " <a href=\"" + esc(run) + "\" target=\"_blank\" rel=\"noopener noreferrer\">workflow</a>";
+        html += "</div>";
+        var links = [];
+        if (ch) links.push("<a href=\"" + esc(ch) + "\" target=\"_blank\" rel=\"noopener noreferrer\">This commit</a>");
+        if (hist) links.push("<a href=\"" + esc(hist) + "\" target=\"_blank\" rel=\"noopener noreferrer\">Branch history</a>");
+        if (md) links.push("<a href=\"" + esc(md) + "\" target=\"_blank\" rel=\"noopener noreferrer\">changelog.md</a>");
+        if (rel) links.push("<a href=\"" + esc(rel) + "\" target=\"_blank\" rel=\"noopener noreferrer\">Releases</a>");
+        if (links.length) {
+          html += "<div style=\"margin:8px 0 0;padding-top:6px;border-top:1px solid rgba(76,255,138,.35)\"><strong>Changelog / history:</strong> " + links.join(" <span aria-hidden=\"true\">|</span> ") + "</div>";
+        }
+        html += note;
+        bodyEl.innerHTML = html;
+      }
+      fetch(META_URL, { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("missing")); })
+        .then(render)
+        .catch(function () {
+          bodyEl.textContent = "Deploy metadata unavailable.";
+          summaryEl.textContent = "build meta unavailable";
+          renderSwitcher(null, (location.hostname || "").indexOf("artbastard") >= 0 ? "artbastard.aday.net.au" : "macroverse.aday.net.au");
+        });
+    })();
+  </script>
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

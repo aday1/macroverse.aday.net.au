@@ -21,7 +21,7 @@ services:
       - edge
 
   macroverse_test:
-    image: ghcr.io/aday1/macroverse.aday.net.au/macroverse:test
+    image: ghcr.io/aday1/macroverse.aday.net.au/macroverse:dev
     restart: unless-stopped
     expose:
       - "8765"
@@ -49,12 +49,13 @@ services:
       - "8765"
     volumes:
       - macroverse_aday_data:/app/data
-      - macroverse_aday_assets:/app/shaders
+      # Full private library synced from this machine (ops/deploy-aday-shaders.ps1); never in public git
+      - ./private-data/aday-shaders:/app/shaders
     networks:
       - edge
 
   artbastard_test:
-    image: ghcr.io/aday1/artbastard.aday.net.au/artbastard:test
+    image: ghcr.io/aday1/artbastard.aday.net.au/artbastard:dev
     restart: unless-stopped
     expose:
       - "3030"

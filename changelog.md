@@ -1,6 +1,89 @@
 Changelog - Macroverse - Wired Atelier
 ======================================
 
+Version 0.1.7 — Showcase videos, comprehensive Help refresh, broken-stub fix
+-----------------------------------------------------------------------------
+
+### Showcase: dropped the stub HTML doc that was hiding the rich page
+- The bootstrap commit had prepended a 25-line "deploy portal" stub
+  on top of the rich Macroverse 42 showcase page in docs/index.html.
+  Two HTML documents in one file confused browsers and effectively
+  hid the rich page (live WebGL background, GLSL Lab easter egg,
+  full Help section, screenshots).
+- The hostname index that the stub used to carry has been folded
+  into a new "Live deployments" mini-block under the CTA buttons:
+  Live · Test · Aday (basic auth) · ArtBastard live + test.
+
+### Showcase: six procedural ffmpeg demo loops
+- New docs/videos/ directory with hero-loop / vj-crossfade /
+  pipeline-flow / gallery-grid / expose-params / fix-chain MP4
+  files plus a poster .webp per video.
+- All loops are deterministic, web-safe (H.264 yuv420p faststart,
+  no audio), 960x540 @ 30fps, capped under 1.5 MB each, total
+  ~2.5 MB. Built by docs/videos/build-videos.sh from ffmpeg's
+  built-in lavfi sources (mandelbrot, life, cellauto, gradients).
+- Embedded in a new "Live demo loops" section as muted autoplay
+  loops with poster fallback. Clearly labelled as procedural
+  placeholders since the Cloud VM has no working WebGL for real
+  screen recordings.
+- Run "bash docs/videos/build-videos.sh" to rebuild any time.
+
+### Showcase: comprehensive Help section rewrite
+- The Help section now mirrors the in-app Help modal in
+  frontend/src/init/bootstrap.ts and covers eighteen subsections:
+    1. Getting started
+    2. View tabs (Preview / Code / Split / VJ / Gallery / Pipeline /
+       Wire Hub)
+    3. Top app bar (logo, shader name, view dropdown, Last build
+       badge, Save, palette, hamburger)
+    4. Mobile bottom tab bar + More sheet
+    5. Command palette (Ctrl+K, "/", Up/Down/Enter/Esc)
+    6. Gallery shortcuts
+    7. Preset VJ Sets (Shift+1 through Shift+9)
+    8. Common actions (preview, search, rename, sets, list views,
+       trash, dead, version history)
+    9. Expose parameters and Wire export (Expose, Search params,
+       sweet-spot underlines, Refactor AI, Visual Modify Vibe via
+       Cursor or GitHub Copilot, Check ISF Wire, Clipboard to Wire,
+       texture handling)
+   10. Vibe Station (Modify current / Create new with genres:
+       Particles, Fractal, 3D Sphere/Cube/Torus, Tunnel, Kaleidoscope,
+       Audio, Gradient)
+   11. VJ deck (decks, crossfader, mix modes, Auto VJ, FFT A/B, OSC
+       A/B, pop-out output, text templates, mouse XY)
+   12. Roliblock (multi-device, BLE/USB, deck assign, LED filters,
+       stretched mode, debug page, view modes, background render)
+   13. External controls (OSC Listen, MIDI Learn, Audio FFT, Texture
+       inputs, webcam)
+   14. Output and streaming (MJPEG MacroCam, OBS, v4l2loopback,
+       Spout/NDI right-click)
+   15. Display effects (Scan, Vignette, CRT code, Full Screen, theme)
+   16. Update button (5s background fetch, amber ahead-indicator,
+       Apply & Restart cross-platform script flow)
+   17. Settings reference (Source paths, LLM Provider Chain, Hard
+       Reset path + behaviour, NUKE, READONLY, DEMO_BANNER, Default
+       view, Mobile/Desktop, Graveyard log)
+   18. Master keyboard shortcut table
+
+### Showcase: misc tidy
+- Added a Demo loops button in the CTA strip jumping to the new
+  section.
+- Added the missing emoji-picker.webp tile to the Screenshots grid.
+- The Screenshots section now points up at the Demo loops section
+  so visitors land on motion content first.
+
+### README
+- Added five new sections aligned with the same coverage:
+  Command Palette, Top App Bar & Mobile UI, Pipeline View & Wire
+  Hub View, Update Button, Display Effects, Roliblock & BLE MIDI.
+- Expanded the UI cheat sheet with eleven new rows (palette,
+  Pipeline / Wire tabs, Update, mobile bottom bar, More sheet,
+  display effects, MIDI Learn, OSC Listen, Audio FFT, Roliblock).
+- Renamed the Screenshots section to "Screenshots & Demo Loops"
+  with a per-file rundown and rebuild instructions.
+
+----------------------------------------
+
 Version 0.1.6 — Multi-Roliblock, BLE MIDI, VJ deck features, Wire pipeline
 -----------------------------------------------------------------------------
 

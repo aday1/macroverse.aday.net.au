@@ -82,6 +82,89 @@ The chain is configurable: reorder, enable/disable each provider, select model p
 
 ---
 
+## Command Palette
+
+Every action in the app is registered as a command and runnable from a Slack/Discord-style palette.
+
+- **Open** with `Ctrl+K` / `Cmd+K`, or `/` when no input is focused
+- Categories: Editor, Parameters, Wire, External, View, App, Display effects, Panels
+- Up/Down to move, Enter to run, Esc to close
+- Mobile-friendly: the same palette is reachable via the `>_` button in the top app bar and the **Commands >_** button on the More sheet
+
+---
+
+## Top App Bar & Mobile UI
+
+A persistent header on every device:
+
+- **Logo** opens Settings
+- **Shader name** with a copper "dirty" dot when there are unsaved changes
+- **View dropdown** mirrors the view tabs (handy when the strip is hidden on phones)
+- **Last build** badge: build date + git short-SHA from `/api/version` (hidden under 900px)
+- **Save / Palette / Hamburger** buttons on the right
+
+On phones (< 640px) a five-tab bottom bar appears:
+
+| Tab | What it does |
+|---|---|
+| Library | Toggle the left dock (shader index) |
+| Preview | Switch to Preview view (or Split if currently in Code) |
+| Code | Switch to Code view, close side docks |
+| Params | Toggle the right dock (parameter sliders) |
+| More | Open a sheet of secondary actions: VJ deck, Gallery, Pipeline, Wire Hub, Split, Commands, Settings, Help, Paths, Rescan |
+
+A **Mobile / Desktop** toggle in the status bar force-applies the mobile CSS on any device; preference persists in localStorage.
+
+---
+
+## Pipeline View & Wire Hub View
+
+Two extra view tabs alongside Preview / Code / Split / VJ / Gallery:
+
+- **Pipeline** — full signal-flow diagram from your shader sources through the Go backend to the WebGL renderer, ISF JSON, and Resolume Wire export. Click nodes to jump into the relevant panel.
+- **Wire Hub** — Wire-side controls: Check ISF Wire, Clipboard to Wire, push to Wire, batch export. Use the diagram view tab to see all 5 FX topologies (feedback, beat-sync, glitch, geometric, colour) at once.
+
+---
+
+## Update Button (in-app rebuild)
+
+The toolbar **Update** button auto-pulls and rebuilds from GitHub.
+
+- Five seconds after launch the app silently runs `git fetch` + `git log HEAD..origin/HEAD`
+- If the remote is ahead, the button turns amber and shows `Update (N)`
+- Clicking opens a modal listing the incoming commits; **Apply & Restart** writes a temp script that runs `git pull origin` + `build.bat` (or `build.sh`) + relaunches the new binary, then exits the current process so Windows can overwrite the running exe
+- Gracefully no-ops outside a git repo
+
+Backend endpoints: `GET /api/update/check`, `POST /api/update/apply`.
+
+---
+
+## Display Effects
+
+All toggleable from the status bar or via the command palette:
+
+- **Scanlines** — horizontal scan-line overlay on the preview
+- **Vignette** — darkened corners on the preview
+- **CRT** — phosphor glow on the code editor
+- **Full Screen** — status-bar button or `F11`
+
+A light-theme preset is available alongside the default Wired Atelier dark palette.
+
+---
+
+## Roliblock (multi-device, BLE / USB)
+
+N simultaneous Roli Lightpad blocks, each with independent MIDI, handshake, LED buffer, and per-device settings.
+
+- **Per-device deck assignment** — auto / deckA / deckB / shared (auto-detect for Roli USB devices)
+- **BLE MIDI** — Web Bluetooth pairing; Device A can be BLE while Device B is USB. 250ms handshake / 80ms LED stream on BLE; 150ms / 50ms on USB. SysEx chunked for BLE MTU.
+- **LED filters** — per-device contrast, brightness, saturation, gamma, grayscale, invert, posterize, channel isolation
+- **Stretched mode** — sample 30x15 from the output canvas, split left/right to two devices for a wide LED display
+- **Debug page** — dual-device debug with independent shaders, mouse XY pads, WebGL preview, per-device LED stream, library cycling (Prev / Next / Random / Auto), view modes (A Only / B Only / Both / Combined 30x15)
+- **Background render** keeps the LED stream alive when the browser tab is hidden
+
+---
+
 ## VJ Scratchpad
 
 A/B deck mixer for live performance. Access via the **VJ** tab.
@@ -219,12 +302,12 @@ It always creates a timestamped `.zip` backup before touching any files.
 
 | Action | How |
 |---|---|
-| **Preview a shader** | Click it in the list |
+| **Preview a shader** | Click it in the list, or drag and drop on the preview / code area |
 | **Search** | Type in the filter box (name, tags, category) |
 | **Rename** | Double-click the name, or right-click → Rename |
 | **Move category** | Right-click → Move to category |
 | **Add tags** | Click `+` next to tags, or right-click → Edit tags |
-| **Expose parameters** | Click Expose in the code toolbar |
+| **Expose parameters** | Click Expose in the code toolbar (or right-click a sweet-spot dashed underline) |
 | **Send to Wire** | Click Clipboard to Wire after exposing |
 | **Switch List/Grid** | List / Compact / Grid buttons |
 | **Version history** | Right-click → See versions → click any to revert |
@@ -234,7 +317,18 @@ It always creates a timestamped `.zip` backup before touching any files.
 | **Gallery tag** | 1–9 toggles preset tag on focused shader |
 | **Gallery set** | Shift+1–9 toggles preset VJ Set |
 | **Gallery shortcuts** | Press ? inside Gallery for full HUD |
+| **Command palette** | `Ctrl+K` / `Cmd+K`, or `/` when no input is focused |
+| **Pipeline view** | Click the Pipeline tab |
+| **Wire Hub view** | Click the Wire tab |
+| **Update app** | Click Update in the toolbar (turns amber when remote is ahead) |
+| **Mobile bottom bar** | Visible automatically on phones (< 640px), or force-mobile in status bar |
+| **More sheet (mobile)** | Tap **More** in the bottom tab bar |
+| **Display effects** | Scan / Vignette / CRT toggles in status bar |
 | **Webcam input** | Right panel → Texture inputs → Webcam |
+| **MIDI Learn** | Right panel → MIDI → Enable, then Learn next to a param |
+| **OSC Listen** | Right panel → OSC → set port → Listen, send to `/shader/<name>` |
+| **Audio FFT** | Right panel → Audio → Start, map bands to params |
+| **Roliblock** | Settings → Roliblock; debug page for dual-device / BLE pairing |
 | **Full screen** | Click Full Screen in status bar, or F11 |
 
 ---
@@ -262,9 +356,22 @@ All shaders are ISF format with exposed parameters.
 
 ---
 
-## Screenshots
+## Screenshots & Demo Loops
 
-Add images to `docs/screenshots/` (`full-ui-layout.webp`, `context-menu.webp`, `grid-view.webp`, `emoji-picker.webp`) to display them in the README and on the [live showcase](https://aday1.github.io/Macroverse/).
+Live screenshots live in `docs/screenshots/` (`full-ui-layout.webp`, `context-menu.webp`, `grid-view.webp`, `emoji-picker.webp`).
+
+Six procedural demo loops live in `docs/videos/`:
+
+- `hero-loop.mp4` — Domain-warp FBM hero loop
+- `vj-crossfade.mp4` — A/B deck crossfade
+- `pipeline-flow.mp4` — GLSL → ISF → Wire signal flow
+- `gallery-grid.mp4` — Eight live shaders in the gallery
+- `expose-params.mp4` — Magic numbers turned into ISF sliders
+- `fix-chain.mp4` — Local regex → Ollama → AI fix chain
+
+All deterministic; rebuild with `bash docs/videos/build-videos.sh` (requires ffmpeg 6+ with libx264 + libwebp). Each MP4 caps at ~1.5 MB.
+
+See them live on the [showcase page](https://aday1.github.io/Macroverse/#demos).
 
 ---
 

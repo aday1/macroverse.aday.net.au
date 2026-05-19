@@ -35,12 +35,58 @@ export function clearLastCompileError(): void {
   lastCompileErrorPath = '';
 }
 
-/** Fallback Cursor API key when none set in Settings. Remove or empty for production. */
-const FALLBACK_CURSOR_API_KEY = 'key_96dd71b2d85fe7b5eaf8df5224167a6cc8263ddcda7d422592e2c2600898a3d7';
+/** Browser-only overrides (compile overlay quick entry). Server Settings used as fallback. */
+const LS_CURSOR_API_KEY = 'macroverse-cursor-api-key-local';
+const LS_GITHUB_TOKEN = 'macroverse-github-token-local';
 
 export function getCursorApiKey(): string {
-  const k = (appSettings as Record<string, unknown>).cursorApiKey as string;
-  return (k && k !== '***') ? k : FALLBACK_CURSOR_API_KEY;
+  try {
+    const local = localStorage.getItem(LS_CURSOR_API_KEY)?.trim();
+    if (local) return local;
+  } catch (_) { /* ignore */ }
+  const k = (appSettings as Record<string, unknown>).cursorApiKey as string | undefined;
+  return (k && k !== '***') ? k : '';
+}
+
+export function getGithubToken(): string {
+  try {
+    const local = localStorage.getItem(LS_GITHUB_TOKEN)?.trim();
+    if (local) return local;
+  } catch (_) { /* ignore */ }
+  const k = (appSettings as Record<string, unknown>).githubToken as string | undefined;
+  return (k && k !== '***') ? k : '';
+}
+
+export function setLocalCursorApiKey(value: string): void {
+  try {
+    const t = value.trim();
+    if (t) localStorage.setItem(LS_CURSOR_API_KEY, t);
+    else localStorage.removeItem(LS_CURSOR_API_KEY);
+  } catch (_) { /* ignore */ }
+}
+
+export function setLocalGithubToken(value: string): void {
+  try {
+    const t = value.trim();
+    if (t) localStorage.setItem(LS_GITHUB_TOKEN, t);
+    else localStorage.removeItem(LS_GITHUB_TOKEN);
+  } catch (_) { /* ignore */ }
+}
+
+export function getLocalCursorKeyStored(): string {
+  try {
+    return localStorage.getItem(LS_CURSOR_API_KEY)?.trim() || '';
+  } catch (_) {
+    return '';
+  }
+}
+
+export function getLocalGithubTokenStored(): string {
+  try {
+    return localStorage.getItem(LS_GITHUB_TOKEN)?.trim() || '';
+  } catch (_) {
+    return '';
+  }
 }
 
 export const defaultAppSettings: Settings = {

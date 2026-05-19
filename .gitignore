@@ -10,6 +10,8 @@ shader-errors.json
 unrecoverable-shaders.json
 debug-fix-errors.log
 macroverse.db
+private-data/
+ops/aday-shaders.local.json
 # compiled binaries
 *.exe
 *.exe~

@@ -1,9 +1,16 @@
-Create basic-auth file before deploying `aday` track.
+Basic auth for macroverse-aday.aday.net.au (aday track).
 
-Example:
+Committed default (rotate on production):
+
+  user: aday
+  pass: macroverse
+
+Regenerate:
 
   htpasswd -c aday.htpasswd your_username
 
-Mount path is:
+Or: bash ops/set-aday-password.sh your_username
+
+Mount path in container:
 
   /etc/nginx/auth/aday.htpasswd

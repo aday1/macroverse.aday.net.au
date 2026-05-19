@@ -1,9 +1,58 @@
 import { fetchSources, fetchIndex, fetchThumbnailsBatch } from '../api.js';
 import { status, hideSplash, showPathsInfo } from '../dom.js';
-import { setEntries, setAppSettings, setCurrentEntry, setCurrentSource, setThumbnail, appSettings, entries, getThumbnail } from '../state.js';
+import * as stateModule from '../state.js';
+import { setEntries, setAppSettings, setCurrentEntry, setCurrentSource, setThumbnail, appSettings, entries, getThumbnail, clearLastCompileError } from '../state.js';
 import { buildList, initListFilters } from '../list.js';
 import { loadShader } from '../render.js';
 import type { IndexEntry } from '../types.js';
+
+const LAST_SHADER_KEY = 'macroverse-last-shader-path';
+
+/** Remember the last successfully-loaded shader so the user lands on
+ *  the same one next visit. */
+function rememberLastShader(path: string | undefined | null): void {
+  try { if (path) localStorage.setItem(LAST_SHADER_KEY, path); } catch (_) {}
+}
+function recallLastShader(): string | null {
+  try { return localStorage.getItem(LAST_SHADER_KEY); } catch (_) { return null; }
+}
+
+// Listen for shader changes triggered by the user (clicking a list
+// item, drag-drop, etc.). When the shader compiles cleanly, remember
+// it. Listener is attached once at module load.
+if (typeof window !== 'undefined') {
+  window.addEventListener('macroverse:shader-changed', (ev: Event) => {
+    const detail = (ev as CustomEvent<{ path?: string }>).detail;
+    // Defer: the compile error state is set synchronously inside
+    // render() which runs immediately before the event dispatch, so
+    // a microtask is enough to read the latest value.
+    queueMicrotask(() => {
+      if (stateModule.lastCompileError) return;
+      rememberLastShader(detail?.path);
+    });
+  });
+}
+
+/** Score a shader for "is this likely to compile in WebGL 1.0?". Higher
+ *  is better. We want the FIRST landing to be a simple, reliable shader
+ *  (gradient, plasma, solid red, noise) rather than a debug/test
+ *  shader that happens to come first alphabetically and may use
+ *  GLSL ES 3.00 features. */
+function landingScore(e: IndexEntry): number {
+  const name = ((e.fixedName ?? e.name ?? e.path ?? '')).toLowerCase();
+  let s = 0;
+  // Strong positive: known-simple visual shaders
+  if (/\b(gradient|plasma|solid|simple|hello|basic|minimal)\b/.test(name)) s += 100;
+  // Mild positive: classic generative shaders
+  if (/\b(noise|spiral|rainbow|tunnel)\b/.test(name)) s += 30;
+  // Strong negative: debug/test/sampler shaders are usually written
+  // for WebGL 2 / GLSL ES 3.00 with bitwise/modulo on ints, integer
+  // texture lookups, etc.
+  if (/\b(debug|test|sampler|checker|scratch|broken|dead|wip)\b/.test(name)) s -= 100;
+  // Negative for items currently flagged dead in the index
+  if ((e.tags || []).some((t) => /^dead$/i.test(t))) s -= 1000;
+  return s;
+}
 
 export interface LoadSequenceOpts {
   signal?: AbortSignal;
@@ -158,25 +207,55 @@ export async function loadSequence(opts?: LoadSequenceOpts): Promise<void> {
 
   if (arr.length > 0) {
     status(arr.length + ' shaders loaded');
-    const first = arr.find((x) => /sorted_txt/i.test(x.path || '')) || arr[0];
-    if (first && first.path) {
-      const rest = arr.filter((e) => e !== first && e.path);
-      const candidates = [first, ...rest].slice(0, 15);
-      let loaded = false;
-      for (const entry of candidates) {
-        setCurrentEntry(entry);
-        try {
-          await loadShader(entry);
-          loaded = true;
-          break;
-        } catch (_) {
-          /* compile or load failed, try next */
-        }
+
+    // Build the candidate list:
+    // 1. The user's last successfully-loaded shader, if it still exists.
+    // 2. Then everything else, sorted by landingScore (simple visual
+    //    shaders ahead of debug / test / sampler shaders that often
+    //    require GLSL ES 3.00 and break on plain WebGL 1.0).
+    const remembered = recallLastShader();
+    const rememberedEntry = remembered
+      ? arr.find((e) => e.path === remembered)
+      : null;
+    const others = arr
+      .filter((e) => e.path && e !== rememberedEntry)
+      .slice()
+      .sort((a, b) => landingScore(b) - landingScore(a));
+    const candidates = (rememberedEntry ? [rememberedEntry, ...others] : others).slice(0, 25);
+
+    let loaded = false;
+    for (const entry of candidates) {
+      setCurrentEntry(entry);
+      try {
+        clearLastCompileError();
+        await loadShader(entry);
+        // render() catches its own compile errors and shows the
+        // overlay without throwing. Inspect lastCompileError to
+        // detect silent failures and try the next candidate.
+        if (stateModule.lastCompileError) continue;
+        loaded = true;
+        rememberLastShader(entry.path);
+        break;
+      } catch (_) {
+        /* fetch / abort failure - try next */
       }
-      if (!loaded) {
-        setCurrentEntry(first);
-        loadShader(first);
-      }
+    }
+
+    if (!loaded) {
+      // Every candidate either failed to fetch or failed to compile.
+      // Don't leave the user staring at a broken shader: clear the
+      // overlay, show a friendly message, and let them pick from the
+      // library.
+      clearLastCompileError();
+      const overlay = document.getElementById('previewCompileErrorOverlay');
+      if (overlay) (overlay as HTMLElement).style.display = 'none';
+      const fixBtn = document.getElementById('fixBtn');
+      if (fixBtn) (fixBtn as HTMLElement).style.display = 'none';
+      setCurrentEntry(null);
+      setCurrentSource('');
+      const sync = (globalThis as unknown as { syncCodeFromState?: () => void }).syncCodeFromState;
+      if (typeof sync === 'function') sync();
+      status('No shader auto-loaded. Pick one from the library to start.');
     }
   } else {
     setCurrentSource('');
