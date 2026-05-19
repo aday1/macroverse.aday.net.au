@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>macroverse.aday.net.au</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #0d1117; color: #e6edf3; }
+    a { color: #7db4ff; }
+    code { background: #1f2937; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Macroverse GitHub Showcase Page</h1>
+  <p>This is the project showcase/overview page, not the primary live runtime.</p>
+  <ul>
+    <li>Live: <a href="https://macroverse.aday.net.au">macroverse.aday.net.au</a></li>
+    <li>Test: <a href="https://macroverse-test.aday.net.au">macroverse-test.aday.net.au</a></li>
+    <li>Aday private: <code>macroverse-aday.aday.net.au</code> (basic auth required)</li>
+    <li>ArtBastard live: <a href="https://artbastard.aday.net.au">artbastard.aday.net.au</a></li>
+    <li>ArtBastard test: <a href="https://artbastard-test.aday.net.au">artbastard-test.aday.net.au</a></li>
+  </ul>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Macroverse 42 — The Wired Atelier</title>
+  <meta name="description" content="GLSL/ISF shader lab and VJ tool for Resolume Wire. Browse, preview, expose parameters, fix shaders, and export to Wire. One binary.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void:    #06040f;
+      --surface: #0d0820;
+      --blue:    #4488cc;
+      --violet:  #8833cc;
+      --teal:    #00ddaa;
+      --copper:  #ee8833;
+      --text:    #d0c8e8;
+      --dim:     #9977cc;
+      --glow-b:  rgba(68, 136, 204, 0.45);
+      --glow-v:  rgba(136, 51, 204, 0.35);
+      --glow-t:  rgba(0, 221, 170, 0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Share Tech Mono', 'JetBrains Mono', monospace;
+      background: var(--void);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ─── WebGL canvas ─────────────────────────────────────────────────────── */
+    #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; }
+    .bg-fallback {
+      display: none; position: fixed; inset: 0; z-index: -2;
+      background: radial-gradient(ellipse 120% 80% at 50% 10%,
+        #1a0030 0%, #060410 60%);
+    }
+
+    /* ─── Overlays ─────────────────────────────────────────────────────────── */
+    .scanline {
+      position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+      background: repeating-linear-gradient(0deg,
+        transparent, transparent 2px,
+        rgba(0,0,0,0.09) 2px, rgba(0,0,0,0.09) 4px);
+    }
+    .vignette {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background: radial-gradient(ellipse 100% 100% at 50% 50%,
+        transparent 25%, rgba(6,4,15,0.70) 100%);
+    }
+    /* top-edge purple ambient */
+    .ambient {
+      position: fixed; top: 0; left: 0; right: 0; height: 40vh;
+      z-index: -1; pointer-events: none;
+      background: radial-gradient(ellipse 80% 100% at 50% -10%,
+        rgba(136,51,204,0.12) 0%, transparent 70%);
+    }
+
+    /* ─── Layout ───────────────────────────────────────────────────────────── */
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 960px; margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+    }
+
+    /* ─── Header ───────────────────────────────────────────────────────────── */
+    header { text-align: center; padding: 5rem 0 3.5rem; }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 7vw, 3.8rem);
+      letter-spacing: 0.18em;
+      color: var(--blue);
+      text-shadow: 0 0 30px var(--glow-b), 0 0 80px rgba(68,136,204,0.15);
+      animation: glitch-title 11s ease-in-out infinite;
+      position: relative;
+    }
+    @keyframes glitch-title {
+      0%,89%,100% {
+        transform: none;
+        text-shadow: 0 0 30px var(--glow-b), 0 0 80px rgba(68,136,204,0.15);
+      }
+      90% { transform: skewX(-3deg) translateX(-2px); text-shadow: -3px 0 var(--violet), 3px 0 var(--teal); }
+      91% { transform: skewX(2deg)  translateX( 2px); text-shadow:  3px 0 var(--violet),-3px 0 var(--teal); }
+      92% { transform: none; text-shadow: 0 0 30px var(--glow-b); }
+      93% { transform: skewX(-1deg); text-shadow: -2px 0 var(--teal), 2px 0 var(--blue); }
+      94% { transform: none; text-shadow: 0 0 30px var(--glow-b), 0 0 80px rgba(68,136,204,0.15); }
+    }
+
+    .tagline {
+      font-size: 0.95rem;
+      color: var(--copper);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-top: 0.6rem;
+    }
+    .showcase-banner {
+      margin: 0.9rem auto 0;
+      display: inline-block;
+      padding: 0.38rem 0.72rem;
+      border: 1px solid rgba(68, 136, 204, 0.55);
+      color: #cde5ff;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(6, 18, 38, 0.82);
+    }
+    .lain-quote {
+      font-size: 0.82rem;
+      color: #c8b8f0;
+      margin-top: 0.9rem;
+      letter-spacing: 0.08em;
+      font-style: italic;
+      text-shadow:
+        0 0 8px rgba(0,221,170,0.45),
+        0 0 20px rgba(136,51,204,0.30);
+      animation: quote-breathe 5s ease-in-out infinite;
+    }
+    @keyframes quote-breathe {
+      0%,100% {
+        text-shadow: 0 0 8px rgba(0,221,170,0.35), 0 0 20px rgba(136,51,204,0.20);
+        opacity: 0.80;
+      }
+      50% {
+        text-shadow: 0 0 14px rgba(0,221,170,0.70), 0 0 32px rgba(136,51,204,0.45), 0 0 2px rgba(200,184,240,0.5);
+        opacity: 1.0;
+      }
+    }
+    .glow-line {
+      height: 1px; width: 50%; margin: 1.4rem auto 0;
+      background: linear-gradient(90deg, transparent, var(--blue), var(--violet), transparent);
+      animation: line-pulse 4s ease-in-out infinite;
+    }
+    @keyframes line-pulse {
+      0%,100% { opacity: 0.3; }
+      50%      { opacity: 0.9; }
+    }
+
+    /* ─── CTA buttons ──────────────────────────────────────────────────────── */
+    .cta { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2rem; }
+    .btn {
+      padding: 0.65rem 1.5rem; font-family: inherit; font-size: 0.9rem;
+      letter-spacing: 0.08em; text-decoration: none; border: 1px solid;
+      transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+      backdrop-filter: blur(6px);
+    }
+    .btn-live {
+      color: var(--void); background: var(--teal);
+      border-color: var(--teal);
+      box-shadow: 0 0 14px rgba(0,221,170,0.5);
+      letter-spacing: 0.1em;
+    }
+    .btn-live:hover { background: #00ffcc; box-shadow: 0 0 32px rgba(0,221,170,0.8); }
+    .btn-primary {
+      color: var(--void); background: var(--copper);
+      border-color: var(--copper);
+      box-shadow: 0 0 12px rgba(238,136,51,0.4);
+    }
+    .btn-primary:hover { background: #ff9944; box-shadow: 0 0 28px rgba(238,136,51,0.7); }
+    .btn-secondary {
+      color: var(--blue); background: rgba(68,136,204,0.08);
+      border-color: var(--blue);
+    }
+    .btn-secondary:hover { background: var(--blue); color: var(--void); box-shadow: 0 0 20px var(--glow-b); }
+
+    /* ─── Sections ─────────────────────────────────────────────────────────── */
+    section {
+      margin: 3.5rem 0; padding: 2rem 0;
+      border-top: 1px solid rgba(68,136,204,0.12);
+    }
+    h2 {
+      font-family: 'Orbitron', sans-serif; font-weight: 700;
+      font-size: 0.95rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--copper); margin-bottom: 1.2rem;
+    }
+    h2::before { content: '// '; color: var(--dim); }
+
+    p { line-height: 1.75; color: var(--text); margin-bottom: 1rem; }
+    .dim { color: var(--dim); }
+
+    /* ─── Two-up use cases ─────────────────────────────────────────────────── */
+    .use-cases {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; margin-top: 1.2rem;
+    }
+    @media (max-width: 600px) { .use-cases { grid-template-columns: 1fr; } }
+    .use-case {
+      background: rgba(13,8,32,0.75); backdrop-filter: blur(8px);
+      border: 1px solid rgba(68,136,204,0.15); padding: 1.4rem;
+      position: relative; overflow: hidden;
+    }
+    .use-case::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 3px; height: 100%;
+    }
+    .use-case.uc-vj::before  { background: var(--teal); box-shadow: 0 0 8px var(--glow-t); }
+    .use-case.uc-wire::before { background: var(--copper); box-shadow: 0 0 8px rgba(238,136,51,0.4); }
+    .use-case h3 {
+      font-family: 'Orbitron', sans-serif; font-size: 0.85rem;
+      letter-spacing: 0.1em; margin-bottom: 0.8rem;
+    }
+    .uc-vj  h3 { color: var(--teal); }
+    .uc-wire h3 { color: var(--copper); }
+    .use-case p { font-size: 0.88rem; margin: 0; }
+
+    /* ─── Feature grid ─────────────────────────────────────────────────────── */
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 0.75rem; margin-top: 1.2rem;
+    }
+    .feat {
+      background: rgba(13,8,32,0.7); border: 1px solid rgba(68,136,204,0.10);
+      padding: 0.9rem 1rem; backdrop-filter: blur(6px);
+    }
+    .feat .tag {
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--dim); margin-bottom: 0.35rem;
+    }
+    .feat .label { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+
+    /* ─── Code block ───────────────────────────────────────────────────────── */
+    pre {
+      background: rgba(6,4,15,0.92); backdrop-filter: blur(4px);
+      border: 1px solid rgba(68,136,204,0.15); border-left: 3px solid var(--blue);
+      padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.82rem;
+      line-height: 1.6; margin-top: 0.8rem; color: var(--text);
+    }
+    code { font-family: 'Share Tech Mono', monospace; }
+    pre code { color: inherit; }
+    .cm { color: var(--dim); }   /* comment */
+    .kw { color: var(--violet); } /* keyword */
+    .fn { color: #44ddff; }       /* function */
+    .st { color: var(--teal); }   /* string / value */
+
+    /* ─── Screenshots ──────────────────────────────────────────────────────── */
+    .screenshots {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem; margin-top: 1.2rem;
+    }
+    .slot {
+      aspect-ratio: 16/10; background: var(--surface);
+      border: 1px solid rgba(68,136,204,0.15);
+    }
+    .slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slot.ph { display: flex; align-items: center; justify-content: center;
+      border: 1px dashed rgba(85,68,136,0.4); }
+    .slot.ph img { display: none; }
+    .slot.ph::after { content: attr(data-label); color: var(--dim); font-size: 0.75rem; }
+
+    /* ─── Node decoration ──────────────────────────────────────────────────── */
+    .nodes {
+      display: flex; gap: 1.5rem; align-items: center;
+      justify-content: center; margin: 2rem 0 0; opacity: 0.35;
+    }
+    .node {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue); box-shadow: 0 0 8px var(--glow-b);
+      animation: node-blink 3s ease-in-out infinite;
+    }
+    .node:nth-child(2) { background: var(--violet); box-shadow: 0 0 8px var(--glow-v); animation-delay: 1s; }
+    .node:nth-child(3) { background: var(--teal);   box-shadow: 0 0 8px var(--glow-t); animation-delay: 2s; }
+    .node-line { height: 1px; flex: 1; background: linear-gradient(90deg, var(--blue), var(--violet), var(--teal)); opacity: 0.4; }
+    @keyframes node-blink { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    /* ─── Shader controls strip ────────────────────────────────────────────── */
+    .shader-controls {
+      margin-top: 1.6rem; padding: 1rem 1.2rem 0.8rem;
+      background: rgba(13,8,32,0.65); backdrop-filter: blur(8px);
+      border: 1px solid rgba(68,136,204,0.18);
+      border-radius: 2px;
+    }
+    .shader-controls .ctrl-row {
+      display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; justify-content: center;
+    }
+    .shader-controls label {
+      display: flex; flex-direction: column; gap: 4px; align-items: center;
+    }
+    .shader-controls .ctrl-name {
+      font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--copper);
+    }
+    .shader-controls .ctrl-val { color: var(--teal); }
+    .shader-controls input[type=range] {
+      width: 120px; accent-color: var(--teal); cursor: pointer;
+    }
+    .shader-controls .ctrl-hint {
+      margin-top: 0.75rem; text-align: center;
+      font-size: 10px; color: var(--dim); letter-spacing: .05em;
+      line-height: 1.8;
+    }
+    .shader-controls .ctrl-hint kbd {
+      color: var(--blue); font-family: inherit;
+    }
+
+    /* ─── GLSL lab (easter egg) ────────────────────────────────────────────── */
+    #glsl-lab {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+      background: rgba(6,4,15,0.97); border-top: 1px solid var(--blue);
+      padding: 16px; font-family: 'Share Tech Mono', monospace; font-size: 12px;
+      color: var(--text); max-height: 55vh; overflow-y: auto;
+      box-shadow: 0 -4px 40px rgba(68,136,204,0.25);
+    }
+    #glsl-lab textarea {
+      width: 100%; height: 220px;
+      background: #060410; color: #c0e0ff;
+      border: 1px solid var(--blue); padding: 10px;
+      font-family: inherit; font-size: 11px;
+      resize: vertical; outline: none; line-height: 1.55;
+    }
+    #glsl-lab button {
+      font-family: inherit; letter-spacing: .08em; cursor: pointer;
+    }
+    /* ─── Footer ───────────────────────────────────────────────────────────── */
+    footer {
+      text-align: center; padding: 2.5rem 0; font-size: 0.78rem; color: var(--dim);
+      border-top: 1px solid rgba(68,136,204,0.08);
+    }
+    footer a { color: var(--dim); text-decoration: none; }
+    footer a:hover { color: var(--blue); }
+    .protocol { letter-spacing: 0.1em; font-size: 0.7rem; color: rgba(85,68,136,0.5); margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <div class="bg-fallback" id="bg-fallback"></div>
+  <div class="ambient"></div>
+  <div class="vignette"></div>
+  <div class="scanline"></div>
+
+  <div class="wrap">
+    <header>
+      <h1>MACROVERSE 42</h1>
+      <p class="tagline">The Wired Atelier</p>
+      <p class="showcase-banner">GitHub Showcase Page // not the primary live app</p>
+      <p class="lain-quote">your whole library, live — search it, tag it, perform it</p>
+      <div class="glow-line"></div>
+      <div class="cta">
+        <a class="btn btn-live" href="https://macroverse42.fly.dev/">Try it live</a>
+        <a class="btn btn-primary" href="https://github.com/aday1/Macroverse/releases">Download</a>
+        <a class="btn btn-secondary" href="https://github.com/aday1/Macroverse">Source on GitHub</a>
+        <a class="btn btn-secondary" href="#help">Help &amp; Shortcuts</a>
+      </div>
+      <div class="shader-controls">
+        <div class="ctrl-row">
+          <label>
+            <span class="ctrl-name">Warp &nbsp;<span class="ctrl-val" id="ov-warp">1.00</span></span>
+            <input type="range" id="ctrl-warp" min="0" max="2" step="0.05" value="1">
+          </label>
+          <label>
+            <span class="ctrl-name">Speed &nbsp;<span class="ctrl-val" id="ov-speed">1.00</span></span>
+            <input type="range" id="ctrl-speed" min="0.1" max="3" step="0.05" value="1">
+          </label>
+          <label>
+            <span class="ctrl-name">Grid &nbsp;<span class="ctrl-val" id="ov-grid">1.00</span></span>
+            <input type="range" id="ctrl-grid" min="0" max="2" step="0.05" value="1">
+          </label>
+          <label>
+            <span class="ctrl-name">Palette &nbsp;<span class="ctrl-val" id="ov-pal">0.00</span></span>
+            <input type="range" id="ctrl-pal" min="-0.5" max="0.5" step="0.01" value="0">
+          </label>
+        </div>
+        <p class="ctrl-hint">
+          move your cursor to warp the field &nbsp;·&nbsp; <kbd>~</kbd> opens the live GLSL editor<br>
+          <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
+          <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex → Ollama → AI · or dream up entirely new shaders from a single prompt · A/B deck · crossfader · tag · search · perform your whole library · stream live to OBS · export to Wire</span>
+        </p>
+      </div>
+    </header>
+
+    <section>
+      <h2>Two ways in</h2>
+      <div class="use-cases">
+        <div class="use-case uc-vj">
+          <h3>Standalone VJ Tool</h3>
+          <p>Browse and perform with your full GLSL/ISF library. A/B crossfader, mix modes, MIDI/OSC mapping. MJPEG stream to OBS or virtual webcam. Tag, search, revert. All signals, one window.</p>
+        </div>
+        <div class="use-case uc-wire">
+          <h3>Resolume Wire Pipeline</h3>
+          <p>Load any GLSL file, check Wire compatibility, expose magic-number literals as ISF sliders, run the shader fix chain (regex → Ollama → AI), and push the finished macro straight into Resolume Wire with working parameters.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Quick start</h2>
+<pre><code><span class="cm"># Download a release binary, put it in your shader folder, run:</span>
+.\Macroverse42.exe          <span class="cm"># Windows</span>
+./Macroverse42             <span class="cm"># Linux / Mac</span>
+<span class="cm"># open http://localhost:8765</span>
+</code></pre>
+<pre><code><span class="cm"># Or build from source:</span>
+<span class="kw">git</span> clone https://github.com/aday1/Macroverse.git
+<span class="kw">cd</span> Macroverse/api
+<span class="fn">go build</span> -o ../Macroverse42 .
+<span class="kw">cd</span> .. && ./Macroverse42</code></pre>
+    </section>
+
+    <section>
+      <h2>Features</h2>
+      <div class="feat-grid">
+        <div class="feat"><div class="tag">Preview</div><div class="label">Real-time WebGL preview for any GLSL/ISF shader</div></div>
+        <div class="feat"><div class="tag">Expose</div><div class="label">One-click: turn magic numbers into ISF sliders for Wire</div></div>
+        <div class="feat"><div class="tag">Fix chain</div><div class="label">Broken shader? Regex → Ollama → AI repairs it in order</div></div>
+        <div class="feat"><div class="tag">VJ deck</div><div class="label">A/B crossfader, mix modes, auto-cycle, MIDI/OSC mapping</div></div>
+        <div class="feat"><div class="tag">Wire export</div><div class="label">Check ISF compat, clipboard to Wire, push with params</div></div>
+        <div class="feat"><div class="tag">OBS stream</div><div class="label">MJPEG stream at /api/output/macrocam/stream</div></div>
+        <div class="feat"><div class="tag">Git history</div><div class="label">Auto-commit on save, browse and revert any version</div></div>
+        <div class="feat"><div class="tag">Library</div><div class="label">2000+ shaders: tags, categories, emoji badges, search</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Screenshots</h2>
+      <p class="dim">Add your own to <code>docs/screenshots/</code> to populate this gallery.</p>
+      <div class="screenshots">
+        <div class="slot ph" data-label="full-ui-layout.webp"><img src="screenshots/full-ui-layout.webp" alt="Full UI" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
+        <div class="slot ph" data-label="context-menu.webp"><img src="screenshots/context-menu.webp" alt="Context menu" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
+        <div class="slot ph" data-label="grid-view.webp"><img src="screenshots/grid-view.webp" alt="Grid view" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
+      </div>
+    </section>
+
+    <section id="help">
+      <h2>Help &amp; Keyboard Shortcuts</h2>
+      <div class="feat-grid" style="margin-bottom:1.5rem;">
+        <div class="feat"><div class="tag">Gallery</div><div class="label">← → ↑ ↓ — navigate between shader cells</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label">Alt+← / Alt+→ — previous / next page</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label">1–9 — toggle preset tag on focused shader (same key removes it)</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label">Shift+1–9 — toggle preset VJ Set on focused shader</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label">A — set-toggle prompt (shows all sets, current membership)</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label">F — toggle favourite</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label">R — rename focused shader</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label">? — show / hide keyboard shortcut HUD</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label">Space — toggle auto-advance (cycles focus automatically)</div></div>
+        <div class="feat"><div class="tag">Export</div><div class="label">Export ▾ menu: CSV · JSON · paths (.txt, one per line → Resolume Avenue)</div></div>
+      </div>
+
+      <h3 style="color:var(--teal);margin-bottom:.75rem;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;">Preset VJ Sets (Shift+1 through Shift+9)</h3>
+      <div class="feat-grid" style="margin-bottom:1.5rem;">
+        <div class="feat"><div class="tag">1</div><div class="label">vj-ambient</div></div>
+        <div class="feat"><div class="tag">2</div><div class="label">vj-techno</div></div>
+        <div class="feat"><div class="tag">3</div><div class="label">vj-cosmic</div></div>
+        <div class="feat"><div class="tag">4</div><div class="label">vj-glitch</div></div>
+        <div class="feat"><div class="tag">5</div><div class="label">vj-geometric</div></div>
+        <div class="feat"><div class="tag">6</div><div class="label">vj-organic</div></div>
+        <div class="feat"><div class="tag">7</div><div class="label">vj-wire-ready</div></div>
+        <div class="feat"><div class="tag">8</div><div class="label">vj-dark</div></div>
+        <div class="feat"><div class="tag">9</div><div class="label">vj-colour</div></div>
+      </div>
+
+      <h3 style="color:var(--teal);margin-bottom:.75rem;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;">Common Actions</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem;color:#c0c0d0;">
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Preview shader</td><td style="padding:.4rem .6rem;">Click it in the list</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Search</td><td style="padding:.4rem .6rem;">Type in the filter box (name, tag, category)</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Rename</td><td style="padding:.4rem .6rem;">Double-click name, or right-click → Rename</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Move category</td><td style="padding:.4rem .6rem;">Right-click → Move to category</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Add tags</td><td style="padding:.4rem .6rem;">Click + next to tags, or right-click → Edit tags</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Expose parameters</td><td style="padding:.4rem .6rem;">Click Expose in the code toolbar</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Send to Wire</td><td style="padding:.4rem .6rem;">Click Clipboard to Wire (after Expose)</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Version history</td><td style="padding:.4rem .6rem;">Right-click → See versions → click any to revert</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">A/B VJ deck</td><td style="padding:.4rem .6rem;">Click the VJ tab</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Gallery browse</td><td style="padding:.4rem .6rem;">Click the Gallery tab</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Webcam input</td><td style="padding:.4rem .6rem;">Right panel → Texture inputs → Webcam</td></tr>
+        <tr><td style="padding:.4rem .6rem;color:#9966ff;">Full screen</td><td style="padding:.4rem .6rem;">Click Full Screen in status bar, or press F11</td></tr>
+      </table>
+
+      <h3 style="color:var(--teal);margin:.75rem 0 .5rem;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;">Settings Reference</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem;color:#c0c0d0;">
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Source paths</td><td style="padding:.4rem .6rem;">Add / remove folders to scan. Default: shaders/</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">LLM Provider Chain</td><td style="padding:.4rem .6rem;">Enable/disable Local regex · Ollama · Cursor per-provider</td></tr>
+        <tr style="border-bottom:1px solid #2a1a4a;"><td style="padding:.4rem .6rem;color:#9966ff;">Hard Reset (git)</td><td style="padding:.4rem .6rem;">Zip the configured target folder and restore it from git. Target path configurable in Settings → Hard Reset Path.</td></tr>
+        <tr><td style="padding:.4rem .6rem;color:#9966ff;">NUKE</td><td style="padding:.4rem .6rem;">Backup DB → clear index → rescan disk. Shader files unchanged.</td></tr>
+      </table>
+
+      <h3 style="color:var(--teal);margin:.75rem 0 .5rem;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em;">OBS / Streaming</h3>
+      <pre><code><span class="cm"># MJPEG stream for OBS Browser Source:</span>
+http://localhost:8765/api/output/macrocam/stream
+
+<span class="cm"># Linux virtual webcam (requires v4l2loopback):</span>
+ffmpeg -i http://localhost:8765/api/output/macrocam/stream -f v4l2 /dev/video0</code></pre>
+    </section>
+
+    <div class="nodes">
+      <div class="node"></div>
+      <div class="node-line"></div>
+      <div class="node"></div>
+      <div class="node-line"></div>
+      <div class="node"></div>
+    </div>
+
+    <footer>
+      <a href="https://github.com/aday1/Macroverse">Macroverse 42</a> &mdash; The Wired Atelier &mdash; GLSL lab for Resolume Wire
+      <div class="protocol">PROTOCOL: ISF 2.0 &nbsp;/&nbsp; SIGNAL: GLSL ES 1.0 &nbsp;/&nbsp; PORT: 8765</div>
+    </footer>
+  </div>
+
+  <script>
+  // ─── WebGL background: live GLSL — Macroverse palette ──────────────────────
+  (function () {
+    var C  = document.getElementById('bg');
+    var gl = C.getContext('webgl') || C.getContext('experimental-webgl');
+    if (!gl) { document.getElementById('bg-fallback').style.display = 'block'; return; }
+
+    var VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+
+    // Fragment shader — also exposed in the easter-egg GLSL Lab (press ~ or triple-click title)
+    var FS_DEFAULT = [
+      'precision mediump float;',
+      'uniform float T;',        // time (seconds)
+      'uniform vec2  R;',        // resolution
+      'uniform vec2  M;',        // mouse  0..1  (x right, y up)
+      'uniform float uWarp;',    // domain-warp intensity  0..2
+      'uniform float uSpeed;',   // time scale             0.1..3
+      'uniform float uGrid;',    // grid-node brightness   0..2
+      'uniform float uPal;',     // palette shift         -0.5..0.5
+
+      // ── Hash & value noise ──────────────────────────────────────────────
+      'float H(vec2 p){p=fract(p*vec2(127.1,311.7));p+=dot(p,p+17.5);return fract(p.x*p.y);}',
+      'float N(vec2 p){',
+      '  vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);',
+      '  return mix(mix(H(i),H(i+vec2(1,0)),f.x),mix(H(i+vec2(0,1)),H(i+vec2(1,1)),f.x),f.y);',
+      '}',
+
+      // ── FBM (6-octave fractional Brownian motion) ───────────────────────
+      'float fbm(vec2 p){',
+      '  float v=0.,w=.5;',
+      '  for(int i=0;i<6;i++){v+=w*N(p);p=p*2.08+vec2(1.7,9.2);w*=.46;}',
+      '  return v;',
+      '}',
+
+      // ── Macroverse colour palette ───────────────────────────────────────
+      // void -> deep purple -> indigo -> electric blue -> DMT teal -> white-hot
+      // palette hue drifts slowly over time; uPal shifts the blend point
+      'vec3 pal(float f,float t){',
+      '  float drift=sin(t*.07)*.08+cos(t*.05)*.06;',
+      '  f=clamp(f+drift,0.,1.);',
+      '  vec3 c;',
+      '  if(f<.20) c=mix(vec3(.024,.016,.047),vec3(.12,.04,.28),f/.20);',
+      '  else if(f<.42) c=mix(vec3(.12,.04,.28),vec3(.18,.08,.55),(f-.20)/.22);',
+      '  else if(f<.62) c=mix(vec3(.18,.08,.55),vec3(.27,.53,.80),(f-.42)/.20);',
+      '  else if(f<.78) c=mix(vec3(.27,.53,.80),vec3(.0,.80,.68),(f-.62)/.16);',
+      '  else c=mix(vec3(.0,.80,.68),vec3(.93,.82,.94),(f-.78)/.22);',
+      '  c+=vec3(.60,.22,.0)*smoothstep(.68,.76,f)*smoothstep(.84,.76,f)*.28;', // copper bloom
+      '  return c;',
+      '}',
+
+      // ── Network grid nodes (the Wired) ─────────────────────────────────
+      'float grid(vec2 uv,float asp){',
+      '  vec2 g=fract(vec2(uv.x*asp*18.,uv.y*18.))-.5;',
+      '  return exp(-dot(g,g)*80.)*0.25;',
+      '}',
+
+      // ── Main ───────────────────────────────────────────────────────────
+      'void main(){',
+      '  vec2 uv=gl_FragCoord.xy/R;',
+      '  float asp=R.x/R.y;',
+      // Mouse pulls the domain-warp origin — cursor warps the field
+      '  vec2 mp=(M-.5)*0.7;',
+      '  vec2 p=uv+mp; p.x*=asp;',
+      '  float t=T*.055*uSpeed;',
+      '  vec2 w1=vec2(fbm(p+vec2(t,t*.75)), fbm(p+vec2(t*.8,t*.5)+2.3));',
+      '  vec2 w2=vec2(fbm(p+w1*1.1+vec2(1.7,9.2)+t*.18),',
+      '               fbm(p+w1      +vec2(8.3,2.8)));',
+      '  float f=fbm(p+w2*(.80*uWarp));',
+      '  float fpal=clamp(f+uPal,0.,1.);',
+      '  vec3 col=pal(fpal,T)*0.88;',
+      // Grid nodes — brightest in dark void regions
+      '  float dark=1.-smoothstep(.18,.42,f);',
+      '  col+=vec3(.27,.53,.80)*grid(uv,asp)*dark*.6*uGrid;',
+      // Signal scan line
+      '  float scanY=fract(T*.08);',
+      '  float sline=exp(-abs(uv.y-scanY)*40.)*0.07;',
+      '  col+=vec3(.28,.55,.90)*sline;',
+      // Vignette
+      '  vec2 vig=uv-.5; col*=1.-dot(vig,vig)*1.05;',
+      '  gl_FragColor=vec4(col,1.);',
+      '}'
+    ].join('\n');
+
+    // ── Shader compilation with error reporting ──────────────────────────
+    var prog = null;
+    var uT, uR, uM, uWarp, uSpeed, uGrid, uPal, aP;
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER,
+      new Float32Array([-1,-1, 1,-1, -1,1, 1,-1, 1,1, -1,1]), gl.STATIC_DRAW);
+
+    function compile(fsSrc) {
+      function sh(type, src) {
+        var s = gl.createShader(type);
+        gl.shaderSource(s, src); gl.compileShader(s);
+        return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
+      }
+      function shErr(type, src) {
+        var s = gl.createShader(type);
+        gl.shaderSource(s, src); gl.compileShader(s);
+        return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? null : gl.getShaderInfoLog(s);
+      }
+      var vsErr = shErr(gl.VERTEX_SHADER, VS);
+      var fsErr = shErr(gl.FRAGMENT_SHADER, fsSrc);
+      if (vsErr || fsErr) return vsErr || fsErr;
+      var vs = sh(gl.VERTEX_SHADER, VS);
+      var fs = sh(gl.FRAGMENT_SHADER, fsSrc);
+      var p = gl.createProgram();
+      gl.attachShader(p, vs); gl.attachShader(p, fs);
+      gl.linkProgram(p);
+      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) return gl.getProgramInfoLog(p);
+      if (prog) gl.deleteProgram(prog);
+      prog = p; gl.useProgram(prog);
+      uT    = gl.getUniformLocation(prog, 'T');
+      uR    = gl.getUniformLocation(prog, 'R');
+      uM    = gl.getUniformLocation(prog, 'M');
+      uWarp = gl.getUniformLocation(prog, 'uWarp');
+      uSpeed= gl.getUniformLocation(prog, 'uSpeed');
+      uGrid = gl.getUniformLocation(prog, 'uGrid');
+      uPal  = gl.getUniformLocation(prog, 'uPal');
+      aP    = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(aP);
+      gl.vertexAttribPointer(aP, 2, gl.FLOAT, false, 0, 0);
+      return null;
+    }
+    var initErr = compile(FS_DEFAULT);
+    if (initErr) { console.warn('[Macroverse] shader error:', initErr); return; }
+
+    // ── Live params (driven by sliders + smooth mouse) ───────────────────
+    var params = { mx:0.5, my:0.5, warp:1.0, speed:1.0, grid:1.0, pal:0.0 };
+    var tgtMx = 0.5, tgtMy = 0.5;
+    document.addEventListener('mousemove', function(e) {
+      tgtMx = e.clientX / window.innerWidth;
+      tgtMy = 1.0 - e.clientY / window.innerHeight;
+    });
+
+    // ── Bind visible page sliders ────────────────────────────────────────
+    function bindSlider(id, ovId, key, dp) {
+      var sl = document.getElementById(id);
+      var ov = document.getElementById(ovId);
+      if (!sl) return;
+      sl.addEventListener('input', function() {
+        params[key] = parseFloat(sl.value);
+        if (ov) ov.textContent = parseFloat(sl.value).toFixed(dp !== undefined ? dp : 2);
+      });
+    }
+    bindSlider('ctrl-warp',  'ov-warp',  'warp',  2);
+    bindSlider('ctrl-speed', 'ov-speed', 'speed', 2);
+    bindSlider('ctrl-grid',  'ov-grid',  'grid',  2);
+    bindSlider('ctrl-pal',   'ov-pal',   'pal',   2);
+
+    // ── Resize ───────────────────────────────────────────────────────────
+    function resize() {
+      C.width = window.innerWidth; C.height = window.innerHeight;
+      gl.viewport(0, 0, C.width, C.height);
+    }
+    window.addEventListener('resize', resize); resize();
+
+    // ── Render loop ──────────────────────────────────────────────────────
+    var t0 = null;
+    function frame(ts) {
+      if (!t0) t0 = ts;
+      var t = (ts - t0) / 1000;
+      // Smooth mouse lerp — gentle pull, not jittery
+      params.mx += (tgtMx - params.mx) * 0.035;
+      params.my += (tgtMy - params.my) * 0.035;
+      gl.uniform1f(uT,    t);
+      gl.uniform2f(uR,    C.width, C.height);
+      gl.uniform2f(uM,    params.mx, params.my);
+      gl.uniform1f(uWarp, params.warp);
+      gl.uniform1f(uSpeed,params.speed);
+      gl.uniform1f(uGrid, params.grid);
+      gl.uniform1f(uPal,  params.pal);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    // ── Easter egg: GLSL Lab ─────────────────────────────────────────────
+    // Activate: press  ~  or  `  (backtick),  or triple-click the h1 title.
+    // The live GLSL source is right here in the page — edit and recompile.
+    var labEl = null;
+    var clickCount = 0, clickTimer = null;
+
+    function syncLabSliders() {
+      ['warp','speed','grid','pal'].forEach(function(k) {
+        var sl = document.getElementById('lab-sl-'+k);
+        var lv = document.getElementById('lab-lv-'+k);
+        if (sl) { sl.value = params[k]; }
+        if (lv) { lv.textContent = parseFloat(params[k]).toFixed(2); }
+        // Keep page sliders in sync too
+        var ps = document.getElementById('ctrl-'+k);
+        var pv = document.getElementById('ov-'+k);
+        if (ps) ps.value = params[k];
+        if (pv) pv.textContent = parseFloat(params[k]).toFixed(2);
+      });
+    }
+
+    function buildLab() {
+      if (labEl) {
+        labEl.style.display = labEl.style.display === 'none' ? 'block' : 'none';
+        if (labEl.style.display === 'block') syncLabSliders();
+        return;
+      }
+      labEl = document.createElement('div');
+      labEl.id = 'glsl-lab';
+      labEl.innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">' +
+          '<span style="color:#00ddaa;letter-spacing:.12em;font-size:13px;">// GLSL LAB — live fragment shader editor</span>' +
+          '<button id="lab-close" style="background:transparent;color:#9977cc;border:1px solid #4488cc;padding:4px 12px;">close&nbsp;[~]</button>' +
+        '</div>' +
+        '<div style="font-size:9px;color:#9977cc;margin-bottom:10px;letter-spacing:.06em;">' +
+          'This is the actual GLSL running behind the page. Edit it. Press Ctrl+Enter or COMPILE to apply.' +
+        '</div>' +
+        '<div style="display:flex;gap:20px 32px;flex-wrap:wrap;margin-bottom:14px;padding:12px;background:rgba(13,8,32,0.85);border:1px solid rgba(68,136,204,0.2);">' +
+          ['warp','speed','grid','pal'].map(function(k) {
+            var cfg = {warp:{min:0,max:2,step:.05},speed:{min:.1,max:3,step:.05},grid:{min:0,max:2,step:.05},pal:{min:-.5,max:.5,step:.01}}[k];
+            return '<label style="display:flex;flex-direction:column;gap:4px;min-width:130px;">' +
+              '<span style="color:#ee8833;font-size:9px;letter-spacing:.12em;">' + k.toUpperCase() +
+              ' <span id="lab-lv-' + k + '">' + parseFloat(params[k]).toFixed(2) + '</span></span>' +
+              '<input type="range" id="lab-sl-' + k + '" min="' + cfg.min + '" max="' + cfg.max + '" step="' + cfg.step + '" value="' + params[k] + '" style="accent-color:#00ddaa;width:130px;">' +
+            '</label>';
+          }).join('') +
+        '</div>' +
+        '<div style="margin-bottom:6px;color:#9977cc;font-size:9px;letter-spacing:.1em;">FRAGMENT SHADER SOURCE — edit below, Ctrl+Enter to recompile</div>' +
+        '<textarea id="lab-src" spellcheck="false">' + FS_DEFAULT.replace(/</g,'&lt;') + '</textarea>' +
+        '<div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap;">' +
+          '<button id="lab-compile" style="background:#00ddaa;color:#06040f;border:none;padding:6px 20px;">COMPILE [Ctrl+Enter]</button>' +
+          '<button id="lab-reset" style="background:transparent;color:#ee8833;border:1px solid #ee8833;padding:6px 14px;">RESET</button>' +
+          '<span id="lab-status" style="font-size:11px;color:#9977cc;"></span>' +
+        '</div>';
+      document.body.appendChild(labEl);
+
+      var srcEl = document.getElementById('lab-src');
+      // Unescape the textarea content
+      srcEl.value = FS_DEFAULT;
+      var statusEl = document.getElementById('lab-status');
+
+      function doCompile() {
+        var e = compile(srcEl.value);
+        if (e) {
+          statusEl.style.color = '#ff6666';
+          statusEl.textContent = e.split('\n').slice(0,2).join(' | ');
+        } else {
+          statusEl.style.color = '#00ddaa';
+          statusEl.textContent = 'compiled OK ✓';
+          setTimeout(function(){ if (statusEl.textContent === 'compiled OK ✓') statusEl.textContent = ''; }, 2500);
+        }
+      }
+
+      document.getElementById('lab-compile').onclick = doCompile;
+      document.getElementById('lab-reset').onclick = function() {
+        srcEl.value = FS_DEFAULT;
+        doCompile();
+        statusEl.textContent = 'reset to original';
+      };
+      document.getElementById('lab-close').onclick = function() { labEl.style.display = 'none'; };
+
+      srcEl.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); doCompile(); }
+      });
+
+      // Lab sliders sync with params AND the page sliders
+      ['warp','speed','grid','pal'].forEach(function(k) {
+        var sl = document.getElementById('lab-sl-'+k);
+        var lv = document.getElementById('lab-lv-'+k);
+        sl.addEventListener('input', function() {
+          params[k] = parseFloat(sl.value);
+          if (lv) lv.textContent = parseFloat(sl.value).toFixed(2);
+          var ps = document.getElementById('ctrl-'+k);
+          var pv = document.getElementById('ov-'+k);
+          if (ps) ps.value = params[k];
+          if (pv) pv.textContent = parseFloat(params[k]).toFixed(2);
+        });
+      });
+    }
+
+    // Keyboard trigger: ~ or `
+    document.addEventListener('keydown', function(e) {
+      if (e.key === '`' || e.key === '~') buildLab();
+    });
+
+    // Triple-click h1 trigger
+    var h1 = document.querySelector('h1');
+    if (h1) {
+      h1.title = 'triple-click to open GLSL lab';
+      h1.style.cursor = 'pointer';
+      h1.addEventListener('click', function() {
+        clickCount++;
+        if (clickTimer) clearTimeout(clickTimer);
+        if (clickCount >= 3) { clickCount = 0; buildLab(); return; }
+        clickTimer = setTimeout(function(){ clickCount = 0; }, 600);
+      });
+    }
+
+  })();
+  </script>
+</body>
+</html>

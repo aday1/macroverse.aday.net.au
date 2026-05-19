@@ -1,0 +1,10 @@
+{
+  "shadersSource": "C:/Users/aday/Desktop/Obsidian/YomikosPapers/temp_/cloudflare_pages_repos/Macroversed-FortyTwoEdition/shaders",
+  "fortyTwoRoot": "C:/Users/aday/Desktop/Obsidian/YomikosPapers/temp_/cloudflare_pages_repos/Macroversed-FortyTwoEdition",
+  "includeResolume": false,
+  "linodeHost": "172.105.171.251",
+  "linodeUser": "root",
+  "sshKeyPath": "C:/Users/aday/Desktop/Obsidian/YomikosPapers/temp_/wave2-linode/linode_deploy_ed25519",
+  "remoteComposeDir": "/root/compose/macroverse.aday.net.au",
+  "triggerReindex": true
+}

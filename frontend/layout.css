@@ -1,0 +1,435 @@
+.layout { display: flex; flex: 1; min-height: 0; width: 100%; overflow: hidden; min-width: 0; }
+.column-header { font-size: 10px; text-transform: uppercase; padding: 6px 10px; color: var(--amiga-copper); background: repeating-linear-gradient(90deg, var(--amiga-surface) 0px, var(--amiga-surface) 2px, var(--amiga-panel) 2px, var(--amiga-panel) 4px); border-bottom: 2px solid var(--bevel-dark); border-top: 1px solid var(--bevel-light); letter-spacing: 0.15em; text-shadow: 1px 1px 0 rgba(0,0,0,0.5); }
+.index-panel { display: flex; flex-direction: column; min-height: 0; overflow: hidden; background: var(--amiga-panel); border-right: 2px solid var(--bevel-dark); box-shadow: inset -4px 0 0 var(--bevel-light); min-width: 180px; width: var(--index-width, 280px); max-width: 480px; }
+.index-panel.collapsed { min-width: 32px; width: 32px; max-width: 32px; }
+.index-panel.collapsed .index-toolbar, .index-panel.collapsed .list { display: none; }
+.index-panel.collapsed .index-header #indexHeaderText { display: none; }
+.index-panel.collapsed #indexCollapseBtn { transform: rotate(180deg); }
+.index-panel .index-header { flex-shrink: 0; }
+.index-panel .index-toolbar { flex-shrink: 0; }
+.index-panel .list { flex: 1; min-height: 80px; }
+.index-resizer { width: 8px; min-width: 8px; background: var(--amiga-surface); cursor: col-resize; user-select: none; }
+.index-resizer:hover { background: var(--amiga-accent); }
+.index-panel.collapsed + .index-resizer { display: none; }
+.toolbar { padding: 8px 12px; background: var(--amiga-surface); border-bottom: 1px solid var(--bevel-dark); display: flex; flex-direction: column; gap: 6px; }
+.toolbar-group-label { font-size: 9px; text-transform: uppercase; color: var(--crt-dim); letter-spacing: 0.1em; margin-bottom: 1px; }
+.toolbar-row { flex-wrap: wrap; }
+.toolbar-filters { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.toolbar-filters .list-filter-format { flex: 1; min-width: 60px; }
+.toolbar-divider { height: 1px; background: var(--bevel-dark); margin: 4px 0; }
+.toolbar-actions { margin-top: 2px; }
+.list-filter-format { width: 100%; padding: 4px 8px; font-size: 11px; background: var(--amiga-bg); color: var(--crt-fg); border: 1px solid var(--bevel-dark); font-family: inherit; cursor: pointer; }
+.search { width: 100%; padding: 6px 10px; background: var(--amiga-bg); color: var(--crt-fg); border: 1px solid var(--bevel-dark); font-family: inherit; }
+.search::placeholder { color: var(--amiga-text-dim); }
+.main { flex: 1; display: grid; grid-template-columns: var(--index-width, 280px) 8px minmax(0, 1fr) 8px minmax(200px, 420px); grid-template-rows: 1fr; min-width: 0; overflow: hidden; max-width: 100%; }
+.main.index-collapsed { grid-template-columns: 32px 0 minmax(0, 1fr) 8px minmax(200px, 420px); }
+.main.index-collapsed .index-resizer { display: none; }
+.index-panel { grid-column: 1; }
+.index-resizer { grid-column: 2; }
+.main-content { grid-column: 3; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.col-resizer { grid-column: 4; background: var(--amiga-surface); cursor: col-resize; user-select: none; }
+.col-resizer:hover { background: var(--amiga-accent); }
+.right-column { grid-column: 5; display: flex; flex-direction: column; min-width: 0; overflow: hidden; background: var(--amiga-panel); border-left: 1px solid var(--bevel-dark); }
+.right-column.collapsed { min-width: 32px; width: 32px; max-width: 32px; }
+.right-column.collapsed .right-panel, .right-column.collapsed .right-tabs { display: none; }
+.right-column.collapsed .right-col-header #rightHeaderText { display: none; }
+.right-column.collapsed #rightCollapseBtn { transform: rotate(180deg); }
+.right-column.collapsed + .col-resizer { display: none; }
+.main.right-collapsed { grid-template-columns: var(--index-width, 280px) 8px minmax(0, 1fr) 0 32px; }
+.main.right-collapsed .col-resizer { display: none; }
+.main.index-collapsed.right-collapsed { grid-template-columns: 32px 0 minmax(0, 1fr) 0 32px; }
+.right-tabs { display: flex; gap: 2px; padding: 4px 8px; background: var(--amiga-surface); border-bottom: 1px solid var(--bevel-dark); }
+.right-tab { padding: 4px 8px; font-size: 10px; background: var(--amiga-panel); border: 1px solid var(--bevel-dark); color: var(--crt-dim); cursor: pointer; }
+.right-tab:hover { color: var(--crt-fg); background: var(--amiga-surface); }
+.right-tab.active { background: var(--amiga-accent); color: var(--amiga-bg); }
+.right-panel { display: none; flex: 1; flex-direction: column; min-height: 0; overflow: hidden; }
+.right-panel.active { display: flex; }
+.view-tabs { display: flex; gap: 2px; padding: 4px 8px; background: repeating-linear-gradient(90deg, var(--amiga-surface) 0px, var(--amiga-surface) 2px, var(--amiga-panel) 2px, var(--amiga-panel) 4px); border-bottom: 2px solid var(--bevel-dark); border-top: 1px solid var(--bevel-light); flex-shrink: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.view-tabs::-webkit-scrollbar { display: none; }
+.view-tab { padding: 4px 10px; font-size: 11px; background: var(--amiga-panel); border: 1px solid var(--bevel-dark); border-top-color: var(--bevel-light); border-left-color: var(--bevel-light); color: var(--crt-dim); cursor: pointer; flex-shrink: 0; white-space: nowrap; }
+.view-tab:hover { color: var(--crt-fg); background: var(--amiga-surface); }
+.view-tab.active { background: var(--amiga-accent); color: var(--amiga-bg); border-color: var(--amiga-accent); }
+.view-tab-orient { padding: 2px 6px; font-size: 10px; background: var(--amiga-panel); color: var(--crt-fg); border: 1px solid var(--bevel-dark); margin-left: 0; font-family: inherit; cursor: pointer; }
+.view-tab-orient:hover { background: var(--amiga-surface); }
+.content-split { display: flex; flex-direction: row; flex: 1; min-height: 180px; min-width: 0; overflow: hidden; align-items: stretch; }
+.content-split.preview-only .split-resizer, .content-split.preview-only .code-area { display: none !important; }
+.content-split.preview-only .preview-section { flex: 1; }
+.content-split.code-only .preview-section, .content-split.code-only .split-resizer { display: none !important; }
+.content-split.code-only .code-area { flex: 1; }
+.content-split.split-mode .preview-section { flex: 1; min-width: 120px; min-height: 80px; }
+.content-split.split-mode .code-area { flex: 1; min-width: 180px; min-height: 80px; }
+.content-split.split-mode.split-vertical { flex-direction: column; }
+.content-split.split-mode.split-vertical .split-resizer { width: 100%; height: 8px; min-height: 8px; min-width: 0; cursor: row-resize; }
+.preview-section { display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.split-resizer { flex: 0 0 8px; min-width: 8px; background: var(--amiga-surface); cursor: col-resize; user-select: none; }
+.split-resizer:hover { background: var(--amiga-accent); }
+.code-area { display: none; flex-direction: column; min-width: 200px; background: var(--amiga-bg); overflow: hidden; min-height: 0; }
+.code-area.visible { display: flex; }
+.preview-area { flex: 1; min-height: 200px; display: flex; flex-direction: column; background: var(--amiga-surface); position: relative; border: 1px solid var(--bevel-dark); box-shadow: inset 0 0 0 1px var(--bevel-light); }
+.canvas-wrap { flex: 1; min-height: 120px; position: relative; }
+#canvas { width: 100%; height: 100%; display: block; }
+.code-toolbar { display: flex; gap: 4px; padding: 4px 8px; background: var(--amiga-surface); border-bottom: 1px solid var(--bevel-dark); flex-wrap: wrap; align-items: center; }
+.code-toolbar .toolbar-group { margin-right: 6px; padding-right: 6px; border-right: 1px solid var(--bevel-dark); }
+.code-toolbar .toolbar-group:last-of-type { margin-right: 0; padding-right: 0; border-right: none; }
+.toolbar-group { display: flex; gap: 2px; padding: 1px 4px; border-radius: 3px; background: rgba(0,0,0,0.15); align-items: center; }
+.toolbar-group[data-group="file"] { border-left: 2px solid var(--amiga-copper); }
+.toolbar-group[data-group="wire"] { border-left: 2px solid #44aadd; }
+.toolbar-group[data-group="params"] { border-left: 2px solid #2ecc71; }
+.toolbar-group[data-group="ext"] { border-left: 2px solid var(--crt-dim); }
+.code-wrap { flex: 1; min-height: 80px; overflow: auto; background: var(--theme-editor-bg); }
+.code-input-wrap { flex: 1; min-width: 0; min-height: 100%; }
+
+/* ─── Wired Atelier: glow accents ─────────────────────────────────────────── */
+/* Active tab pulse */
+.view-tab.active {
+  animation: accent-pulse 3.5s ease-in-out infinite;
+  text-shadow: 0 0 8px rgba(68,136,204,0.8);
+}
+.right-tab.active {
+  animation: accent-pulse 3.5s ease-in-out infinite;
+}
+/* Preview canvas area: inner glow border */
+.preview-area {
+  box-shadow: inset 0 0 0 1px var(--bevel-light), inset 0 0 20px rgba(68,136,204,0.04);
+}
+/* Column headers: subtle stripe shimmer shift */
+.column-header {
+  background: repeating-linear-gradient(90deg,
+    var(--amiga-surface) 0px, var(--amiga-surface) 2px,
+    var(--amiga-panel)   2px, var(--amiga-panel)   4px);
+  text-shadow: 0 0 10px rgba(238,136,51,0.4);
+}
+/* Code toolbar Wire group: blue accent glow */
+.toolbar-group[data-group="wire"] {
+  border-left: 2px solid var(--amiga-accent);
+  box-shadow: -2px 0 8px rgba(68,136,204,0.25);
+}
+/* Params group: emerald glow */
+.toolbar-group[data-group="params"] {
+  border-left: 2px solid #2ecc71;
+  box-shadow: -2px 0 8px rgba(46,204,113,0.20);
+}
+/* Split resizer: glow on hover */
+.split-resizer:hover, .col-resizer:hover, .index-resizer:hover {
+  box-shadow: 0 0 8px rgba(68,136,204,0.5);
+}
+/* Search input: accent focus ring */
+.search:focus {
+  outline: none;
+  border-color: var(--amiga-accent);
+  box-shadow: 0 0 8px rgba(68,136,204,0.35);
+}
+
+/* ============================================================== */
+/* Responsive shell - tablet (641-1024) and phone (<=640)         */
+/*                                                                */
+/* The desktop grid above is left intact and is selected by the   */
+/* default-cascade. Below, narrow viewports replace it with:      */
+/*   - tablet : a flex column with the index/right columns        */
+/*              promoted to fixed-position drawers when their     */
+/*              dock-*-open class is set on body                  */
+/*   - phone  : same drawers but full-screen, plus a 56px bottom  */
+/*              tab bar that's hidden on tablet/desktop           */
+/* ============================================================== */
+
+/* Drawer scrim (one element, used on both tablet and phone) */
+.dock-scrim {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 8000;
+  display: none;
+  -webkit-tap-highlight-color: transparent;
+}
+body.dock-any-open .dock-scrim { display: block; }
+
+/* ── Tablet (641-1024) ── */
+@media (min-width: 641px) and (max-width: 1024px) {
+  body { overflow-x: hidden; }
+
+  /* Replace the 5-column grid with a flex column. The left and right
+     panels are removed from the doc flow and live as overlays. */
+  .main, .main.index-collapsed, .main.right-collapsed,
+  .main.index-collapsed.right-collapsed {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .main-content { flex: 1; width: 100% !important; min-height: 0; }
+
+  /* Resizers don't apply when panels are overlays */
+  .index-resizer, .col-resizer { display: none !important; }
+
+  /* Index panel: hidden by default; slides in from left when
+     dock-left-open is on body. */
+  .index-panel, .main .index-panel {
+    position: fixed !important;
+    top: 52px;        /* below app bar */
+    left: 0; bottom: 0;
+    width: 320px;
+    max-width: 86vw;
+    min-width: 280px;
+    height: auto;
+    z-index: 8001;
+    transform: translateX(-105%);
+    transition: transform 220ms cubic-bezier(.2,.6,.2,1);
+    border-right: 2px solid var(--amiga-copper);
+    border-bottom: none;
+    box-shadow: 6px 0 20px rgba(0,0,0,0.55);
+  }
+  body.dock-left-open .index-panel { transform: translateX(0); }
+
+  .right-column {
+    position: fixed !important;
+    top: 52px;
+    right: 0; bottom: 0;
+    width: 360px;
+    max-width: 92vw;
+    min-width: 280px;
+    z-index: 8001;
+    transform: translateX(105%);
+    transition: transform 220ms cubic-bezier(.2,.6,.2,1);
+    border-left: 2px solid var(--amiga-copper);
+    box-shadow: -6px 0 20px rgba(0,0,0,0.55);
+    display: flex !important;
+  }
+  body.dock-right-open .right-column { transform: translateX(0); }
+
+  /* Code toolbar: allow wrapping */
+  .code-toolbar { flex-wrap: wrap; padding: 4px 6px; gap: 3px; }
+
+  /* Status bar: tighter */
+  .status { padding: 4px 8px; gap: 6px; }
+
+  .preview-area { min-height: 220px; }
+  .canvas-wrap  { min-height: 180px; }
+
+  /* iOS auto-zoom prevention */
+  .search, input, select { font-size: 16px !important; }
+}
+
+/* ── Phone (<=640) ── */
+@media (max-width: 640px) {
+  body { overflow-x: hidden; padding-bottom: 56px; /* leave room for bottom tab bar */ }
+
+  .main, .main.index-collapsed, .main.right-collapsed,
+  .main.index-collapsed.right-collapsed {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .main-content { flex: 1; width: 100% !important; min-height: 0; }
+
+  .index-resizer, .col-resizer { display: none !important; }
+
+  /* Index drawer: full-screen-ish from bottom */
+  .index-panel, .main .index-panel {
+    position: fixed !important;
+    top: auto;
+    left: 0; right: 0; bottom: 56px;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 70vh;
+    z-index: 8001;
+    transform: translateY(110%);
+    transition: transform 220ms cubic-bezier(.2,.6,.2,1);
+    border: none;
+    border-top: 2px solid var(--amiga-copper);
+    box-shadow: 0 -10px 28px rgba(0,0,0,0.6);
+  }
+  body.dock-left-open .index-panel { transform: translateY(0); }
+  /* On phone, the index "collapsed" state is irrelevant - users
+     toggle via the bottom-tab-bar's Library button. Reset the
+     existing collapsed visuals so they don't fight the drawer. */
+  .index-panel.collapsed { height: 70vh !important; max-height: 70vh !important; min-height: 0 !important; width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
+  .index-panel.collapsed .index-toolbar, .index-panel.collapsed .list { display: flex; }
+  .index-panel.collapsed .list { display: block; }
+  .index-panel.collapsed .index-header #indexHeaderText { display: inline; }
+
+  .right-column {
+    position: fixed !important;
+    top: auto;
+    left: 0; right: 0; bottom: 56px;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 70vh;
+    z-index: 8001;
+    transform: translateY(110%);
+    transition: transform 220ms cubic-bezier(.2,.6,.2,1);
+    border: none;
+    border-top: 2px solid var(--amiga-copper);
+    box-shadow: 0 -10px 28px rgba(0,0,0,0.6);
+    display: flex !important;
+  }
+  body.dock-right-open .right-column { transform: translateY(0); }
+  .right-column.collapsed { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
+
+  .code-toolbar { flex-wrap: wrap; padding: 3px 6px; gap: 3px; }
+  .status { padding: 4px 8px; gap: 4px; flex-wrap: wrap; }
+
+  .preview-area { min-height: 35vw; }
+  .canvas-wrap  { min-height: 25vw; }
+
+  .split-resizer {
+    height: 12px !important;
+    min-height: 12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    cursor: row-resize;
+  }
+  .content-split.split-mode { flex-direction: column !important; }
+  .content-split.split-mode .preview-section { flex: 0 0 auto; min-height: 30vh; }
+
+  /* View tabs: still scrollable horizontally as a backstop, but
+     the app-bar dropdown and bottom-tab-bar are the primary nav. */
+  .view-tabs { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+
+  .search, input, select { font-size: 16px !important; }
+}
+
+/* ============================================================== */
+/* Bottom tab bar (phone only)                                    */
+/* ============================================================== */
+.bottom-tab-bar {
+  display: none;
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: 56px;
+  z-index: 8500;
+  background: var(--amiga-panel);
+  border-top: 2px solid var(--bevel-dark);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.45);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+@media (max-width: 640px) {
+  .bottom-tab-bar { display: flex; }
+}
+.bottom-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: transparent;
+  border: none;
+  color: var(--crt-dim);
+  font-family: inherit;
+  font-size: 10px;
+  cursor: pointer;
+  padding: 4px 0 6px;
+  border-top: 2px solid transparent;
+}
+.bottom-tab .bottom-tab-icon {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--crt-dim);
+}
+.bottom-tab.active {
+  color: var(--amiga-accent);
+  border-top-color: var(--amiga-accent);
+}
+.bottom-tab.active .bottom-tab-icon {
+  color: var(--amiga-accent);
+  text-shadow: 0 0 8px rgba(68,136,204,0.55);
+}
+.bottom-tab:active {
+  background: rgba(68,136,204,0.12);
+}
+
+/* ============================================================== */
+/* More sheet (bottom-sheet style modal)                          */
+/* ============================================================== */
+.more-sheet {
+  position: fixed; inset: 0;
+  z-index: 9000;
+  display: none;
+}
+.more-sheet.open { display: block; }
+.more-sheet-scrim {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.55);
+  -webkit-tap-highlight-color: transparent;
+}
+.more-sheet-card {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  background: var(--amiga-panel);
+  border-top: 2px solid var(--amiga-copper);
+  box-shadow: 0 -8px 28px rgba(0,0,0,0.6);
+  padding: 8px 12px env(safe-area-inset-bottom, 12px);
+  animation: more-sheet-up 220ms cubic-bezier(.2,.6,.2,1);
+}
+@keyframes more-sheet-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.more-sheet-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--bevel-light);
+  margin: 4px auto 8px;
+}
+.more-sheet-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--amiga-copper);
+  margin-bottom: 8px;
+  text-align: center;
+}
+.more-sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.more-sheet-btn {
+  background: var(--amiga-surface);
+  border: 1px solid var(--bevel-dark);
+  border-top-color: var(--bevel-light);
+  border-left-color: var(--bevel-light);
+  color: var(--crt-fg);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 14px 10px;
+  cursor: pointer;
+  text-align: left;
+}
+.more-sheet-btn:active { background: var(--amiga-panel); }
+.more-sheet-footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+.more-sheet-cancel {
+  background: transparent;
+  border: 1px solid var(--bevel-dark);
+  color: var(--crt-dim);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+/* ============================================================== */
+/* Tablet/phone: hide the right-column collapse button (drawer is */
+/* opened from outside) and keep the index header readable        */
+/* ============================================================== */
+@media (max-width: 1024px) {
+  /* Drawer visuals: when open, give it a header bar with Close */
+  body.dock-left-open .index-panel,
+  body.dock-right-open .right-column {
+    display: flex !important;
+  }
+  /* Keep the existing collapse buttons working but not visible on
+     touch (the user doesn't need them when the drawer is closed by
+     scrim or list-item click). */
+  #indexCollapseBtn, #rightCollapseBtn { display: none; }
+}
+
+/* On desktop, no drawer behavior - keep the existing grid layout. */
+@media (min-width: 1025px) {
+  .bottom-tab-bar, .more-sheet, .dock-scrim { display: none !important; }
+}

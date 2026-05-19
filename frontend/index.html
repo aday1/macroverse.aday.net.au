@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#06040f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Macroverse">
+  <meta name="format-detection" content="telephone=no">
+  <title>Macroverse 42 - The Wired Atelier</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&family=JetBrains+Mono:wght@400&family=Source+Code+Pro:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="components.css">
+</head>
+<body>
+  <!-- Read-only / demo instance banner — shown by JS when /api/config returns readonly:true -->
+  <div id="demoBanner" style="display:none;align-items:center;justify-content:center;gap:10px;padding:6px 12px;background:rgba(238,136,51,0.12);border-bottom:1px solid var(--amiga-copper);font-size:11px;color:var(--amiga-copper);letter-spacing:0.05em;flex-shrink:0;flex-wrap:wrap;">
+    <span>&#9888;</span>
+    <span><strong>Read-only demo instance</strong> — VJ playback active. Saves, deletes and edits are disabled. Run locally for full access.</span>
+    <a href="https://github.com/aday1/Macroverse" target="_blank" rel="noopener" style="color:var(--amiga-accent);text-decoration:none;">Get Macroverse &rarr;</a>
+  </div>
+  <div id="splashOverlay" class="splash-overlay">
+    <div class="splash-content">
+      <div class="splash-title">Macroverse - Wired Atelier</div>
+      <div class="splash-tagline">GLSL Shader Lab for Resolume Wire</div>
+      <div class="splash-version" id="splashVersion">Loading...</div>
+    </div>
+  </div>
+  <header class="app-bar" id="appBar">
+    <button type="button" class="app-bar-logo" id="appBarLogo" title="Open settings" aria-label="Open settings">M42</button>
+    <div class="app-bar-title">
+      <span class="app-bar-shader" id="appBarShader" title="Currently loaded shader">No shader loaded</span>
+      <span class="app-bar-dirty" id="appBarDirty" title="Unsaved changes" aria-hidden="true"></span>
+    </div>
+    <div class="app-bar-views" id="appBarViews">
+      <select id="viewSelect" class="app-bar-view-select" aria-label="View mode">
+        <option value="preview">Preview</option>
+        <option value="code">Code</option>
+        <option value="split" selected>Split</option>
+        <option value="vj">VJ</option>
+        <option value="gallery">Gallery</option>
+        <option value="pipeline">Pipeline</option>
+        <option value="wire">Wire Hub</option>
+      </select>
+    </div>
+    <div class="app-bar-actions">
+      <button type="button" class="app-bar-btn app-bar-tablet-only" id="appBarLibraryBtn" title="Library" aria-label="Open shader library">&#9776; Lib</button>
+      <button type="button" class="app-bar-btn app-bar-tablet-only" id="appBarParamsBtn" title="Parameters" aria-label="Open parameters panel">&#8801; Params</button>
+      <button type="button" class="app-bar-btn app-bar-save" id="appBarSave" title="Save shader (Ctrl+S)" aria-label="Save shader">Save</button>
+      <button type="button" class="app-bar-btn" id="appBarPalette" title="Commands (Ctrl+K)" aria-label="Open command palette">&gt;_</button>
+      <button type="button" class="app-bar-btn app-bar-menu" id="appBarMenu" title="More" aria-label="More menu">&#x2630;</button>
+    </div>
+  </header>
+  <div class="layout">
+    <div class="main" id="mainGrid">
+      <div class="index-panel" id="indexPanel">
+        <div class="column-header index-header" style="display:flex;align-items:center;justify-content:space-between"><span id="indexHeaderText" title="Shader index - shows count, source folder, and format breakdown">Index</span><button type="button" id="indexCollapseBtn" class="wire-btn" style="font-size:9px;padding:1px 5px;background:transparent;border:none;color:var(--amiga-copper)" title="Collapse/expand index panel" aria-label="Collapse or expand index panel">&lt;</button></div>
+        <div class="toolbar index-toolbar">
+          <div class="toolbar-group-label">Filters</div>
+          <div class="toolbar-row toolbar-filters">
+            <select id="listFormatFilter" class="list-filter-format" title="Filter by format: All shaders, GLSL only, or ISF (Wire-ready) only" aria-label="Filter by shader format">
+              <option value="all">All</option>
+              <option value="glsl">GLSL</option>
+              <option value="isf">ISF</option>
+            </select>
+            <select id="listSetFilter" class="list-filter-format" title="Filter by set: show only shaders in this set" aria-label="Filter by shader set">
+              <option value="">All sets</option>
+            </select>
+            <button type="button" id="listSetManageBtn" class="wire-btn" style="font-size:9px;padding:2px 6px" title="Manage sets: rename, remove, add">Manage</button>
+          </div>
+          <label class="dead-toggle-label" id="deadToggleLabel" style="display:none" title="Show/hide shaders tagged as DEAD"><input type="checkbox" id="showDeadToggle" autocomplete="off"><span>Show dead</span><span class="dead-count-badge" id="deadCountBadge"></span></label>
+          <label class="trash-toggle-label" id="trashToggleLabel" style="display:none" title="Show/hide shaders in trash"><input type="checkbox" id="showTrashToggle" autocomplete="off"><span>Show trash</span><span class="trash-count-badge" id="trashCountBadge"></span></label>
+          <div class="toolbar-group-label">View</div>
+          <div class="toolbar-row list-view-toggle" style="display:flex;gap:2px">
+            <button type="button" class="wire-btn list-view-btn active" data-view="list" title="List view with tags and sets">List</button>
+            <button type="button" class="wire-btn list-view-btn" data-view="compact" title="Dense list: tags and sets show on hover">Compact</button>
+            <button type="button" class="wire-btn list-view-btn" data-view="grid" title="Grid view with thumbnail previews">Grid</button>
+          </div>
+          <div class="toolbar-group-label">Search</div>
+          <input type="text" class="search" id="search" placeholder="filter name, tags...">
+          <button type="button" class="wire-btn index-tools-toggle" id="indexToolsToggle" title="Show extra index controls" aria-label="Toggle extra index controls">More tools &darr;</button>
+          <div class="toolbar-divider"></div>
+          <div class="toolbar-group-label">Settings</div>
+          <div class="toolbar-actions toolbar-row" style="display:flex;gap:4px">
+            <button type="button" class="wire-btn" id="sidebarPathsBtn" style="flex:1;font-size:10px;padding:3px 6px" title="Manage source folders and index file" aria-label="Manage source paths">Paths</button>
+            <button type="button" class="wire-btn" id="sidebarSettingsBtn" style="flex:1;font-size:10px;padding:3px 6px" title="App settings: resolution, API keys, thumbnails, theme" aria-label="App settings">Settings</button>
+            <button type="button" class="wire-btn" id="sidebarHelpBtn" style="flex:1;font-size:10px;padding:3px 6px;color:var(--amiga-copper)" title="Help: keyboard shortcuts, features, Wire export tips" aria-label="Help and shortcuts">?</button>
+            <button type="button" class="wire-btn" id="sidebarRescanBtn" style="flex:1;font-size:10px;padding:3px 6px;color:#2ecc71" title="Rescan source folders for new/changed shaders" aria-label="Rescan shader folders">Scan</button>
+            <button type="button" class="wire-btn" id="sidebarUpdateBtn" style="flex:1;font-size:10px;padding:3px 6px;color:var(--crt-dim)" title="Check GitHub for updates, rebuild and restart if available" aria-label="Check for updates">Update</button>
+          </div>
+        </div>
+        <div class="list" id="list"></div>
+      </div>
+      <div class="index-resizer" id="indexResizer" title="Drag to resize index column"></div>
+      <div class="main-content">
+        <div class="view-tabs">
+          <button type="button" class="view-tab" data-view="preview" title="Full preview - shader output only" aria-label="Preview mode">Preview</button>
+          <button type="button" class="view-tab" data-view="code" title="Full code editor - edit GLSL/ISF source" aria-label="Code editor mode">Code</button>
+          <button type="button" class="view-tab active" data-view="split" title="Preview and code side by side" aria-label="Split view mode">Split</button>
+          <select id="splitOrientationSelect" class="view-tab-orient" title="Split orientation: H = horizontal, V = vertical" aria-label="Split orientation">
+            <option value="vertical">V</option>
+            <option value="horizontal">H</option>
+          </select>
+          <button type="button" class="view-tab" data-view="vj" title="VJ Scratchpad: A/B deck mixer with crossfader" style="color:var(--amiga-copper)" aria-label="VJ deck mode">VJ</button>
+          <button type="button" class="view-tab" data-view="gallery" title="Shader gallery - audition multiple shaders, quick tag and set" aria-label="Gallery mode">Gallery</button>
+          <button type="button" class="view-tab" data-view="pipeline" title="Signal pipeline: Shader to Macroverse to Wire" style="color:var(--amiga-accent)" aria-label="Pipeline diagram">Pipeline</button>
+          <button type="button" class="view-tab" data-view="wire" title="Wire Pipeline Hub: build, browse, generate Wire patches" style="color:#44ffaa" aria-label="Wire Pipeline Hub">Wire Hub</button>
+        </div>
+        <div id="pipelineContainer" style="display:none;flex:1;overflow:auto;background:var(--amiga-bg);padding:24px;min-height:0"></div>
+        <div id="wirePipelineContainer" style="display:none;flex:1;overflow:hidden;background:var(--amiga-bg);min-height:0"></div>
+        <div id="galleryContainer" class="gallery-container" style="display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden">
+          <div id="galleryToolbar" class="gallery-toolbar"></div>
+          <div id="galleryGridWrap" class="gallery-grid-wrap">
+            <div id="galleryGrid" class="gallery-grid"></div>
+            <div id="gallerySidebar" class="gallery-sidebar"></div>
+          </div>
+        </div>
+        <div class="content-split split-mode split-vertical" id="contentSplit">
+          <section class="preview-section">
+            <div class="preview-area">
+              <div class="canvas-wrap">
+                <canvas id="canvas" width="854" height="480"></canvas>
+              </div>
+              <div id="previewCompileErrorOverlay" class="preview-compile-error-overlay" style="display:none">
+                <div class="preview-error-box">
+                  <div class="preview-error-title">Compile Error</div>
+                  <div id="previewErrorPath" class="preview-error-path" style="font-size:11px;color:var(--amiga-copper);margin-bottom:8px;word-break:break-all"></div>
+                  <div id="previewErrorIrrep" class="preview-error-irrep" style="display:none;color:#ff6666;font-weight:bold;margin-bottom:8px">Cannot auto-resolve</div>
+                  <div class="preview-error-msg" id="previewErrorMsg"></div>
+                  <div style="font-size:10px;color:var(--crt-dim);margin:8px 0 4px">Click Fix to auto-repair. If auto-fix fails, it escalates to Cursor AI agent.</div>
+                  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+                    <button type="button" id="previewRevertBtn" class="wire-btn" style="background:var(--amiga-surface);color:var(--amiga-copper)" title="Revert to last saved (e.g. undo Expose that broke the shader)">Revert to saved</button>
+                    <button type="button" id="previewFixBtn" class="wire-btn preview-fix-btn btn-ai-ollama" title="Tries local + Ollama first; Cursor only if needed"><span class="btn-ollama-icon" aria-hidden="true">&#x1F9D9;</span> Fix shader</button>
+                    <button type="button" id="previewFixGithubBtn" class="wire-btn" style="background:var(--amiga-surface);color:var(--amiga-copper)" title="Fix using GitHub Copilot (set GitHub token in Settings)">Fix with GitHub</button>
+                    <button type="button" id="previewDismissBtn" class="wire-btn" style="background:var(--amiga-surface);color:var(--crt-dim)" title="Hide this overlay (error stays in status bar)">Dismiss</button>
+                    <button type="button" id="previewTagDeadBtn" class="wire-btn preview-tag-dead-btn" style="display:none" title="Tag this shader as DEAD - it cannot be auto-fixed">Tag as DEAD</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <div class="split-resizer" id="splitResizer" title="TLDR: Drag to resize preview vs code split"></div>
+          <div class="code-area visible" id="codeArea" style="position:relative">
+            <div id="paramsSearchPopover" class="params-search-popover" style="display:none"></div>
+            <div class="code-toolbar" id="codeToolbar">
+              <div class="toolbar-group" data-group="file">
+                <button type="button" class="wire-btn btn-save" id="codeSaveBtn" title="Save shader to disk and auto-commit (Ctrl+S)" aria-label="Save shader">Save</button>
+                <button type="button" class="wire-btn" id="codeRevertBtn" title="Revert to last saved version (git checkout)" aria-label="Revert to saved">Revert</button>
+                <button type="button" class="wire-btn" id="codeReloadBtn" title="Reload shader from disk (picks up external edits)" aria-label="Reload from disk">Reload</button>
+                <button type="button" class="wire-btn" id="codeUndoBtn" title="Undo last edit in editor" aria-label="Undo edit" disabled>Undo</button>
+              </div>
+              <div class="toolbar-group" data-group="wire">
+                <button type="button" class="wire-btn btn-wire" id="codeCheckISFWireBtn" title="Check this is compatible with ISF Wire with the exposed parameters and sampler2D if appropriate" aria-label="Check ISF Wire compatibility">Check ISF Wire</button>
+                <button type="button" class="wire-btn btn-expose" id="codeCopyForWireBtn" title="Copy ISF version to clipboard - paste into Wire" aria-label="Copy to Wire clipboard">Clipboard to Wire</button>
+              </div>
+              <div class="toolbar-group" data-group="params">
+                <button type="button" class="wire-btn" id="codeSearchParamsBtn" title="Find numeric values in code that can become live sliders" aria-label="Search for parameters">Search</button>
+                <button type="button" class="wire-btn btn-expose" id="codeExposeBtn" title="Scan code for exposable parameters (local, free)" aria-label="Expose parameters">Expose</button>
+                <button type="button" class="wire-btn btn-ai btn-ai-tokens" id="codeRefactorParamsBtn" title="Uses Cursor API (tokens) - 15s cooldown"><span class="btn-tokens-icon" aria-hidden="true">&#x1F3AB;&#x1F4B8;</span> Refactor</button>
+                <button type="button" class="wire-btn btn-ai btn-ai-tokens" id="codeVisualModifyBtn" title="Uses Cursor API (tokens) - 15s cooldown"><span class="btn-tokens-icon" aria-hidden="true">&#x1F3AB;&#x1F4B8;</span> Vibe</button>
+                <button type="button" class="wire-btn" id="codeVibeGithubBtn" style="font-size:10px;padding:2px 6px" title="Vibe using GitHub Copilot (set GitHub token in Settings)">Vibe (GitHub)</button>
+              </div>
+              <div class="toolbar-group toolbar-group-ext" data-group="ext" style="display:none">
+                <button type="button" class="wire-btn" id="codeOpenCursorBtn" title="Open this shader file in Cursor IDE">Cursor</button>
+                <button type="button" class="wire-btn" id="codeOpenAgentBtn" title="Launch cursor-agent terminal in this shader's directory">Agent</button>
+                <button type="button" class="wire-btn" id="codeOpenExplorerBtn" title="Show shader file in Windows Explorer">Explorer</button>
+                <button type="button" class="wire-btn" id="codeOpenNotepadBtn" title="Open shader file in Notepad for quick edits">Notepad</button>
+              </div>
+              <button type="button" class="wire-btn toolbar-more-btn" id="toolbarMoreBtn" title="Show/hide: Cursor, Agent, Explorer, Notepad buttons" style="font-size:9px;padding:2px 4px;color:var(--crt-dim)">...</button>
+            </div>
+            <div class="code-agent-split" id="codeAgentSplit">
+              <div class="agent-output-pane collapsed" id="agentOutputPane">
+                <div class="agent-output-pane-header">Agent output (thinking / stream)
+                  <span id="agentOutputActions" style="display:none;gap:4px">
+                    <button type="button" id="agentOutputCopy" class="wire-btn" style="font-size:10px;padding:2px 6px" title="Copy agent output to clipboard" aria-label="Copy agent output">Copy</button>
+                    <button type="button" id="agentOutputPrint" class="wire-btn" style="font-size:10px;padding:2px 6px" title="Print agent output" aria-label="Print agent output">Print</button>
+                    <button type="button" id="agentOutputClear" class="wire-btn" style="font-size:10px;padding:2px 6px" title="Clear agent output" aria-label="Clear agent output">Clear</button>
+                    <button type="button" id="agentOutputHide" class="wire-btn" style="font-size:10px;padding:2px 6px" title="Hide agent output pane" aria-label="Hide agent output">Hide</button>
+                  </span>
+                </div>
+                <div id="agentOutput" style="display:none;flex:1;min-height:0;overflow-y:auto"></div>
+              </div>
+              <div class="agent-code-resizer" id="agentCodeResizer" title="TLDR: Drag to resize agent output vs code"></div>
+              <div class="code-wrap" id="codeWrap">
+                <div id="codeEditorContainer" class="code-input-wrap"></div>
+              </div>
+            </div>
+          </div>
+          <div id="vjDeckContainer" style="display:none;flex:1;overflow:auto;background:var(--amiga-bg);"></div>
+        </div>
+        <div class="status" id="status">
+          <span class="status-text" id="statusText">Loading...</span>
+          <button type="button" class="wire-btn status-fullscreen-btn" id="fullscreenBtn" title="Toggle full screen (F11)" style="font-size:10px;padding:2px 8px;margin-left:6px" aria-label="Toggle full screen">Full screen</button>
+          <button type="button" class="wire-btn status-mobile-btn" id="mobileToggleBtn" title="Switch between mobile and desktop layout (developer toggle)" style="font-size:10px;padding:2px 8px;margin-left:4px" aria-label="Switch mobile or desktop layout">Mobile</button>
+          <span id="shaderRevInfo" style="font-size:10px;color:var(--amiga-accent);margin-left:8px;display:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;flex-shrink:1;" title="Git revision history for current shader"></span>
+          <span class="status-version" id="statusVersion" style="font-size:10px;color:var(--crt-dim);margin-left:8px;"></span>
+          <button type="button" class="fix-btn btn-ai-ollama" id="fixBtn" style="display:none" title="Tries local + Ollama first; Cursor only if needed"><span class="btn-ollama-icon" aria-hidden="true">&#x1F9D9;</span> Fix</button>
+        </div>
+      </div>
+      <div class="col-resizer" id="colResizer" title="TLDR: Drag to resize params column"></div>
+      <div class="right-column" id="rightColumn">
+        <div class="column-header right-col-header" style="display:flex;align-items:center;justify-content:space-between"><span id="rightHeaderText">Parameters</span><button type="button" id="rightCollapseBtn" class="wire-btn" style="font-size:9px;padding:1px 5px;background:transparent;border:none;color:var(--amiga-copper)" title="Collapse/expand params panel" aria-label="Collapse or expand params panel">&gt;</button></div>
+        <div class="right-panel active" id="paramsPanel">
+          <div class="params-panel">
+            <h4>Parameters</h4>
+            <div id="paramsSummary" class="params-summary"></div>
+            <div id="paramsList"></div>
+            <div id="paramsExternalWrap" class="params-external-control"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+Enable Total TLS (optional - for dev.macroverse / dev.artbastard hostnames)
+================================================================================
+
+Universal SSL (*.aday.net.au) covers ONE label only:
+  macroverse-dev.aday.net.au   OK
+  dev.macroverse.aday.net.au   NOT covered (two labels) -> ERR_SSL_VERSION_OR_CIPHER_MISMATCH
+
+Default fix (recommended): use macroverse-dev / artbastard-dev only.
+Run: temp_/cloudflare-fix-ssl.ps1 (removes nested dev.* DNS records).
+
+If you must keep dev.macroverse.* URLs with HTTPS:
+1. Cloudflare dashboard -> aday.net.au -> SSL/TLS -> Edge Certificates
+2. Enable "Total TLS"
+3. Wait 15-60 minutes for certificates to issue
+
+API (token needs SSL and Certificates Write on zone):
+  POST /zones/{zone_id}/acm/total_tls
+  Body: {"enabled": true, "certificate_authority": "lets_encrypt"}
+
+Wrangler OAuth cannot enable Total TLS (403).

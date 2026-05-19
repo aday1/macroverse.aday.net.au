@@ -1,0 +1,86 @@
+SHADER BASELINE REPORT
+============================================================
+
+Summary
+----------------------------------------
+Total shaders indexed: 2478
+Renames applied (on disk): 744
+Non-shader files detected and deleted: 9
+
+Categories used:
+  3d: 585
+  geometric: 447
+  color: 309
+  grid: 231
+  abstract: 193
+  fractal: 121
+  plasma: 107
+  tunnel: 92
+  noise: 90
+  particles: 82
+  psychedelic: 66
+  text: 61
+  space: 50
+  water: 27
+  utility: 12
+  misc: 5
+
+Tags used (sample, no isf):
+  3d
+  abstract
+  color
+  fractal
+  geometric
+  grid
+  misc
+  noise
+  particles
+  plasma
+  psychedelic
+  space
+  text
+  tunnel
+  utility
+  water
+
+Example sets:
+  Water & Ocean: 185 shaders
+  Tunnels: 861 shaders
+  Plasma & Fire: 275 shaders
+  Grids & Dots: 999 shaders
+  Space & Stars: 286 shaders
+  Starter Pack: 1425 shaders
+  Text & Typography: 850 shaders
+
+Renames (old -> new path, new name)
+----------------------------------------
+  shaders/VJ-Sorted-Production/ISF/misc/_ifdefGL_ES.fs
+    -> shaders/VJ-Sorted-Production/ISF/misc/ifdefGL-ES.fs  (name: ifdefGL-ES)
+
+Non-shader files (do not compile / not shaders)
+----------------------------------------
+  shaders/VJ-Sorted-Production/ISF/3d/Calery3_1.fs: no void main or gl_FragColor / too short / readme-like
+  shaders/VJ-Sorted-Production/ISF/3d/DotMatrix-ConcentricRings-13.fs: no void main or gl_FragColor / too short / readme-like
+  shaders/VJ-Sorted-Production/ISF/3d/figuringouthowtowritearaytracer.fs: no void main or gl_FragColor / too short / readme-like
+  shaders/VJ-Sorted-Production/ISF/fractal/TravelTheUniverse-XY_1.fs: no void main or gl_FragColor / too short / readme-like
+  shaders/VJ-Sorted-Production/ISF/misc/EmberBridge10.fs: no void main or gl_FragColor / too short / readme-like
+  shaders/VJ-Sorted-Production/ISF/misc/HelixRealm23.fs: no void main or gl_FragColor / too short / readme-like
+  shaders/VJ-Sorted-Production/ISF/misc/SynthDrive50-2.fs: no void main or gl_FragColor / too short / readme-like
+  shaders/VJ-Sorted-Production/ISF/misc/SynthDrive50.fs: no void main or gl_FragColor / too short / readme-like
+  shaders/VJ-Sorted-Production/ISF/space/TravelTheUniverse-XY_1.fs: no void main or gl_FragColor / too short / readme-like
+
+Deleted files (removed from disk)
+----------------------------------------
+  DELETED: shaders/VJ-Sorted-Production/ISF/3d/Calery3_1.fs (no void main or gl_FragColor / too short / readme-like)
+  DELETED: shaders/VJ-Sorted-Production/ISF/3d/DotMatrix-ConcentricRings-13.fs (no void main or gl_FragColor / too short / readme-like)
+  DELETED: shaders/VJ-Sorted-Production/ISF/3d/figuringouthowtowritearaytracer.fs (no void main or gl_FragColor / too short / readme-like)
+  DELETED: shaders/VJ-Sorted-Production/ISF/fractal/TravelTheUniverse-XY_1.fs (no void main or gl_FragColor / too short / readme-like)
+  DELETED: shaders/VJ-Sorted-Production/ISF/misc/EmberBridge10.fs (no void main or gl_FragColor / too short / readme-like)
+  DELETED: shaders/VJ-Sorted-Production/ISF/misc/HelixRealm23.fs (no void main or gl_FragColor / too short / readme-like)
+  DELETED: shaders/VJ-Sorted-Production/ISF/misc/SynthDrive50-2.fs (no void main or gl_FragColor / too short / readme-like)
+  DELETED: shaders/VJ-Sorted-Production/ISF/misc/SynthDrive50.fs (no void main or gl_FragColor / too short / readme-like)
+  DELETED: shaders/VJ-Sorted-Production/ISF/space/TravelTheUniverse-XY_1.fs (no void main or gl_FragColor / too short / readme-like)
+
+Note: 744 renames were applied in a previous run (e.g. HorizonLight-FrostCrystal-2..11 -> Seascape-V2..V11, _1 -> -1, Infinate -> Infinite). See first-run report for full rename list if needed.
+
+============================================================

@@ -1,0 +1,114 @@
+╔══════════════════════════════════════════════════════════════╗
+║         MACROVERSE 42 — THE WIRED ATELIER                    ║
+║         https://github.com/aday1/Macroverse                  ║
+╚══════════════════════════════════════════════════════════════╝
+
+  GLSL/ISF shader lab and VJ tool for Resolume Wire.
+  Browse ▸ preview ▸ expose parameters ▸ fix shaders ▸ push to Wire.
+  One binary. Open http://localhost:8765
+
+──────────────────────────────────────────────────────────────
+  QUICK START
+──────────────────────────────────────────────────────────────
+
+  1. Put your shaders in a  shaders/  folder next to this file.
+     (or edit shader-preview-settings.json to change the path)
+
+  2. Launch:
+
+       Windows  →  double-click  Macroverse42.exe
+                   or in a terminal:  .\Macroverse42.exe
+
+       Linux    →  chmod +x Macroverse42 && ./Macroverse42
+
+       Mac      →  chmod +x Macroverse42 && ./Macroverse42
+                   if Gatekeeper blocks it, run once:
+                   xattr -dr com.apple.quarantine ./Macroverse42
+
+  3. Open  http://localhost:8765  in your browser.
+
+  4. Click  Scan  in the toolbar (or press  S ) to index shaders.
+
+  That's it. Your library is live.
+
+──────────────────────────────────────────────────────────────
+  GALLERY MODE  ( Gallery tab )
+──────────────────────────────────────────────────────────────
+
+  Live-renders every shader in a grid. Navigate with keyboard:
+
+    ← → ↑ ↓         Move between cells
+    Alt + ← →        Previous / next page
+    1 – 9            Toggle preset tag on focused shader
+    Shift + 1–9      Toggle preset VJ Set on focused shader
+    A                Set-toggle prompt (shows all preset sets)
+    F                Toggle favourite
+    R                Rename focused shader
+    SPACE            Toggle auto-advance
+    ?                Show keyboard shortcut HUD
+
+  Preset VJ Sets (Shift+1 through Shift+9):
+    1: vj-ambient   2: vj-techno    3: vj-cosmic
+    4: vj-glitch    5: vj-geometric 6: vj-organic
+    7: vj-wire-ready 8: vj-dark     9: vj-colour
+
+  "Seed VJ Sets" button auto-assigns shaders by name heuristics.
+
+  Export ▾ menu: CSV, JSON, or paths (.txt, one per line)
+  filtered by view, set, or tag — feed .txt into Resolume Avenue.
+
+──────────────────────────────────────────────────────────────
+  RESOLUME WIRE PIPELINE
+──────────────────────────────────────────────────────────────
+
+  Open any shader in the editor, then:
+
+    Expose          — turns magic-number literals into ISF sliders
+    Check ISF Wire  — validates Wire compatibility
+    Clipboard → Wire — sends the shader + parameters to Resolume Wire
+
+  The fix chain (regex → Ollama → AI) auto-repairs broken shaders
+  before you export.
+
+──────────────────────────────────────────────────────────────
+  SETTINGS  ( shader-preview-settings.json )
+──────────────────────────────────────────────────────────────
+
+  sourcePaths    — shader folders to scan        default: ["shaders"]
+  previewWidth   — canvas width                  default: 854
+  previewHeight  — canvas height                 default: 480
+  targetFps      — animation framerate           default: 30
+  enableGit      — auto-commit every save        default: false
+  enableOutput   — MJPEG stream for OBS          default: false
+  watchFolders   — auto-rescan on file changes   default: false
+
+──────────────────────────────────────────────────────────────
+  OBS / VIRTUAL WEBCAM
+──────────────────────────────────────────────────────────────
+
+  MJPEG stream:   http://localhost:8765/api/output/macrocam/stream
+
+  Linux virtual webcam (requires v4l2loopback):
+    ffmpeg -i http://localhost:8765/api/output/macrocam/stream \
+           -f v4l2 /dev/video0
+
+──────────────────────────────────────────────────────────────
+  BUILD FROM SOURCE
+──────────────────────────────────────────────────────────────
+
+  Requires: Go 1.21+, Node.js 20+
+
+    Linux / Mac:   ./build.sh
+    Windows:       build.bat
+
+  Or manually:
+    cd frontend && npm ci && npm run build && cd ..
+    cd api && go build -o ../Macroverse42 . && cd ..
+
+──────────────────────────────────────────────────────────────
+  ISSUES / SUPPORT
+──────────────────────────────────────────────────────────────
+
+  https://github.com/aday1/Macroverse/issues
+
+╚══════════════════════════════════════════════════════════════╝
