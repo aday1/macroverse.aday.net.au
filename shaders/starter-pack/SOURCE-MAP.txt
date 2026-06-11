@@ -1,0 +1,44 @@
+Macroverse starter-pack source map
+Generated: 2026-05-16T12:42:19.551Z
+Public name -> private library path (under Macroversed-FortyTwoEdition/shaders/)
+
+plasma/orbital-plasma-colors.fs	<- VJ-Sorted-Production/ISF/plasma/plasmaorbcolors.fs
+plasma/soft-glow-plasma.fs	<- VJ-Sorted-Production/ISF/plasma/PrettyGlow1.fs
+plasma/classic-plasma-five.fs	<- isf/plasma5.fs
+tunnel/retro-pipes.fs	<- isf/PipesRetro.fs
+tunnel/lightspeed-zoom.fs	<- VJ-Sorted-Production/ISF/tunnel/Lightspeed-Zoom1.fs
+tunnel/wire-tunnel.fs	<- VJ-Sorted-Production/ISF/tunnel/Tunnel.fs
+fractal/cyber-fractal.frag	<- glsl/Cyber-Fractal.frag
+fractal/star-nest.fs	<- VJ-Sorted-Production/ISF/fractal/StarNest.fs
+fractal/road-to-fractal.fs	<- VJ-Sorted-Production/ISF/fractal/RoadToFractal.fs
+geometric/disc-orbit.fs	<- isf/discs.fs
+geometric/mystify-lines.fs	<- isf/MystifyLines.fs
+geometric/neon-torus.frag	<- glsl/Neon-Torus.frag
+geometric/crystal-sphere.frag	<- glsl/Crystal-Sphere.frag
+abstract/brush-strokes.fs	<- isf/abstract-brushstrokes.fs
+abstract/sine-waves.fs	<- isf/Sinewaves1.fs
+abstract/gold-waves.fs	<- VJ-Sorted-Production/ISF/abstract/goldwaves.fs
+noise/cloud-fbm.fs	<- VJ-Sorted-Production/ISF/noise/clouds.fs
+noise/iq-noise-lab.fs	<- VJ-Sorted-Production/ISF/noise/NoisefunctionsfromIQ.fs
+noise/checker-mist.fs	<- core/checkerboards/core-checker-mist.fs
+space/nebula-drift.fs	<- isf/Nebula.fs
+space/starfield-warp.fs	<- isf/StarfieldWarp.fs
+space/planetary-glow.fs	<- VJ-Sorted-Production/ISF/space/Planetary.fs
+water/retro-ripples.fs	<- isf/RetroRipples.fs
+water/seascape.fs	<- VJ-Sorted-Production/ISF/water/Seascape.fs
+water/aquatic-field.fs	<- VJ-Sorted-Production/ISF/water/AquaticField.fs
+particles/bubble-field.fs	<- isf/Bubbles.fs
+particles/star-trip.fs	<- VJ-Sorted-Production/ISF/particles/StarTrip.fs
+particles/starfield-fire.fs	<- VJ-Sorted-Production/ISF/particles/StarField-Fire.fs
+psychedelic/demoscene-beast.frag	<- glsl/demoscene-unicorn.frag
+psychedelic/neon-flower.fs	<- VJ-Sorted-Production/ISF/psychedelic/PsychedelicFlower1.fs
+psychedelic/color-vortex.fs	<- VJ-Sorted-Production/ISF/psychedelic/PsychedelicVortextXY.fs
+grid/matrix-rain.fs	<- isf/MatrixRain.fs
+grid/voronoi-cells.fs	<- VJ-Sorted-Production/ISF/grid/VoronoiII-XY.fs
+grid/neon-xy-grid.fs	<- core/grids/core-grid-neon-xy.fs
+color/gradient-pulse.fs	<- isf/Gradient1.fs
+color/color-bleed.fs	<- isf/Colorbleed1.fs
+color/smpte-bars.fs	<- isf/SMPTE-ColorBars.fs
+misc/feedback-blur.fs	<- isf/feedback-blur.fs
+misc/chroma-warp.fs	<- isf/TextureFX-ChromaWarp.fs
+misc/spinner-glow.fs	<- isf/Spinner.fs

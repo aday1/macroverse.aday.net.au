@@ -1,0 +1,10 @@
+{
+  "name": "macroverse-wired-atelier",
+  "private": true,
+  "scripts": {
+    "bulk-thumbnails": "node scripts/bulk-thumbnails.js"
+  },
+  "dependencies": {
+    "puppeteer": "^23.11.1"
+  }
+}

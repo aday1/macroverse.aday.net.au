@@ -1,0 +1,30 @@
+{
+  "current_stable": "42.2",
+  "versions": [
+    {
+      "semver": "42.2",
+      "title": "WebXR VR VJ + live remote extensions",
+      "features": [
+        "WebXR VR audience dome (vj-vr.html)",
+        "VR VJ controller + DOM overlay HUD",
+        "Copy VR audience / Copy VR VJ QR shortcuts",
+        "Live GLSL push from VR (vj:shader-live)",
+        "Auto VJ shader-swap vs depth-motion toggles",
+        "Shared vjStreamCore for flat + VR output"
+      ]
+    },
+    {
+      "semver": "42.1",
+      "title": "Stable hosted release (Forty-Two)",
+      "features": [
+        "Gig sessions + salted view/control tokens",
+        "Audience stream QR + optional touch X/Y",
+        "Co-VJ WebSocket desk sync",
+        "Auto VJ + BPM bar timing",
+        "Shader carousel + VJ startup splash QRs",
+        "LAN bridge agent + deploy-meta build UI",
+        "Rich gradient sliders (touch-safe)"
+      ]
+    }
+  ]
+}

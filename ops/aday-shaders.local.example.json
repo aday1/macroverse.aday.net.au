@@ -1,0 +1,10 @@
+{
+  "shadersSource": "D:/path/to/Macroversed-FortyTwoEdition/shaders",
+  "fortyTwoRoot": "D:/path/to/Macroversed-FortyTwoEdition",
+  "includeResolume": false,
+  "linodeHost": "172.105.171.251",
+  "linodeUser": "root",
+  "sshKeyPath": "D:/path/to/linode_deploy_ed25519",
+  "remoteComposeDir": "/root/compose/macroverse.aday.net.au",
+  "triggerReindex": true
+}

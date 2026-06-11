@@ -1,0 +1,11 @@
+resolume/
+resolume-example/
+shaders/**
+!shaders/starter-pack/**
+*.7z
+*.zip
+*.db
+.git
+.github
+node_modules
+frontend/node_modules

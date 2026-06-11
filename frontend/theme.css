@@ -1,0 +1,144 @@
+:root {
+  /* ─── Wired Atelier palette - lifted from "void black" to "twilight    */
+  /*   indigo" so the UI is readable without losing the synthwave/Amiga  */
+  /*   atmosphere. Old values kept in comments for reference.            */
+  --amiga-bg:          #1a1530;   /* twilight indigo (was #06040f) */
+  --amiga-surface:     #251c44;   /* lifted indigo  (was #0d0820)  */
+  --amiga-panel:       #2d2350;   /* clear panel    (was #110c28)  */
+  --amiga-border-light:#5a48a0;   /* electric edge  (was #2a1a66)  */
+  --amiga-border-dark: #110a25;   /* visible bevel  (was #030208)  */
+  --amiga-text:        #ece4f8;   /* near-white lavender (was #ccc0e8) */
+  --amiga-text-dim:    #9c8cc8;   /* readable dim   (was #55448a)  */
+  --amiga-accent:      #6aa6e6;   /* brighter blue  (was #4488cc)  */
+  --amiga-copper:      #ffa044;   /* brighter copper(was #ee8833)  */
+  --glitch-blue:       rgba(106, 166, 230, 0.35);
+
+  /* derived aliases used in layout/components */
+  --crt-fg:   var(--amiga-text);
+  --crt-dim:  var(--amiga-text-dim);
+  --bevel-dark:  var(--amiga-border-dark);
+  --bevel-light: var(--amiga-border-light);
+
+  /* ─── Code editor colours - lifted in tandem with the app palette */
+  --theme-editor-bg:         #14102a;   /* was #040210 */
+  --theme-editor-fg:         #e0d6f2;   /* was #c8bce8 */
+  --theme-editor-keyword:    #d870ff;   /* was #cc44ff */
+  --theme-editor-string:     #5cffba;   /* was #44ffaa */
+  --theme-editor-comment:    #7a8cb8;   /* was #445588 - now legible */
+  --theme-editor-number:     #ff9c5c;   /* was #ff8844 */
+  --theme-editor-punctuation:#b0a0d8;   /* was #9988cc */
+  --theme-editor-operator:   #d870ff;   /* was #cc44ff */
+  --theme-editor-function:   #5cdfff;   /* was #44ddff */
+  --theme-editor-caret:      #e0d6f2;
+  --theme-editor-selection:  rgba(136, 0, 255, 0.30);
+  --theme-editor-glow:       rgba(136, 0, 255, 0.07);
+}
+
+* { box-sizing: border-box; }
+
+/* iOS landscape text-resize prevention */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* Eliminate the iOS 300ms tap delay and double-tap zoom on UI controls */
+button, .wire-btn, .view-tab, .right-tab, .list-item, .ctx-menu-item,
+input, select, textarea, label, .mobile-fab, .app-bar-btn,
+.bottom-tab, .palette-item, .toolbar-group {
+  touch-action: manipulation;
+}
+
+/* ─── Scrollbars ─────────────────────────────────────────────────────────── */
+* { scrollbar-width: thin; scrollbar-color: var(--bevel-light) var(--amiga-bg); }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: var(--amiga-bg); }
+*::-webkit-scrollbar-thumb { background: var(--bevel-light); border-radius: 3px; border: 2px solid var(--amiga-bg); }
+*::-webkit-scrollbar-thumb:hover { background: var(--amiga-copper); }
+*::-webkit-scrollbar-corner { background: var(--amiga-bg); }
+
+:root {
+  --split-handle: 8px;
+  --split-handle-touch: 26px;
+  --scroll-size: 10px;
+  --scroll-size-touch: 20px;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --split-handle: var(--split-handle-touch);
+    --scroll-size: var(--scroll-size-touch);
+  }
+}
+
+/* Scroll regions: internal panels only (not the whole page) */
+.scroll-region {
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-width: auto;
+  scrollbar-color: var(--amiga-copper) var(--amiga-bg);
+}
+.scroll-region::-webkit-scrollbar { width: var(--scroll-size); height: var(--scroll-size); }
+.scroll-region::-webkit-scrollbar-track { background: var(--amiga-bg); }
+.scroll-region::-webkit-scrollbar-thumb {
+  background: var(--amiga-copper);
+  border-radius: 4px;
+  border: 2px solid var(--amiga-bg);
+}
+.scroll-region::-webkit-scrollbar-thumb:hover { background: var(--amiga-accent); }
+
+/* ─── Body ───────────────────────────────────────────────────────────────── */
+body {
+  margin: 0;
+  font-family: "Share Tech Mono", "Lucida Console", Consolas, ui-monospace, monospace;
+  background: var(--amiga-bg);
+  color: var(--crt-fg);
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%23cc7744' stroke='%23000' stroke-width='1' d='M2 2 L2 18 L8 12 L11 18 L13 16 L10 10 L18 10 Z'/%3E%3C/svg%3E") 2 2, pointer;
+}
+body * { cursor: inherit; }
+input, textarea, button, select, .wire-btn, .view-tab, .right-tab, .list-item, .ctx-menu-item, .col-resizer, .split-resizer, [title] { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%23cc7744' stroke='%23000' stroke-width='1' d='M2 2 L2 18 L8 12 L11 18 L13 16 L10 10 L18 10 Z'/%3E%3C/svg%3E") 2 2, pointer; }
+.code-wrap, .code-wrap * { cursor: text; }
+
+/* On touch devices, drop the custom SVG cursor (it adds nothing and
+   pseudo-doubles paint cost on scroll) */
+@media (pointer: coarse) {
+  body, body *,
+  input, textarea, button, select,
+  .wire-btn, .view-tab, .right-tab, .list-item, .ctx-menu-item,
+  .col-resizer, .split-resizer, [title] {
+    cursor: auto !important;
+  }
+}
+
+/* ─── Ambient scanline overlay ───────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 99998; pointer-events: none;
+  background: repeating-linear-gradient(0deg,
+    transparent 0px, transparent 2px,
+    rgba(0,0,12,0.04) 2px, rgba(0,0,12,0.04) 4px);
+}
+
+/* ─── Subtle purple ambient bloom at the top ─────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; height: 35vh;
+  z-index: 99997; pointer-events: none;
+  background: radial-gradient(ellipse 100% 100% at 50% -20%,
+    rgba(120, 60, 220, 0.10) 0%, transparent 70%);
+}
+
+/* ─── Global glow on active interactive elements ─────────────────────────── */
+@keyframes accent-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(68,136,204,0.40); }
+  50%       { box-shadow: 0 0 14px rgba(68,136,204,0.70), 0 0 28px rgba(68,136,204,0.20); }
+}
+
+/* ─── Selection colour ───────────────────────────────────────────────────── */
+::selection { background: rgba(136, 0, 255, 0.28); color: #e0d8ff; }

@@ -1,0 +1,26 @@
+node_modules/
+frontend/dist/
+frontend-build/
+thumbnails.json
+shader-preview-settings.json
+shader-index.json
+training-shader-index.json
+.env
+shader-errors.json
+unrecoverable-shaders.json
+debug-fix-errors.log
+macroverse.db
+private-data/
+ops/aday-shaders.local.json
+nginx/auth/aday.htpasswd
+# compiled binaries
+*.exe
+*.exe~
+Macroverse42
+# Claude Code temp files
+tmpclaude-*
+nul
+pack-release.ps1
+
+
+ops/*.local.json

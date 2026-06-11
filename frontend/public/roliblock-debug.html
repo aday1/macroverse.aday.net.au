@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roliblock DEBUG - Dual Device Test (BLOCKS protocol)</title>
+  <style>
+    body { font-family: monospace; background: #111; color: #ccc; padding: 16px; font-size: 12px; }
+    h1 { font-size: 14px; color: #8af; }
+    h2 { font-size: 13px; color: #8af; margin: 0 0 8px 0; }
+    section { margin-bottom: 16px; border: 1px solid #333; padding: 12px; }
+    .dual-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .device-col { flex: 1; min-width: 400px; border: 1px solid #333; padding: 12px; }
+    .device-col.a { border-color: #446; }
+    .device-col.b { border-color: #644; }
+    .row { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+    canvas { display: block; background: #000; border: 2px solid #444; }
+    .led-sim { image-rendering: pixelated; image-rendering: crisp-edges; }
+    button { padding: 6px 10px; cursor: pointer; background: #333; color: #eee; border: 1px solid #555; font-family: inherit; font-size: 11px; }
+    button:hover { background: #444; }
+    .status { font-size: 11px; color: #888; margin-top: 4px; }
+    pre { background: #1a1a1a; padding: 8px; overflow-x: auto; font-size: 10px; max-height: 150px; overflow-y: auto; }
+    .log { color: #6a6; }
+    .err { color: #a66; }
+    label { display: block; margin: 4px 0; font-size: 11px; }
+    select { background: #222; color: #ccc; border: 1px solid #444; font-family: monospace; font-size: 11px; padding: 2px 4px; }
+    textarea { width: 100%; min-width: 300px; background: #1a1a1a; color: #ccc; border: 1px solid #333; font-family: monospace; font-size: 10px; padding: 6px; }
+    .mouse-label { font-size: 11px; color: #8af; margin-top: 4px; }
+    .btn-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+    .view-active { background: #446 !important; border-color: #88aaff !important; }
+  </style>
+</head>
+<body>
+  <h1>Roliblock DEBUG - Dual Device Test (BLOCKS Protocol)</h1>
+  <p style="font-size:11px; color:#888; margin-bottom:8px;">
+    Two independent Roli Lightpad Blocks, each with its own shader, mouse XY, WebGL preview, and LED stream.<br>
+    Connect via USB MIDI or Bluetooth (BLE). Touch via MPE MIDI: Pitch Bend = X, CC74 = Y. Or hover the WebGL preview canvas.
+  </p>
+
+  <section>
+    <div style="font-weight:bold; margin-bottom:8px;">1. Web MIDI</div>
+    <button id="btnRequestSysex">Request MIDI (with sysex)</button>
+    <div style="display:flex; gap:16px; margin-top:8px;">
+      <div><strong>Inputs:</strong> <pre id="inputsList" style="min-width:200px">(none)</pre></div>
+      <div><strong>Outputs:</strong> <pre id="outputsList" style="min-width:200px">(none)</pre></div>
+    </div>
+  </section>
+
+  <section style="margin-bottom:8px;padding:8px 12px;">
+    <div style="font-weight:bold;margin-bottom:6px;">View Mode</div>
+    <div class="btn-row">
+      <button id="btnViewA">A Only</button>
+      <button id="btnViewB">B Only</button>
+      <button id="btnViewBoth" class="view-active">Both</button>
+      <button id="btnViewCombined">Combined</button>
+      <button id="btnViewLinked" title="DNA linked: stretch one shader across both pads, unify touch XY">Linked</button>
+    </div>
+    <div id="combinedContainer" style="display:none;margin-top:8px;">
+      <div style="font-size:10px;color:#888;margin-bottom:2px;">Combined (A left, B right &mdash; 30&times;15)</div>
+      <canvas id="combinedCanvas" width="640" height="240" style="border:2px solid #555;"></canvas>
+      <div style="margin-top:4px;">
+        <canvas id="combinedLedSim" class="led-sim" style="border:2px solid #555;"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <div class="dual-row">
+    <!-- ═══ DEVICE A ═══ -->
+    <div class="device-col a" id="colA">
+      <h2 style="color:#88aaff">Device A</h2>
+      <label>Touch input: <select id="selInputA"><option value="">-- select --</option></select></label>
+      <label>LED output: <select id="selOutputA"><option value="">-- select --</option></select></label>
+      <div style="margin-top:4px;">
+        <button id="btnBleA" style="background:#225;">Pair BLE</button>
+        <button id="btnBleDisconnectA" style="background:#422;display:none;">Disconnect BLE</button>
+        <span id="connBadgeA" style="margin-left:8px;font-size:11px;color:#666;">&mdash;</span>
+      </div>
+      <div class="status" id="statusA">Select devices above or pair BLE.</div>
+
+      <div style="font-weight:bold; margin:10px 0 4px;">GLSL Shader A</div>
+      <textarea id="shaderCodeA" rows="6"></textarea>
+      <div style="margin-top:4px;">
+        <button id="btnLoadA">Load .fs</button>
+        <input type="file" id="fileShaderA" accept=".fs,.frag,.glsl" style="display:none">
+        <button id="btnApplyA">Apply</button>
+        <span id="shaderStatusA" style="margin-left:6px;font-size:11px;color:#888;"></span>
+      </div>
+
+      <div style="font-weight:bold; margin:10px 0 4px;">Preview + LED Sim</div>
+      <div class="row">
+        <div>
+          <div style="font-size:10px;color:#888;margin-bottom:2px;">WebGL (mouse or Roli = uMouse)</div>
+          <canvas id="previewA" width="320" height="240"></canvas>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#888;margin-bottom:2px;">15x15 LED sim</div>
+          <canvas id="ledSimA" class="led-sim"></canvas>
+        </div>
+      </div>
+      <label><input type="checkbox" id="chkStreamA" checked> Stream to device LEDs</label>
+      <span id="streamStatusA" style="margin-left:8px;font-size:11px;color:#888;"></span>
+      <div class="mouse-label" id="mouseLabelA">Mouse: X=0.50 Y=0.50</div>
+
+      <div class="btn-row">
+        <button id="btnRedA">RED</button>
+        <button id="btnGreenA">GREEN</button>
+        <button id="btnBlueA">BLUE</button>
+        <button id="btnOffA">OFF</button>
+        <button id="btnPatternA">PATTERN</button>
+        <button id="btnHandshakeA">Re-Handshake</button>
+      </div>
+
+      <div style="margin-top:8px;font-weight:bold;font-size:11px;">Shader Library</div>
+      <div class="btn-row" style="align-items:center;">
+        <button id="btnPrevA">&#9664; Prev</button>
+        <button id="btnNextA">Next &#9654;</button>
+        <button id="btnRandA">Random</button>
+        <span id="navLabelA" style="font-size:10px;color:#888;margin-left:6px;"></span>
+      </div>
+      <div style="margin-top:4px;">
+        <label style="font-size:11px;"><input type="checkbox" id="chkAutoA"> Auto-cycle</label>
+        <select id="selIntervalA" style="margin-left:4px;">
+          <option value="3">3s</option>
+          <option value="5" selected>5s</option>
+          <option value="8">8s</option>
+          <option value="12">12s</option>
+          <option value="20">20s</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ═══ DEVICE B ═══ -->
+    <div class="device-col b" id="colB">
+      <h2 style="color:#ffaa88">Device B</h2>
+      <label>Touch input: <select id="selInputB"><option value="">-- select --</option></select></label>
+      <label>LED output: <select id="selOutputB"><option value="">-- select --</option></select></label>
+      <div style="margin-top:4px;">
+        <button id="btnBleB" style="background:#225;">Pair BLE</button>
+        <button id="btnBleDisconnectB" style="background:#422;display:none;">Disconnect BLE</button>
+        <span id="connBadgeB" style="margin-left:8px;font-size:11px;color:#666;">&mdash;</span>
+      </div>
+      <div class="status" id="statusB">Select devices above or pair BLE.</div>
+
+      <div style="font-weight:bold; margin:10px 0 4px;">GLSL Shader B</div>
+      <textarea id="shaderCodeB" rows="6"></textarea>
+      <div style="margin-top:4px;">
+        <button id="btnLoadB">Load .fs</button>
+        <input type="file" id="fileShaderB" accept=".fs,.frag,.glsl" style="display:none">
+        <button id="btnApplyB">Apply</button>
+        <span id="shaderStatusB" style="margin-left:6px;font-size:11px;color:#888;"></span>
+      </div>
+
+      <div style="font-weight:bold; margin:10px 0 4px;">Preview + LED Sim</div>
+      <div class="row">
+        <div>
+          <div style="font-size:10px;color:#888;margin-bottom:2px;">WebGL (mouse or Roli = uMouse)</div>
+          <canvas id="previewB" width="320" height="240"></canvas>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#888;margin-bottom:2px;">15x15 LED sim</div>
+          <canvas id="ledSimB" class="led-sim"></canvas>
+        </div>
+      </div>
+      <label><input type="checkbox" id="chkStreamB" checked> Stream to device LEDs</label>
+      <span id="streamStatusB" style="margin-left:8px;font-size:11px;color:#888;"></span>
+      <div class="mouse-label" id="mouseLabelB">Mouse: X=0.50 Y=0.50</div>
+
+      <div class="btn-row">
+        <button id="btnRedB">RED</button>
+        <button id="btnGreenB">GREEN</button>
+        <button id="btnBlueB">BLUE</button>
+        <button id="btnOffB">OFF</button>
+        <button id="btnPatternB">PATTERN</button>
+        <button id="btnHandshakeB">Re-Handshake</button>
+      </div>
+
+      <div style="margin-top:8px;font-weight:bold;font-size:11px;">Shader Library</div>
+      <div class="btn-row" style="align-items:center;">
+        <button id="btnPrevB">&#9664; Prev</button>
+        <button id="btnNextB">Next &#9654;</button>
+        <button id="btnRandB">Random</button>
+        <span id="navLabelB" style="font-size:10px;color:#888;margin-left:6px;"></span>
+      </div>
+      <div style="margin-top:4px;">
+        <label style="font-size:11px;"><input type="checkbox" id="chkAutoB"> Auto-cycle</label>
+        <select id="selIntervalB" style="margin-left:4px;">
+          <option value="3">3s</option>
+          <option value="5" selected>5s</option>
+          <option value="8">8s</option>
+          <option value="12">12s</option>
+          <option value="20">20s</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <section style="margin-top:16px;">
+    <div style="font-weight:bold; margin-bottom:4px;">Log</div>
+    <pre id="consoleLog"></pre>
+  </section>
+
+  <script>
+    (function () {
+      /* ═══ Constants ═══ */
+      var GRID = 15, CELL = 12, GAP = 1;
+      var DEVICE_INDEX = 0x00;
+      var LED_OFFSET = 113;
+      var PIXELS = GRID * GRID;
+      var LED_BYTES = PIXELS * 2;
+      var PACKET_MAX = 0x03FF;
+      var MAX_PKT = 200;
+      var STREAM_INTERVAL_MS = 50;
+      var BLE_MIDI_SERVICE = '03b80e5a-ede8-4b33-a751-6ce34ec4c700';
+      var BLE_MIDI_CHAR = '7772e5db-3868-4112-a1a9-f2669d106bf3';
+      var BLE_HANDSHAKE_DELAY = 250;
+      var BLE_STREAM_INTERVAL_MS = 80;
+
+      /* ═══ Shared logging ═══ */
+      var logLines = [];
+      function debugLog(msg, isErr) {
+        var line = '[' + new Date().toTimeString().slice(0, 8) + '] ' + msg;
+        logLines.push(line);
+        if (logLines.length > 40) logLines.shift();
+        console.log('[Roliblock] ' + msg);
+        if (isErr) console.error('[Roliblock] ' + msg);
+        document.getElementById('consoleLog').textContent = logLines.join('\n');
+      }
+
+      /* ═══ 7-bit packed builder (BLOCKS DataChangeList) ═══ */
+      function Packed7Bit() { this.d = []; this.w = 0; this.b = 0; }
+      Packed7Bit.prototype.size = function () { return this.w + (this.b > 0 ? 1 : 0); };
+      Packed7Bit.prototype.getData = function () { return this.d.slice(0, this.size()); };
+      Packed7Bit.prototype.clone = function () {
+        var c = new Packed7Bit(); c.d = this.d.slice(); c.w = this.w; c.b = this.b; return c;
+      };
+      Packed7Bit.prototype.writeBits = function (val, n) {
+        while (n > 0) {
+          if (this.b === 0) {
+            if (n < 7) { this.d[this.w] = val & 0x7F; this.b = n; return; }
+            if (n === 7) { this.d[this.w++] = val & 0x7F; return; }
+            this.d[this.w++] = val & 0x7F; val >>>= 7; n -= 7;
+          } else {
+            var todo = Math.min(7 - this.b, n);
+            this.d[this.w] = (this.d[this.w] || 0) | ((val & ((1 << todo) - 1)) << this.b);
+            val >>>= todo; n -= todo; this.b += todo;
+            if (this.b === 7) { this.b = 0; this.w++; }
+          }
+        }
+      };
+
+      /* ═══ SysEx wrapper with BLOCKS checksum ═══ */
+      function buildSysEx(devIdx, payload) {
+        var len = payload.length + 8;
+        var d = new Uint8Array(len);
+        d[0] = 0xF0; d[1] = 0x00; d[2] = 0x21; d[3] = 0x10; d[4] = 0x77;
+        d[5] = devIdx & 0x7F;
+        for (var i = 0; i < payload.length; i++) d[6 + i] = payload[i] & 0x7F;
+        d[len - 1] = 0xF7;
+        var ck = (len - 8) & 0xFF;
+        for (var j = 6; j < len - 2; j++) ck = (ck + ck * 2 + d[j]) & 0xFF;
+        d[len - 2] = ck & 0x7F;
+        return d;
+      }
+
+      /* ═══ BLE MIDI Connection ═══ */
+      function BleMidiConn() {
+        this.device = null;
+        this.characteristic = null;
+        this.connectionState = 'disconnected';
+        this.mtu = 20;
+        this.onMidiMessage = null;
+        this.onDisconnect = null;
+        this._sysexBuf = [];
+        this._boundNotify = this._handleNotification.bind(this);
+        this._boundDisconnect = this._handleDisconnect.bind(this);
+      }
+      BleMidiConn.prototype.pair = function () {
+        var self = this;
+        if (typeof navigator === 'undefined' || !navigator.bluetooth) {
+          return Promise.resolve(false);
+        }
+        this.connectionState = 'connecting';
+        return navigator.bluetooth.requestDevice({
+          filters: [{ services: [BLE_MIDI_SERVICE] }],
+          optionalServices: [BLE_MIDI_SERVICE]
+        }).then(function (device) {
+          self.device = device;
+          return self._connectGatt();
+        }).catch(function () {
+          self.connectionState = 'disconnected';
+          return false;
+        });
+      };
+      BleMidiConn.prototype._connectGatt = function () {
+        var self = this;
+        if (!this.device || !this.device.gatt) return Promise.resolve(false);
+        return this.device.gatt.connect().then(function (server) {
+          return server.getPrimaryService(BLE_MIDI_SERVICE);
+        }).then(function (service) {
+          return service.getCharacteristic(BLE_MIDI_CHAR);
+        }).then(function (ch) {
+          self.characteristic = ch;
+          return ch.startNotifications();
+        }).then(function () {
+          self.characteristic.addEventListener('characteristicvaluechanged', self._boundNotify);
+          self.device.addEventListener('gattserverdisconnected', self._boundDisconnect);
+          self.connectionState = 'connected';
+          debugLog('BLE connected: ' + (self.device.name || self.device.id));
+          return true;
+        }).catch(function (e) {
+          debugLog('BLE GATT failed: ' + (e.message || e), true);
+          self.connectionState = 'disconnected';
+          return false;
+        });
+      };
+      BleMidiConn.prototype._handleNotification = function (event) {
+        var dv = event.target.value;
+        if (!dv || dv.byteLength < 3) return;
+        var messages = this._parseBlePacket(dv);
+        for (var m = 0; m < messages.length; m++) {
+          var msg = messages[m];
+          if (msg[0] === 0xF0) {
+            this._sysexBuf = Array.from(msg);
+          } else if (this._sysexBuf.length > 0) {
+            for (var j = 0; j < msg.length; j++) this._sysexBuf.push(msg[j]);
+          }
+          if (this._sysexBuf.length > 0 && this._sysexBuf[this._sysexBuf.length - 1] === 0xF7) {
+            if (this.onMidiMessage) this.onMidiMessage(new Uint8Array(this._sysexBuf));
+            this._sysexBuf = [];
+            continue;
+          }
+          if (this._sysexBuf.length === 0 && this.onMidiMessage) {
+            this.onMidiMessage(msg);
+          }
+        }
+      };
+      BleMidiConn.prototype._parseBlePacket = function (dv) {
+        var messages = [];
+        var i = 1;
+        while (i < dv.byteLength) {
+          if (dv.getUint8(i) & 0x80) { i++; }
+          var start = i;
+          while (i < dv.byteLength) {
+            var b = dv.getUint8(i);
+            if (b === 0xF7) { i++; break; }
+            if (b & 0x80) {
+              if (i === start) { i++; continue; }
+              break;
+            }
+            i++;
+          }
+          if (i > start) {
+            messages.push(new Uint8Array(dv.buffer.slice(dv.byteOffset + start, dv.byteOffset + i)));
+          }
+        }
+        return messages;
+      };
+      BleMidiConn.prototype.sendSysEx = function (sysexBytes) {
+        if (!this.characteristic || this.connectionState !== 'connected') return Promise.resolve();
+        var ch = this.characteristic;
+        var payloadMax = this.mtu - 2;
+        var offset = 0;
+        var now = Date.now();
+        var tsHigh = ((now >> 7) & 0x3F) | 0x80;
+        var tsLow = (now & 0x7F) | 0x80;
+        function sendNext() {
+          if (offset >= sysexBytes.length) return Promise.resolve();
+          var remaining = sysexBytes.length - offset;
+          var chunkSize = Math.min(remaining, payloadMax);
+          var pkt = new Uint8Array(chunkSize + 2);
+          pkt[0] = tsHigh;
+          pkt[1] = tsLow;
+          for (var k = 0; k < chunkSize; k++) pkt[k + 2] = sysexBytes[offset + k];
+          offset += chunkSize;
+          return ch.writeValueWithoutResponse(pkt).then(sendNext).catch(function () {});
+        }
+        return sendNext();
+      };
+      BleMidiConn.prototype.disconnect = function () {
+        if (this.characteristic) {
+          try { this.characteristic.removeEventListener('characteristicvaluechanged', this._boundNotify); } catch (_) {}
+          this.characteristic = null;
+        }
+        if (this.device) {
+          try { this.device.removeEventListener('gattserverdisconnected', this._boundDisconnect); } catch (_) {}
+          if (this.device.gatt && this.device.gatt.connected) {
+            try { this.device.gatt.disconnect(); } catch (_) {}
+          }
+        }
+        this.connectionState = 'disconnected';
+      };
+      BleMidiConn.prototype._handleDisconnect = function () {
+        this.connectionState = 'disconnected';
+        this.characteristic = null;
+        debugLog('BLE disconnected: ' + (this.device ? (this.device.name || this.device.id) : '?'));
+        if (this.onDisconnect) this.onDisconnect();
+      };
+
+      /* ═══ RGBA to BGR565 ═══ */
+      function rgbToBgr565(r, g, b) {
+        return (((b >> 3) & 0x1F) << 11) | (((g >> 2) & 0x3F) << 5) | ((r >> 3) & 0x1F);
+      }
+
+      /* ═══ WebGL shader compile helper ═══ */
+      function compileGlShader(gl, type, src) {
+        var s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+          var err = gl.getShaderInfoLog(s);
+          gl.deleteShader(s);
+          throw new Error(err || 'compile failed');
+        }
+        return s;
+      }
+
+      var vertSrc = 'precision highp float; attribute vec2 a_pos; varying vec2 v_uv; void main() { v_uv = a_pos*0.5+0.5; gl_Position = vec4(a_pos,0.,1.); }';
+
+      /* ═══ BLOCKS handshake dumps ═══ */
+      var DUMP1 = '02 01 00 30 5A 3E 47 0B 20 01 3A 00 10 71 01 12 4B 31 09 08 60 46 5F 25 11 40 05 02 28 61 01 17 54 11 40 10 36 78 21 12 6D 1C 30 5B 00 2E 28 63 00 23 6C 70 43 24 5A 39 60 32 01 28 09 41 0D 3E 28 24 10 1B 04 51 48 1A 0A 08 22 09 1B 2C 30 45 0D 2E 08 24 20 1B 1C 00 5B 6C 50 41 16 36 58 20 10 01 6D 50 40 2D 36 58 60 0B 01 6D 70 40 2D 3A 78 3F 00 0F 1C 78 4F 07 2E 28 78 08 19 04 52 06 15 01 48 24 00 21 64 10 48 1A 02 18 60 0C 01 4C 70 40 05 7C 3F 00 7F 0F 60 7F 03 78 7F 00 7E 1F 40 7F 07 70 7F 01 7C 3F 00 7F 0F 60 7F 03 78 7F 00 7E 1F 40 7F 07 70 7F 01 7C 3F 00 7F 0F 00 00';
+      var DUMP2 = '02 02 00 0C 5C 7F 07 70 7F 01 7C 3F 00 7F 0F 60 7F 03 78 7F 00 7E 1F 40 7F 07 70 7F 01 7C 3F 00 7F 0F 60 7F 03 78 7F 00 7E 1F 40 7F 07 70 7F 01 7C 3F 00 7F 0F 60 7F 03 78 7F 00 7E 1F 40 7F 07 70 7F 01 7C 3F 00 7F 0F 60 7F 03 78 7F 00 1E 19 00 4B';
+      function parseDump(hex) { return hex.trim().split(/\s+/).map(function (h) { return parseInt(h, 16); }); }
+
+      /* ═══ ISF input parsing (shared pure functions) ═══ */
+      var ISF_SKIP = { TIME:1, RENDERSIZE:1, time:1, resolution:1, mouse:1, uMouse:1, mouseX:1, mouseY:1, timeScale:1, FRAMEINDEX:1, iFrame:1 };
+      function isfInputsToUniforms(body) {
+        var m = body.match(/\/\*\s*\{[\s\S]*\}\s*\*\//);
+        if (!m) return { uniforms: '', defaults: {}, types: {} };
+        var jsonStr = m[0].replace(/^\s*\/\*\s*/, '').replace(/\s*\*\/\s*$/, '');
+        try {
+          var meta = JSON.parse(jsonStr);
+          var inputs = meta.INPUTS;
+          if (!Array.isArray(inputs) || inputs.length === 0) return { uniforms: '', defaults: {}, types: {} };
+          var lines = [], defaults = {}, types = {};
+          for (var i = 0; i < inputs.length; i++) {
+            var inp = inputs[i], name = inp.NAME;
+            if (!name || !/^\w+$/.test(name) || ISF_SKIP[name]) continue;
+            var t = (inp.TYPE || 'float').toLowerCase();
+            var glslType = 'float';
+            if (t === 'bool') glslType = 'bool';
+            else if (t === 'vec2' || t === 'point2d') glslType = 'vec2';
+            else if (t === 'vec3' || t === 'color') glslType = 'vec3';
+            else if (t === 'vec4') glslType = 'vec4';
+            else if (t === 'image' || t === 'sampler2d') continue;
+            types[name] = glslType;
+            var def = inp.DEFAULT;
+            if (typeof def === 'number') defaults[name] = def;
+            else if (typeof def === 'boolean') defaults[name] = def ? 1 : 0;
+            else if (Array.isArray(def) && def.length >= 3) defaults[name] = [Number(def[0])||0.5, Number(def[1])||0.5, Number(def[2])||0.5];
+            else if (Array.isArray(def) && def.length === 2) defaults[name] = [Number(def[0])||0.5, Number(def[1])||0.5];
+            else if (glslType === 'float') defaults[name] = 0.5;
+            else if (glslType === 'bool') defaults[name] = 0;
+            else if (glslType === 'vec3' || glslType === 'color') defaults[name] = [0.5, 0.5, 0.5];
+            lines.push('uniform ' + glslType + ' ' + name + ';');
+          }
+          return { uniforms: lines.length ? lines.join('\n') + '\n' : '', defaults: defaults, types: types };
+        } catch (e) { return { uniforms: '', defaults: {}, types: {} }; }
+      }
+
+      function addPreamble(src) {
+        var body = (src || '').trim();
+        if (!body) return '';
+        body = body.replace(/\biResolution\b/g, 'RENDERSIZE');
+        body = body.replace(/\biTime\b/g, 'TIME');
+        var mainImage = body.match(/void\s+mainImage\s*\(\s*out\s+vec4\s+(\w+)\s*,\s*(?:in\s+)?vec2\s+(\w+)\s*\)\s*\{/);
+        if (mainImage) {
+          var outVar = mainImage[1], coordVar = mainImage[2];
+          body = body.replace(/void\s+mainImage\s*\(\s*out\s+vec4\s+\w+\s*,\s*(?:in\s+)?vec2\s+\w+\s*\)\s*\{/, 'void main() { vec2 ' + coordVar + ' = gl_FragCoord.xy; vec4 ' + outVar + ';');
+          body = body.replace(new RegExp(outVar + '\\s*;\\s*\\}\\s*$', 's'), 'gl_FragColor = ' + outVar + ';\n}');
+        }
+        body = body.replace(/^\s*#define\s+time\b[^\n]*\n?/gm, '');
+        body = body.replace(/^\s*#define\s+resolution\b[^\n]*\n?/gm, '');
+        body = body.replace(/^\s*#define\s+mouse\b[^\n]*\n?/gm, '');
+        var hasTime = /uniform\s+float\s+(time|TIME)\s*[;=]/.test(body);
+        var hasRes = /uniform\s+vec2\s+(resolution|RENDERSIZE)\s*[;=]/.test(body);
+        var hasMouse = /uniform\s+vec2\s+(mouse|uMouse)\s*[;=]/.test(body);
+        var hasIMouse = /uniform\s+vec[24]\s+iMouse\s*[;=]/.test(body);
+        var hasISF = /"INPUTS"\s*:/.test(body) && (/\bTIME\b/.test(body) || /\bRENDERSIZE\b/.test(body));
+        var isf = hasISF ? isfInputsToUniforms(body) : { uniforms: '', defaults: {}, types: {} };
+        var preamble = 'precision highp float;\n';
+        if (!hasTime) preamble += 'uniform float TIME;\n';
+        if (!hasRes) preamble += 'uniform vec2 RENDERSIZE;\n';
+        if (!hasMouse) preamble += 'uniform vec2 uMouse;\n';
+        if (hasISF && !/uniform\s+float\s+FRAMEINDEX\s*[;=]/.test(body)) preamble += 'uniform float FRAMEINDEX;\n';
+        preamble += isf.uniforms;
+        preamble += '#ifndef time\n#define time TIME\n#endif\n';
+        preamble += '#ifndef resolution\n#define resolution RENDERSIZE\n#endif\n';
+        preamble += '#ifndef mouse\n#define mouse uMouse\n#endif\n';
+        if (!hasIMouse) preamble += '#ifndef iMouse\n#define iMouse vec4(uMouse,0.,0.)\n#endif\n';
+        preamble += '#ifndef iTime\n#define iTime TIME\n#endif\n';
+        preamble += '#ifndef iResolution\n#define iResolution RENDERSIZE\n#endif\n';
+        return { src: preamble + body, defaults: isf.defaults, types: isf.types || {} };
+      }
+
+      /* ═══ 7-bit SysEx touch parser ═══ */
+      function read7BitBits(data, bitPos, numBits) {
+        var v = 0, read = 0;
+        while (read < numBits) {
+          var byteIdx = Math.floor((bitPos + read) / 7);
+          var bitInByte = (bitPos + read) % 7;
+          var avail = 7 - bitInByte;
+          var toRead = Math.min(numBits - read, avail);
+          v |= ((data[byteIdx] >>> bitInByte) & ((1 << toRead) - 1)) << read;
+          read += toRead;
+        }
+        return v;
+      }
+
+      /* ═══ Default shaders ═══ */
+      var SHADER_A = [
+        'void main() {',
+        '  vec2 uv = gl_FragCoord.xy / RENDERSIZE.xy - 0.5;',
+        '  float angle = TIME * 0.5 + uMouse.x * 6.28;',
+        '  float c = cos(angle), s = sin(angle);',
+        '  uv = vec2(uv.x*c - uv.y*s, uv.x*s + uv.y*c) + uMouse*2.0 - 1.0;',
+        '  float scale = 8.0 + 4.0 * sin(TIME * 0.7);',
+        '  vec2 grid = floor(uv * scale);',
+        '  float chk = mod(grid.x + grid.y, 2.0);',
+        '  gl_FragColor = vec4(',
+        '    0.3 + 0.4*sin(TIME + chk*3.14),',
+        '    0.2 + 0.5*sin(TIME*1.3 + chk*2.0),',
+        '    0.4 + 0.4*sin(TIME*0.9 + chk), 1.0);',
+        '}'
+      ].join('\n');
+
+      var SHADER_B = [
+        'void main() {',
+        '  vec2 uv = gl_FragCoord.xy / RENDERSIZE.xy;',
+        '  float d = length(uv - uMouse);',
+        '  float wave = sin(d * 20.0 - TIME * 3.0) * 0.5 + 0.5;',
+        '  float r = wave * (0.5 + 0.5 * sin(TIME));',
+        '  float g = wave * (0.5 + 0.5 * sin(TIME * 1.3 + 2.0));',
+        '  float b = wave * (0.5 + 0.5 * sin(TIME * 0.7 + 4.0));',
+        '  gl_FragColor = vec4(r, g, b, 1.0);',
+        '}'
+      ].join('\n');
+
+      /* ═══════════════════════════════════════════════════════════════
+         DeviceSlot — encapsulates all per-device state and methods
+         ═══════════════════════════════════════════════════════════════ */
+      function DeviceSlot(id) {
+        var self = this;
+        this.id = id;
+
+        // MIDI state
+        this.midiInput = null;
+        this.midiOutput = null;
+        this.handshakeDone = false;
+        this.packetCounter = 1;
+        this.prevLedData = new Uint8Array(LED_BYTES);
+        this.lastSend = 0;
+        this.streamSendCount = 0;
+        this.sysexBuf = [];
+        this.midiMsgCount = 0;
+
+        // BLE state
+        this.connectionType = 'usb';
+        this.bleConn = null;
+        this.bleDeviceName = '';
+
+        // Mouse state
+        this.mouse = { x: 0.5, y: 0.5 };
+        this.mpeX = 0.5;
+        this.mpeY = 0.5;
+
+        // WebGL state
+        this.gl = null;
+        this.glProg = null;
+        this.quadBuf = null;
+        this.startTime = performance.now();
+        this.isfDefaults = {};
+        this.isfTypes = {};
+
+        // Shader library cycling state
+        this.shaderIdx = -1;
+        this.autoTimer = 0;
+        this.autoIntervalSec = 5;
+
+        // DOM refs
+        this.previewCanvas = document.getElementById('preview' + id);
+        this.ledSimCanvas = document.getElementById('ledSim' + id);
+        this.ledCtx = this.ledSimCanvas.getContext('2d');
+        this.shaderTextarea = document.getElementById('shaderCode' + id);
+        this.statusEl = document.getElementById('status' + id);
+        this.shaderStatusEl = document.getElementById('shaderStatus' + id);
+        this.streamStatusEl = document.getElementById('streamStatus' + id);
+        this.streamCheckbox = document.getElementById('chkStream' + id);
+        this.mouseLabel = document.getElementById('mouseLabel' + id);
+        this.inputSelect = document.getElementById('selInput' + id);
+        this.outputSelect = document.getElementById('selOutput' + id);
+        this.navLabel = document.getElementById('navLabel' + id);
+        this.connBadge = document.getElementById('connBadge' + id);
+        this.btnBle = document.getElementById('btnBle' + id);
+        this.btnBleDisconnect = document.getElementById('btnBleDisconnect' + id);
+
+        // Init WebGL
+        this.gl = this.previewCanvas.getContext('webgl', { preserveDrawingBuffer: true });
+        if (!this.gl) this.gl = this.previewCanvas.getContext('experimental-webgl', { preserveDrawingBuffer: true });
+        if (this.gl) {
+          this.quadBuf = this.gl.createBuffer();
+          this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.quadBuf);
+          this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), this.gl.STATIC_DRAW);
+        }
+
+        // Canvas mouse input
+        this.previewCanvas.addEventListener('mousemove', function (e) {
+          var r = self.previewCanvas.getBoundingClientRect();
+          self.mouse.x = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+          self.mouse.y = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+        });
+        this.previewCanvas.addEventListener('click', function (e) {
+          var r = self.previewCanvas.getBoundingClientRect();
+          self.mouse.x = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+          self.mouse.y = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+        });
+
+        // MIDI input change handler
+        this.inputSelect.addEventListener('change', function () {
+          if (self.midiInput) { self.midiInput.onmidimessage = null; self.midiInput = null; }
+          if (this.value && midiAccess) {
+            self.midiInput = midiAccess.inputs.get(this.value);
+            if (self.midiInput) {
+              self.midiInput.onmidimessage = function (ev) { self.onMidi(ev); };
+              debugLog('[' + id + '] Input connected: ' + self.midiInput.name);
+            }
+          }
+        });
+        // MIDI output change handler (disconnects BLE if active)
+        this.outputSelect.addEventListener('change', function () {
+          if (self.bleConn) { self.disconnectBle(); }
+          self.connectionType = 'usb';
+          self.handshakeDone = false;
+          if (this.value && midiAccess) {
+            self.midiOutput = midiAccess.outputs.get(this.value);
+            debugLog('[' + id + '] Output selected: ' + (self.midiOutput ? self.midiOutput.name : 'none'));
+            if (self.midiOutput) self.doHandshake();
+          } else { self.midiOutput = null; }
+          self.updateConnBadge();
+        });
+
+        // Shader buttons
+        document.getElementById('btnApply' + id).addEventListener('click', function () { self.applyShader(); });
+        document.getElementById('btnLoad' + id).addEventListener('click', function () { document.getElementById('fileShader' + id).click(); });
+        document.getElementById('fileShader' + id).addEventListener('change', function (e) {
+          var f = e.target.files && e.target.files[0];
+          if (!f) return;
+          var r = new FileReader();
+          r.onload = function () { self.shaderTextarea.value = r.result || ''; self.applyShader(); };
+          r.readAsText(f);
+          e.target.value = '';
+        });
+
+        // LED test buttons
+        document.getElementById('btnRed' + id).addEventListener('click', function () { self.sendLedFrame(self.solidColor(255,0,0)); debugLog('[' + id + '] RED'); });
+        document.getElementById('btnGreen' + id).addEventListener('click', function () { self.sendLedFrame(self.solidColor(0,255,0)); debugLog('[' + id + '] GREEN'); });
+        document.getElementById('btnBlue' + id).addEventListener('click', function () { self.sendLedFrame(self.solidColor(0,0,255)); debugLog('[' + id + '] BLUE'); });
+        document.getElementById('btnOff' + id).addEventListener('click', function () { self.sendLedFrame(self.solidColor(0,0,0)); debugLog('[' + id + '] OFF'); });
+        document.getElementById('btnPattern' + id).addEventListener('click', function () { self.sendLedFrame(self.testPattern()); debugLog('[' + id + '] PATTERN'); });
+        document.getElementById('btnHandshake' + id).addEventListener('click', function () { self.doHandshake(); });
+
+        // Shader library navigation
+        document.getElementById('btnPrev' + id).addEventListener('click', function () { self.prevShader(); });
+        document.getElementById('btnNext' + id).addEventListener('click', function () { self.nextShader(); });
+        document.getElementById('btnRand' + id).addEventListener('click', function () { self.randomShader(); });
+        var autoCheck = document.getElementById('chkAuto' + id);
+        var intervalSel = document.getElementById('selInterval' + id);
+        autoCheck.addEventListener('change', function () {
+          if (autoCheck.checked) { self.autoIntervalSec = Number(intervalSel.value); self.startAutoTimer(); }
+          else { self.stopAutoTimer(); }
+        });
+        intervalSel.addEventListener('change', function () {
+          self.autoIntervalSec = Number(intervalSel.value);
+          if (autoCheck.checked) self.startAutoTimer();
+        });
+
+        // BLE buttons
+        if (this.btnBle) {
+          this.btnBle.addEventListener('click', function () { self.pairBle(); });
+        }
+        if (this.btnBleDisconnect) {
+          this.btnBleDisconnect.addEventListener('click', function () { self.disconnectBle(); });
+        }
+
+        // Load default shader
+        this.shaderTextarea.value = (id === 'A') ? SHADER_A : SHADER_B;
+        this.applyShader();
+      }
+
+      /* ─── Send SysEx (BLE/USB dual path) ─── */
+      DeviceSlot.prototype.sendSysEx = function (payload) {
+        if (this.connectionType === 'ble' && this.bleConn) {
+          this.bleConn.sendSysEx(buildSysEx(DEVICE_INDEX, payload)).catch(function () {});
+          return;
+        }
+        if (!this.midiOutput) return;
+        try { this.midiOutput.send(buildSysEx(DEVICE_INDEX, payload)); }
+        catch (e) { debugLog('[' + this.id + '] Send failed: ' + e.message, true); }
+      };
+
+      /* ─── Handshake (BLE-aware delay) ─── */
+      DeviceSlot.prototype.doHandshake = function () {
+        var self = this;
+        var delay = (this.connectionType === 'ble') ? BLE_HANDSHAKE_DELAY : 150;
+        if (this.connectionType === 'ble') {
+          if (!this.bleConn || this.bleConn.connectionState !== 'connected') {
+            debugLog('[' + this.id + '] No BLE connection', true); return;
+          }
+        } else {
+          if (!this.midiOutput) { debugLog('[' + this.id + '] No output selected', true); return; }
+        }
+        debugLog('[' + this.id + '] Handshake (' + this.connectionType.toUpperCase() + ')...');
+        this.sendSysEx([0x01, 0x02, 0x00]);
+        this.sendSysEx([0x01, 0x00, 0x00]);
+        setTimeout(function () {
+          self.sendSysEx([0x01, 0x00, 0x00]);
+          self.sendSysEx([0x01, 0x03, 0x00]);
+          self.sendSysEx([0x10, 0x02]);
+          setTimeout(function () {
+            self.sendSysEx([0x01, 0x03, 0x00]);
+            self.sendSysEx(parseDump(DUMP1));
+            self.sendSysEx(parseDump(DUMP2));
+            setTimeout(function () {
+              self.sendSysEx([0x01, 0x05, 0x00]);
+              self.handshakeDone = true;
+              self.packetCounter = 1;
+              self.prevLedData = new Uint8Array(LED_BYTES);
+              debugLog('[' + self.id + '] Handshake DONE (' + self.connectionType.toUpperCase() + ')');
+              self.statusEl.textContent = 'Handshake done (' + self.connectionType.toUpperCase() + '). LEDs active.';
+              self.updateConnBadge();
+            }, delay);
+          }, delay);
+        }, delay);
+      };
+
+      /* ─── LED frame send (unified via sendSysEx) ─── */
+      DeviceSlot.prototype.buildFullFrameMessages = function (newData) {
+        var self = this;
+        var queued = [];
+        var pktIdx = this.packetCounter;
+        function makePkt(payloadBytes, isLast, skipOffset) {
+          var b = new Packed7Bit();
+          b.writeBits(0x02, 7);
+          b.writeBits(pktIdx & PACKET_MAX, 16);
+          pktIdx++;
+          var skip = skipOffset;
+          while (skip > 0) {
+            if (skip > 15) { var chunk = Math.min(255, skip); b.writeBits(3, 3); b.writeBits(chunk, 8); skip -= chunk; }
+            else { b.writeBits(2, 3); b.writeBits(skip, 4); skip = 0; }
+          }
+          b.writeBits(4, 3);
+          for (var i = 0; i < payloadBytes.length; i++) {
+            b.writeBits(payloadBytes[i], 8);
+            b.writeBits((i < payloadBytes.length - 1) ? 1 : 0, 1);
+          }
+          b.writeBits(isLast ? 1 : 0, 3);
+          queued.push(b.getData());
+        }
+        var chunkSize = 100;
+        var offset = 0;
+        while (offset < newData.length) {
+          var end = Math.min(offset + chunkSize, newData.length);
+          var slice = [];
+          for (var i = offset; i < end; i++) slice.push(newData[i]);
+          makePkt(slice, end >= newData.length, LED_OFFSET + offset);
+          offset = end;
+        }
+        this.packetCounter = pktIdx;
+        return queued;
+      };
+
+      DeviceSlot.prototype.sendLedFrame = function (rgbaData) {
+        if (!this.handshakeDone) return;
+        if (this.connectionType === 'ble') {
+          if (!this.bleConn || this.bleConn.connectionState !== 'connected') return;
+        } else {
+          if (!this.midiOutput) return;
+        }
+        var newLed = new Uint8Array(LED_BYTES);
+        for (var i = 0; i < PIXELS; i++) {
+          var c16 = rgbToBgr565(rgbaData[i * 4], rgbaData[i * 4 + 1], rgbaData[i * 4 + 2]);
+          newLed[i * 2] = c16 & 0xFF;
+          newLed[i * 2 + 1] = (c16 >> 8) & 0xFF;
+        }
+        var messages = this.buildFullFrameMessages(newLed);
+        for (var m = 0; m < messages.length; m++) {
+          this.sendSysEx(messages[m]);
+        }
+        this.prevLedData = newLed;
+        this.streamSendCount++;
+      };
+
+      /* ─── Color test helpers ─── */
+      DeviceSlot.prototype.solidColor = function (r, g, b) {
+        var data = new Uint8ClampedArray(PIXELS * 4);
+        for (var i = 0; i < PIXELS; i++) { data[i*4]=r; data[i*4+1]=g; data[i*4+2]=b; data[i*4+3]=255; }
+        return data;
+      };
+      DeviceSlot.prototype.testPattern = function () {
+        var data = new Uint8ClampedArray(PIXELS * 4);
+        for (var row = 0; row < GRID; row++) for (var col = 0; col < GRID; col++) {
+          var i = (row * GRID + col) * 4;
+          data[i] = Math.floor(col * 255 / 14); data[i+1] = Math.floor(row * 255 / 14); data[i+2] = 128; data[i+3] = 255;
+        }
+        return data;
+      };
+
+      /* ─── Shader library cycling ─── */
+      DeviceSlot.prototype.loadShaderByIndex = function (idx) {
+        if (shaderIndex.length === 0) return;
+        idx = ((idx % shaderIndex.length) + shaderIndex.length) % shaderIndex.length;
+        var self = this;
+        var entry = shaderIndex[idx];
+        var path = (entry.path || '').replace(/\\/g, '|');
+        fetch('/api/shader?path=' + encodeURIComponent(path), { cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error(r.statusText);
+            return r.text();
+          })
+          .then(function (src) {
+            self.shaderIdx = idx;
+            self.shaderTextarea.value = src;
+            self.applyShader();
+            self.updateShaderNav();
+            debugLog('[' + self.id + '] Loaded: ' + (entry.name || entry.path));
+          })
+          .catch(function (e) {
+            debugLog('[' + self.id + '] Load failed: ' + e.message, true);
+          });
+      };
+      DeviceSlot.prototype.nextShader = function () {
+        this.loadShaderByIndex(this.shaderIdx + 1);
+      };
+      DeviceSlot.prototype.prevShader = function () {
+        this.loadShaderByIndex(this.shaderIdx - 1);
+      };
+      DeviceSlot.prototype.randomShader = function () {
+        if (shaderIndex.length === 0) return;
+        this.loadShaderByIndex(Math.floor(Math.random() * shaderIndex.length));
+      };
+      DeviceSlot.prototype.updateShaderNav = function () {
+        if (!this.navLabel) return;
+        if (shaderIndex.length === 0) {
+          this.navLabel.textContent = '(no library)';
+        } else if (this.shaderIdx < 0) {
+          this.navLabel.textContent = 'custom / ' + shaderIndex.length;
+        } else {
+          var e = shaderIndex[this.shaderIdx];
+          this.navLabel.textContent = (this.shaderIdx + 1) + '/' + shaderIndex.length + ' \u2014 ' + (e.name || e.path.split(/[/\\|]/).pop());
+        }
+      };
+      DeviceSlot.prototype.startAutoTimer = function () {
+        this.stopAutoTimer();
+        var self = this;
+        this.autoTimer = setInterval(function () { self.nextShader(); }, this.autoIntervalSec * 1000);
+      };
+      DeviceSlot.prototype.stopAutoTimer = function () {
+        if (this.autoTimer) { clearInterval(this.autoTimer); this.autoTimer = 0; }
+      };
+
+      /* ─── BLE connection ─── */
+      DeviceSlot.prototype.pairBle = function () {
+        var self = this;
+        if (!navigator.bluetooth) {
+          debugLog('[' + this.id + '] Web Bluetooth not available', true);
+          this.statusEl.textContent = 'Bluetooth not supported. Use Chrome/Edge.';
+          return;
+        }
+        var ble = new BleMidiConn();
+        ble.onMidiMessage = function (data) {
+          self.onMidi({ data: data });
+        };
+        ble.onDisconnect = function () {
+          self.handshakeDone = false;
+          self.bleConn = null;
+          self.connectionType = 'usb';
+          self.bleDeviceName = '';
+          debugLog('[' + self.id + '] BLE disconnected');
+          self.statusEl.textContent = 'BLE disconnected.';
+          self.updateConnBadge();
+          if (self.btnBle) self.btnBle.style.display = '';
+          if (self.btnBleDisconnect) self.btnBleDisconnect.style.display = 'none';
+        };
+        debugLog('[' + this.id + '] Pairing BLE...');
+        this.statusEl.textContent = 'Pairing BLE...';
+        ble.pair().then(function (ok) {
+          if (!ok) {
+            debugLog('[' + self.id + '] BLE pair cancelled', true);
+            self.statusEl.textContent = 'BLE pair cancelled.';
+            return;
+          }
+          if (self.midiInput) { self.midiInput.onmidimessage = null; self.midiInput = null; }
+          self.midiOutput = null;
+          self.inputSelect.value = '';
+          self.outputSelect.value = '';
+          self.bleConn = ble;
+          self.connectionType = 'ble';
+          self.bleDeviceName = (ble.device && ble.device.name) || (ble.device && ble.device.id) || 'BLE Device';
+          self.handshakeDone = false;
+          debugLog('[' + self.id + '] BLE connected: ' + self.bleDeviceName);
+          self.statusEl.textContent = 'BLE: ' + self.bleDeviceName + '. Handshaking...';
+          self.updateConnBadge();
+          if (self.btnBle) self.btnBle.style.display = 'none';
+          if (self.btnBleDisconnect) self.btnBleDisconnect.style.display = '';
+          self.doHandshake();
+        });
+      };
+      DeviceSlot.prototype.disconnectBle = function () {
+        if (this.bleConn) {
+          this.bleConn.disconnect();
+          this.bleConn = null;
+        }
+        this.connectionType = 'usb';
+        this.bleDeviceName = '';
+        this.handshakeDone = false;
+        this.updateConnBadge();
+        debugLog('[' + this.id + '] BLE disconnected (manual)');
+        this.statusEl.textContent = 'BLE disconnected.';
+        if (this.btnBle) this.btnBle.style.display = '';
+        if (this.btnBleDisconnect) this.btnBleDisconnect.style.display = 'none';
+      };
+      DeviceSlot.prototype.updateConnBadge = function () {
+        if (!this.connBadge) return;
+        if (this.connectionType === 'ble' && this.bleConn) {
+          var state = this.bleConn.connectionState;
+          this.connBadge.textContent = 'BLE ' + (state === 'connected' ? '\u2713' : state === 'connecting' ? '...' : '\u2717');
+          this.connBadge.style.color = state === 'connected' ? '#6f6' : state === 'connecting' ? '#ff6' : '#f66';
+          this.connBadge.title = 'Bluetooth: ' + (this.bleDeviceName || '') + ' (' + state + ')';
+        } else if (this.midiOutput) {
+          this.connBadge.textContent = 'USB \u2713';
+          this.connBadge.style.color = '#6f6';
+          this.connBadge.title = 'USB MIDI: ' + (this.midiOutput.name || '');
+        } else {
+          this.connBadge.textContent = '\u2014';
+          this.connBadge.style.color = '#666';
+          this.connBadge.title = 'No connection';
+        }
+      };
+
+      /* ─── MIDI message handler (touch + MPE) ─── */
+      DeviceSlot.prototype.onMidi = function (event) {
+        var d = event.data;
+        if (!d || d.length < 1) return;
+        var self = this;
+        // SysEx accumulation
+        if (d[0] === 0xF0) {
+          this.sysexBuf = Array.from(d);
+        } else if (this.sysexBuf.length > 0) {
+          for (var i = 0; i < d.length; i++) this.sysexBuf.push(d[i]);
+        }
+        if (this.sysexBuf.length > 0 && this.sysexBuf[this.sysexBuf.length - 1] === 0xF7) {
+          var full = new Uint8Array(this.sysexBuf);
+          if (full.length >= 8 && full[1] === 0x00 && full[2] === 0x21 && full[3] === 0x10 && full[4] === 0x77) {
+            this.parseRoliTouchSysex(full);
+          }
+          this.sysexBuf = [];
+        }
+        // Standard MIDI (MPE)
+        if (d[0] !== 0xF0 && this.sysexBuf.length === 0) {
+          var cmd = d[0] >> 4;
+          if (cmd === 0x0B && d.length >= 3 && d[1] === 74) {
+            this.mpeY = d[2] / 127;
+            this.mouse.x = this.mpeX; this.mouse.y = this.mpeY;
+          } else if (cmd === 0x0E && d.length >= 3) {
+            this.mpeX = (d[2] * 128 + d[1]) / 16383;
+            this.mouse.x = this.mpeX; this.mouse.y = this.mpeY;
+          } else if (cmd === 0x09 || cmd === 0x08 || cmd === 0x0D) {
+            this.mouse.x = this.mpeX; this.mouse.y = this.mpeY;
+          }
+          // Linked mode: remap touch into unified 30x15 space
+          if (linkedMode) {
+            var isLeft = (self.id === 'A');
+            var lx = isLeft ? (self.mpeX * 0.5) : (0.5 + self.mpeX * 0.5);
+            slotA.mouse.x = lx; slotA.mouse.y = self.mpeY;
+            slotB.mouse.x = lx; slotB.mouse.y = self.mpeY;
+          }
+        }
+      };
+
+      DeviceSlot.prototype.parseRoliTouchSysex = function (data) {
+        if (data.length < 8) return;
+        var msgData = data.subarray(5, data.length - 2);
+        var bitPos = 39;
+        while (bitPos + 7 <= msgData.length * 7) {
+          var msgType = read7BitBits(msgData, bitPos, 7);
+          bitPos += 7;
+          if (msgType === 0x11 || msgType === 0x13 || msgType === 0x15) {
+            bitPos += 5; // devIdx
+            bitPos += 5; // touchIdx
+            var x = read7BitBits(msgData, bitPos, 12); bitPos += 12;
+            var y = read7BitBits(msgData, bitPos, 12); bitPos += 12;
+            bitPos += 8; // pressure
+            if (msgType === 0x13) bitPos += 24;
+            this.mpeX = x / 4095;
+            this.mpeY = y / 4095;
+            this.mouse.x = this.mpeX;
+            this.mouse.y = this.mpeY;
+            // Linked mode: remap SysEx touch into unified 30x15 space
+            if (linkedMode) {
+              var isLeft = (this.id === 'A');
+              var lx = isLeft ? (this.mpeX * 0.5) : (0.5 + this.mpeX * 0.5);
+              slotA.mouse.x = lx; slotA.mouse.y = this.mpeY;
+              slotB.mouse.x = lx; slotB.mouse.y = this.mpeY;
+            }
+            return;
+          } else break;
+        }
+      };
+
+      /* ─── Shader compile & apply ─── */
+      DeviceSlot.prototype.applyShader = function () {
+        var code = this.shaderTextarea.value.trim();
+        if (!code) { this.shaderStatusEl.textContent = '(empty)'; return; }
+        if (!this.gl) { this.shaderStatusEl.textContent = 'WebGL not available'; this.shaderStatusEl.style.color = '#a66'; return; }
+        try {
+          if (this.glProg) { this.gl.deleteProgram(this.glProg); this.glProg = null; }
+          var prepared = addPreamble(code);
+          this.isfDefaults = prepared.defaults;
+          this.isfTypes = prepared.types;
+          var vs = compileGlShader(this.gl, this.gl.VERTEX_SHADER, vertSrc);
+          var fs = compileGlShader(this.gl, this.gl.FRAGMENT_SHADER, prepared.src);
+          this.glProg = this.gl.createProgram();
+          this.gl.attachShader(this.glProg, vs);
+          this.gl.attachShader(this.glProg, fs);
+          this.gl.linkProgram(this.glProg);
+          this.gl.deleteShader(vs);
+          this.gl.deleteShader(fs);
+          if (!this.gl.getProgramParameter(this.glProg, this.gl.LINK_STATUS)) {
+            var err = this.gl.getProgramInfoLog(this.glProg);
+            this.gl.deleteProgram(this.glProg); this.glProg = null;
+            throw new Error(err || 'link failed');
+          }
+          this.shaderStatusEl.textContent = 'OK';
+          this.shaderStatusEl.style.color = '#6a6';
+          debugLog('[' + this.id + '] Shader applied');
+        } catch (e) {
+          this.shaderStatusEl.textContent = 'Error: ' + (e.message || e);
+          this.shaderStatusEl.style.color = '#a66';
+          debugLog('[' + this.id + '] Shader error: ' + e.message, true);
+        }
+      };
+
+      /* ─── Render frame ─── */
+      DeviceSlot.prototype.renderShader = function () {
+        var gl = this.gl;
+        if (!gl || !this.glProg) return;
+        var w = this.previewCanvas.width, h = this.previewCanvas.height;
+        var mx = this.mouse.x, my = this.mouse.y;
+        var t = (performance.now() - this.startTime) / 1000;
+        gl.viewport(0, 0, w, h);
+        gl.clearColor(0.05, 0.05, 0.08, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.useProgram(this.glProg);
+        var set = function (name, fn) { var loc = gl.getUniformLocation(this.glProg, name); if (loc) try { fn(loc); } catch(_){} }.bind(this);
+        set('TIME', function (l) { gl.uniform1f(l, t); });
+        set('RENDERSIZE', function (l) { gl.uniform2f(l, w, h); });
+        set('uMouse', function (l) { gl.uniform2f(l, mx, my); });
+        set('mouse', function (l) { gl.uniform2f(l, mx, my); });
+        set('mouseX', function (l) { gl.uniform1f(l, mx); });
+        set('mouseY', function (l) { gl.uniform1f(l, my); });
+        set('time', function (l) { gl.uniform1f(l, t); });
+        set('resolution', function (l) { gl.uniform2f(l, w, h); });
+        set('iTime', function (l) { gl.uniform1f(l, t); });
+        set('iResolution', function (l) { gl.uniform2f(l, w, h); });
+        set('iMouse', function (l) { gl.uniform4f(l, mx, my, 0, 0); });
+        set('FRAMEINDEX', function (l) { gl.uniform1f(l, Math.floor(t * 60)); });
+        // ISF custom uniforms
+        for (var k in this.isfDefaults) {
+          var v = this.isfDefaults[k];
+          var loc = gl.getUniformLocation(this.glProg, k);
+          if (!loc) continue;
+          var typ = this.isfTypes[k];
+          if (typ === 'bool') gl.uniform1i(loc, v ? 1 : 0);
+          else if (Array.isArray(v)) {
+            if (v.length === 3) gl.uniform3f(loc, v[0], v[1], v[2]);
+            else if (v.length === 2) gl.uniform2f(loc, v[0], v[1]);
+          } else { gl.uniform1f(loc, Number(v)); }
+        }
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quadBuf);
+        var apos = gl.getAttribLocation(this.glProg, 'a_pos');
+        gl.enableVertexAttribArray(apos);
+        gl.vertexAttribPointer(apos, 2, gl.FLOAT, false, 0, 0);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      };
+
+      /* ─── Sample canvas to LED sim + stream to device ─── */
+      DeviceSlot.prototype.sampleAndDraw = function () {
+        var scratch = document.createElement('canvas');
+        scratch.width = GRID; scratch.height = GRID;
+        var sctx = scratch.getContext('2d');
+        sctx.drawImage(this.previewCanvas, 0, 0, this.previewCanvas.width, this.previewCanvas.height, 0, 0, GRID, GRID);
+        var data = sctx.getImageData(0, 0, GRID, GRID).data;
+
+        // Stream to device
+        var hasOutput = (this.connectionType === 'ble') ? (this.bleConn && this.bleConn.connectionState === 'connected') : !!this.midiOutput;
+        var canStream = this.streamCheckbox && this.streamCheckbox.checked && this.handshakeDone && hasOutput;
+        var streamInterval = (this.connectionType === 'ble') ? BLE_STREAM_INTERVAL_MS : STREAM_INTERVAL_MS;
+        var now = Date.now();
+        if (canStream && (now - this.lastSend) >= streamInterval) {
+          this.lastSend = now;
+          this.sendLedFrame(data);
+        }
+        if (this.streamStatusEl) {
+          if (!hasOutput) this.streamStatusEl.textContent = '(no output)';
+          else if (!this.handshakeDone) this.streamStatusEl.textContent = '(handshake...)';
+          else if (!this.streamCheckbox || !this.streamCheckbox.checked) this.streamStatusEl.textContent = '(paused)';
+          else this.streamStatusEl.textContent = 'streaming ' + this.streamSendCount + ' (' + streamInterval + 'ms)';
+        }
+
+        // Draw LED sim grid
+        var cw = GRID * (CELL + GAP) + GAP, ch = GRID * (CELL + GAP) + GAP;
+        this.ledSimCanvas.width = cw; this.ledSimCanvas.height = ch;
+        this.ledCtx.fillStyle = '#111'; this.ledCtx.fillRect(0, 0, cw, ch);
+        for (var row = 0; row < GRID; row++) for (var col = 0; col < GRID; col++) {
+          var i = (row * GRID + col) * 4;
+          this.ledCtx.fillStyle = 'rgba(' + data[i] + ',' + data[i+1] + ',' + data[i+2] + ',' + (data[i+3]/255) + ')';
+          this.ledCtx.fillRect(GAP + col * (CELL + GAP), GAP + row * (CELL + GAP), CELL, CELL);
+        }
+
+        // Update mouse label
+        if (this.mouseLabel) {
+          this.mouseLabel.textContent = 'Mouse: X=' + this.mouse.x.toFixed(2) + ' Y=' + this.mouse.y.toFixed(2);
+        }
+      };
+
+      /* ═══ Shared MIDI Access ═══ */
+      var midiAccess = null;
+
+      /* ═══ Shared Shader Library ═══ */
+      var shaderIndex = [];
+
+      function fetchShaderIndex() {
+        fetch('/api/index', { cache: 'no-store' })
+          .then(function (r) { return r.json(); })
+          .then(function (arr) {
+            shaderIndex = Array.isArray(arr) ? arr : [];
+            debugLog('Shader library: ' + shaderIndex.length + ' shaders');
+            slotA.updateShaderNav();
+            slotB.updateShaderNav();
+          })
+          .catch(function (e) { debugLog('Library fetch failed: ' + e.message, true); });
+      }
+
+      function isRoliblockLike(name) {
+        var n = (name || '').toLowerCase();
+        return n.indexOf('roli') >= 0 || n.indexOf('lightpad') >= 0 || n.indexOf('block') >= 0 || n.indexOf('seaboard') >= 0;
+      }
+
+      function populateSelect(sel, devices, currentValue) {
+        var val = currentValue || sel.value;
+        sel.innerHTML = '<option value="">-- select --</option>';
+        devices.forEach(function (dev) {
+          var o = document.createElement('option');
+          o.value = dev.id;
+          o.textContent = dev.name;
+          sel.appendChild(o);
+        });
+        if (val) sel.value = val;
+      }
+
+      function updateAllDropdowns() {
+        if (!midiAccess) return;
+        var inputs = [], outputs = [];
+        midiAccess.inputs.forEach(function (inp) { inputs.push(inp); });
+        midiAccess.outputs.forEach(function (out) { outputs.push(out); });
+
+        var inputNames = inputs.map(function (i) { return i.name + ' [' + i.id + ']'; });
+        var outputNames = outputs.map(function (o) { return o.name + ' [' + o.id + ']'; });
+        document.getElementById('inputsList').textContent = inputNames.length ? inputNames.join('\n') : '(none)';
+        document.getElementById('outputsList').textContent = outputNames.length ? outputNames.join('\n') : '(none)';
+
+        [slotA, slotB].forEach(function (slot) {
+          populateSelect(slot.inputSelect, inputs);
+          populateSelect(slot.outputSelect, outputs);
+        });
+
+        // Auto-detect Roli devices and assign first to A, second to B
+        var roliInputs = inputs.filter(function (i) { return isRoliblockLike(i.name); });
+        var roliOutputs = outputs.filter(function (o) { return isRoliblockLike(o.name); });
+        if (roliInputs.length >= 1 && !slotA.midiInput) {
+          slotA.inputSelect.value = roliInputs[0].id;
+          slotA.inputSelect.dispatchEvent(new Event('change'));
+        }
+        if (roliOutputs.length >= 1 && !slotA.midiOutput && slotA.connectionType === 'usb') {
+          slotA.outputSelect.value = roliOutputs[0].id;
+          slotA.outputSelect.dispatchEvent(new Event('change'));
+        }
+        if (roliInputs.length >= 2 && !slotB.midiInput) {
+          slotB.inputSelect.value = roliInputs[1].id;
+          slotB.inputSelect.dispatchEvent(new Event('change'));
+        }
+        if (roliOutputs.length >= 2 && !slotB.midiOutput && slotB.connectionType === 'usb') {
+          slotB.outputSelect.value = roliOutputs[1].id;
+          slotB.outputSelect.dispatchEvent(new Event('change'));
+        }
+
+        debugLog('Devices: ' + inputs.length + ' in, ' + outputs.length + ' out');
+        slotA.updateConnBadge();
+        slotB.updateConnBadge();
+      }
+
+      document.getElementById('btnRequestSysex').addEventListener('click', function () {
+        debugLog('Requesting MIDI (sysex)...');
+        navigator.requestMIDIAccess({ sysex: true }).then(function (access) {
+          midiAccess = access;
+          debugLog('MIDI access granted');
+          updateAllDropdowns();
+          access.onstatechange = function () { updateAllDropdowns(); };
+        }).catch(function (e) { debugLog('MIDI denied: ' + e.message, true); });
+      });
+
+      /* ═══ Create two device slots ═══ */
+      var slotA = new DeviceSlot('A');
+      var slotB = new DeviceSlot('B');
+
+      /* ═══ Fetch shader library on load ═══ */
+      fetchShaderIndex();
+
+      /* ═══ View Mode Controller ═══ */
+      var viewMode = 'both';
+      var linkedMode = false;
+      var linkedSavedShaderB = ''; // saved shader B source before linked mode synced A→B
+      var colAEl = document.getElementById('colA');
+      var colBEl = document.getElementById('colB');
+      var combinedContainer = document.getElementById('combinedContainer');
+      var combinedCanvas = document.getElementById('combinedCanvas');
+      var combinedLedSim = document.getElementById('combinedLedSim');
+      var combinedCtx = combinedCanvas ? combinedCanvas.getContext('2d') : null;
+      var combinedLedCtx = combinedLedSim ? combinedLedSim.getContext('2d') : null;
+      var scratchCombA = document.createElement('canvas');
+      scratchCombA.width = GRID; scratchCombA.height = GRID;
+      var scratchCombACtx = scratchCombA.getContext('2d');
+      var scratchCombB = document.createElement('canvas');
+      scratchCombB.width = GRID; scratchCombB.height = GRID;
+      var scratchCombBCtx = scratchCombB.getContext('2d');
+
+      var viewBtns = {
+        a: document.getElementById('btnViewA'),
+        b: document.getElementById('btnViewB'),
+        both: document.getElementById('btnViewBoth'),
+        combined: document.getElementById('btnViewCombined'),
+        linked: document.getElementById('btnViewLinked')
+      };
+      function setViewMode(mode) {
+        // Exiting linked mode: restore B shader
+        if (linkedMode && mode !== 'linked') {
+          linkedMode = false;
+          if (linkedSavedShaderB) {
+            slotB.shaderTextarea.value = linkedSavedShaderB;
+            slotB.applyShader();
+            linkedSavedShaderB = '';
+          }
+          debugLog('Unlinked: independent mode restored.');
+        }
+        viewMode = mode;
+        if (mode === 'linked') viewMode = 'combined'; // linked uses combined view
+        colAEl.style.display = (viewMode === 'b') ? 'none' : '';
+        colBEl.style.display = (viewMode === 'a') ? 'none' : '';
+        combinedContainer.style.display = (viewMode === 'combined') ? 'block' : 'none';
+        for (var k in viewBtns) {
+          if (viewBtns[k]) {
+            if (k === mode) viewBtns[k].classList.add('view-active');
+            else viewBtns[k].classList.remove('view-active');
+          }
+        }
+      }
+      viewBtns.a.addEventListener('click', function () { setViewMode('a'); });
+      viewBtns.b.addEventListener('click', function () { setViewMode('b'); });
+      viewBtns.both.addEventListener('click', function () { setViewMode('both'); });
+      viewBtns.combined.addEventListener('click', function () { setViewMode('combined'); });
+      viewBtns.linked.addEventListener('click', function () {
+        if (linkedMode) {
+          // Toggle off: restore independent mode
+          setViewMode('both');
+          return;
+        }
+        // Enter linked mode: sync A shader → B, activate combined view
+        linkedMode = true;
+        linkedSavedShaderB = slotB.shaderTextarea.value;
+        slotB.shaderTextarea.value = slotA.shaderTextarea.value;
+        slotB.applyShader();
+        setViewMode('linked');
+        debugLog('LINKED: A shader synced to B. Touch remapped (A=left half, B=right half). Stretched LED active.');
+      });
+      setViewMode('both');
+
+      /* ═══ Main render loop (keeps running when tab is hidden) ═══ */
+      var bgInterval = 0;
+
+      // Scratch canvas for linked mode stretched LED (30x15)
+      var linkedScratch = document.createElement('canvas');
+      linkedScratch.width = 30; linkedScratch.height = GRID;
+      var linkedScratchCtx = linkedScratch.getContext('2d');
+
+      function tick() {
+        slotA.renderShader();
+        slotB.renderShader();
+
+        // Linked mode: stretched LED streaming (30x15 split across devices)
+        if (linkedMode) {
+          // Sample A preview to left 15 cols, B preview to right 15 cols
+          linkedScratchCtx.drawImage(slotA.previewCanvas, 0, 0, slotA.previewCanvas.width, slotA.previewCanvas.height, 0, 0, GRID, GRID);
+          linkedScratchCtx.drawImage(slotB.previewCanvas, 0, 0, slotB.previewCanvas.width, slotB.previewCanvas.height, GRID, 0, GRID, GRID);
+          var stretchedData = linkedScratchCtx.getImageData(0, 0, 30, GRID).data;
+
+          // Send left half (cols 0-14) to device A
+          var now = Date.now();
+          var hasOutputA = (slotA.connectionType === 'ble') ? (slotA.bleConn && slotA.bleConn.connectionState === 'connected') : !!slotA.midiOutput;
+          var streamIntervalA = (slotA.connectionType === 'ble') ? BLE_STREAM_INTERVAL_MS : STREAM_INTERVAL_MS;
+          if (slotA.streamCheckbox && slotA.streamCheckbox.checked && slotA.handshakeDone && hasOutputA && (now - slotA.lastSend) >= streamIntervalA) {
+            slotA.lastSend = now;
+            var leftData = new Uint8ClampedArray(PIXELS * 4);
+            for (var row = 0; row < GRID; row++) {
+              for (var col = 0; col < GRID; col++) {
+                var si = (row * 30 + col) * 4;
+                var di = (row * GRID + col) * 4;
+                leftData[di] = stretchedData[si]; leftData[di+1] = stretchedData[si+1]; leftData[di+2] = stretchedData[si+2]; leftData[di+3] = 255;
+              }
+            }
+            slotA.sendLedFrame(leftData);
+          }
+
+          // Send right half (cols 15-29) to device B
+          var hasOutputB = (slotB.connectionType === 'ble') ? (slotB.bleConn && slotB.bleConn.connectionState === 'connected') : !!slotB.midiOutput;
+          var streamIntervalB = (slotB.connectionType === 'ble') ? BLE_STREAM_INTERVAL_MS : STREAM_INTERVAL_MS;
+          if (slotB.streamCheckbox && slotB.streamCheckbox.checked && slotB.handshakeDone && hasOutputB && (now - slotB.lastSend) >= streamIntervalB) {
+            slotB.lastSend = now;
+            var rightData = new Uint8ClampedArray(PIXELS * 4);
+            for (var row2 = 0; row2 < GRID; row2++) {
+              for (var col2 = 0; col2 < GRID; col2++) {
+                var si2 = (row2 * 30 + (col2 + GRID)) * 4;
+                var di2 = (row2 * GRID + col2) * 4;
+                rightData[di2] = stretchedData[si2]; rightData[di2+1] = stretchedData[si2+1]; rightData[di2+2] = stretchedData[si2+2]; rightData[di2+3] = 255;
+              }
+            }
+            slotB.sendLedFrame(rightData);
+          }
+        }
+
+        // Per-device LED sims (also streams in non-linked mode; linked mode already sent above)
+        slotA.sampleAndDraw();
+        slotB.sampleAndDraw();
+
+        // Combined view rendering
+        if (viewMode === 'combined' && combinedCtx) {
+          combinedCtx.drawImage(slotA.previewCanvas, 0, 0, 320, 240);
+          combinedCtx.drawImage(slotB.previewCanvas, 320, 0, 320, 240);
+          if (combinedLedCtx) {
+            var cw2 = 30 * (CELL + GAP) + GAP, ch2 = GRID * (CELL + GAP) + GAP;
+            combinedLedSim.width = cw2; combinedLedSim.height = ch2;
+            combinedLedCtx.fillStyle = '#111'; combinedLedCtx.fillRect(0, 0, cw2, ch2);
+            scratchCombACtx.drawImage(slotA.previewCanvas, 0, 0, 320, 240, 0, 0, GRID, GRID);
+            var dA = scratchCombACtx.getImageData(0, 0, GRID, GRID).data;
+            scratchCombBCtx.drawImage(slotB.previewCanvas, 0, 0, 320, 240, 0, 0, GRID, GRID);
+            var dB = scratchCombBCtx.getImageData(0, 0, GRID, GRID).data;
+            for (var row = 0; row < GRID; row++) {
+              for (var col = 0; col < GRID; col++) {
+                var idx = (row * GRID + col) * 4;
+                combinedLedCtx.fillStyle = 'rgb(' + dA[idx] + ',' + dA[idx+1] + ',' + dA[idx+2] + ')';
+                combinedLedCtx.fillRect(GAP + col * (CELL + GAP), GAP + row * (CELL + GAP), CELL, CELL);
+                combinedLedCtx.fillStyle = 'rgb(' + dB[idx] + ',' + dB[idx+1] + ',' + dB[idx+2] + ')';
+                combinedLedCtx.fillRect(GAP + (col + GRID) * (CELL + GAP), GAP + row * (CELL + GAP), CELL, CELL);
+              }
+            }
+          }
+        }
+
+        if (!document.hidden) requestAnimationFrame(tick);
+      }
+      tick();
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          if (!bgInterval) bgInterval = setInterval(tick, 33);
+        } else {
+          if (bgInterval) { clearInterval(bgInterval); bgInterval = 0; }
+          requestAnimationFrame(tick);
+        }
+      });
+
+      debugLog('Dual debug page loaded. Request MIDI or Pair BLE to begin.');
+    })();
+  </script>
+</body>
+</html>

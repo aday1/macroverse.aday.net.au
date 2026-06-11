@@ -1,0 +1,28 @@
+Dev DNS + SSL (aday.net.au)
+============================
+
+HTTPS works (Universal SSL - one label):
+  https://macroverse-dev.aday.net.au/
+  https://artbastard-dev.aday.net.au/
+  Aliases: macroverse-test, artbastard-test, test.macroverse, test.artbastard
+
+HTTPS broken (two labels - no *.aday.net.au cert):
+  https://dev.macroverse.aday.net.au/
+  https://dev.artbastard.aday.net.au/
+
+Fix (recommended):
+  From vault root, with CLOUDFLARE_DNS_API_TOKEN set:
+    powershell -File temp_/cloudflare-fix-ssl.ps1
+  Creates flat dev A records (proxied), deletes dev.macroverse / dev.artbastard DNS.
+
+Optional (keep nested dev.* URLs on HTTPS):
+  Cloudflare dashboard -> SSL/TLS -> Edge Certificates -> Total TLS ON
+  See ops/ENABLE-TOTAL-TLS.txt
+
+Origin nginx (HTTP only redirect for nested names):
+  dev.macroverse -> 301 https://macroverse-dev...
+  Deploy sites.conf then: docker compose exec nginx nginx -s reload
+
+Verify:
+  curl -sS -o /dev/null -w "%{http_code}\n" https://macroverse-dev.aday.net.au/
+  curl -sS -o /dev/null -w "%{http_code}\n" https://artbastard-dev.aday.net.au/

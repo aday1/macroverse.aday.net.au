@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Macroverse 42 — The Wired Atelier</title>
+  <meta name="description" content="Macroverse 42: GLSL/ISF shader lab, cloud + desktop VJ, WebXR VR audience and controller modes, participatory gig sessions, LAN bridge (Ableton Link), and Resolume Wire pipeline. Self-host via Docker or run the single binary.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void:    #06040f;
+      --surface: #0d0820;
+      --blue:    #4488cc;
+      --violet:  #8833cc;
+      --teal:    #00ddaa;
+      --copper:  #ee8833;
+      --text:    #d0c8e8;
+      --dim:     #9977cc;
+      --glow-b:  rgba(68, 136, 204, 0.45);
+      --glow-v:  rgba(136, 51, 204, 0.35);
+      --glow-t:  rgba(0, 221, 170, 0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Share Tech Mono', 'JetBrains Mono', monospace;
+      background: var(--void);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ─── WebGL canvas ─────────────────────────────────────────────────────── */
+    #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; }
+    .bg-fallback {
+      display: none; position: fixed; inset: 0; z-index: -2;
+      background: radial-gradient(ellipse 120% 80% at 50% 10%,
+        #1a0030 0%, #060410 60%);
+    }
+
+    /* ─── Overlays ─────────────────────────────────────────────────────────── */
+    .scanline {
+      position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+      background: repeating-linear-gradient(0deg,
+        transparent, transparent 2px,
+        rgba(0,0,0,0.09) 2px, rgba(0,0,0,0.09) 4px);
+    }
+    .vignette {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background: radial-gradient(ellipse 100% 100% at 50% 50%,
+        transparent 25%, rgba(6,4,15,0.70) 100%);
+    }
+    /* top-edge purple ambient */
+    .ambient {
+      position: fixed; top: 0; left: 0; right: 0; height: 40vh;
+      z-index: -1; pointer-events: none;
+      background: radial-gradient(ellipse 80% 100% at 50% -10%,
+        rgba(136,51,204,0.12) 0%, transparent 70%);
+    }
+
+    /* ─── Layout ───────────────────────────────────────────────────────────── */
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 960px; margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+    }
+
+    /* ─── Header ───────────────────────────────────────────────────────────── */
+    header {
+      text-align: center;
+      padding: 5rem 1rem 3.5rem;
+      position: relative;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 2rem -0.5rem 0;
+      background: rgba(6, 4, 15, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(136, 204, 255, 0.22);
+      border-radius: 10px;
+      z-index: -1;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 7vw, 3.8rem);
+      letter-spacing: 0.18em;
+      color: var(--blue);
+      text-shadow: 0 0 30px var(--glow-b), 0 0 80px rgba(68,136,204,0.15);
+      animation: glitch-title 11s ease-in-out infinite;
+      position: relative;
+    }
+    @keyframes glitch-title {
+      0%,89%,100% {
+        transform: none;
+        text-shadow: 0 0 30px var(--glow-b), 0 0 80px rgba(68,136,204,0.15);
+      }
+      90% { transform: skewX(-3deg) translateX(-2px); text-shadow: -3px 0 var(--violet), 3px 0 var(--teal); }
+      91% { transform: skewX(2deg)  translateX( 2px); text-shadow:  3px 0 var(--violet),-3px 0 var(--teal); }
+      92% { transform: none; text-shadow: 0 0 30px var(--glow-b); }
+      93% { transform: skewX(-1deg); text-shadow: -2px 0 var(--teal), 2px 0 var(--blue); }
+      94% { transform: none; text-shadow: 0 0 30px var(--glow-b), 0 0 80px rgba(68,136,204,0.15); }
+    }
+
+    .tagline {
+      font-size: 0.95rem;
+      color: #ffd8b0;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-top: 0.6rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 14px rgba(0, 0, 0, 0.55);
+    }
+    .showcase-banner {
+      margin: 0.9rem auto 0;
+      display: inline-block;
+      padding: 0.38rem 0.72rem;
+      border: 1px solid rgba(68, 136, 204, 0.55);
+      color: #cde5ff;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(6, 18, 38, 0.82);
+    }
+    .lain-quote {
+      font-size: 0.82rem;
+      color: #ebe4ff;
+      margin-top: 0.9rem;
+      letter-spacing: 0.08em;
+      font-style: italic;
+      text-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.85),
+        0 0 10px rgba(0,221,170,0.35),
+        0 0 18px rgba(136,51,204,0.25);
+      animation: quote-breathe 5s ease-in-out infinite;
+    }
+    @keyframes quote-breathe {
+      0%,100% {
+        text-shadow: 0 0 8px rgba(0,221,170,0.35), 0 0 20px rgba(136,51,204,0.20);
+        opacity: 0.80;
+      }
+      50% {
+        text-shadow: 0 0 14px rgba(0,221,170,0.70), 0 0 32px rgba(136,51,204,0.45), 0 0 2px rgba(200,184,240,0.5);
+        opacity: 1.0;
+      }
+    }
+    .glow-line {
+      height: 1px; width: 50%; margin: 1.4rem auto 0;
+      background: linear-gradient(90deg, transparent, var(--blue), var(--violet), transparent);
+      animation: line-pulse 4s ease-in-out infinite;
+    }
+    @keyframes line-pulse {
+      0%,100% { opacity: 0.3; }
+      50%      { opacity: 0.9; }
+    }
+
+    /* ─── CTA buttons ──────────────────────────────────────────────────────── */
+    .cta { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2rem; }
+    .btn {
+      padding: 0.65rem 1.5rem; font-family: inherit; font-size: 0.9rem;
+      letter-spacing: 0.08em; text-decoration: none; border: 1px solid;
+      transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+      backdrop-filter: blur(6px);
+    }
+    .btn-live {
+      color: var(--void); background: var(--teal);
+      border-color: var(--teal);
+      box-shadow: 0 0 14px rgba(0,221,170,0.5);
+      letter-spacing: 0.1em;
+    }
+    .btn-live:hover { background: #00ffcc; box-shadow: 0 0 32px rgba(0,221,170,0.8); }
+    .btn-primary {
+      color: var(--void); background: var(--copper);
+      border-color: var(--copper);
+      box-shadow: 0 0 12px rgba(238,136,51,0.4);
+    }
+    .btn-primary:hover { background: #ff9944; box-shadow: 0 0 28px rgba(238,136,51,0.7); }
+    .btn-secondary {
+      color: var(--blue); background: rgba(68,136,204,0.08);
+      border-color: var(--blue);
+    }
+    .btn-secondary:hover { background: var(--blue); color: var(--void); box-shadow: 0 0 20px var(--glow-b); }
+
+    /* ─── Sections ─────────────────────────────────────────────────────────── */
+    section {
+      margin: 3.5rem 0; padding: 2rem 0;
+      border-top: 1px solid rgba(68,136,204,0.12);
+    }
+    h2 {
+      font-family: 'Orbitron', sans-serif; font-weight: 700;
+      font-size: 0.95rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--copper); margin-bottom: 1.2rem;
+    }
+    h2::before { content: '// '; color: var(--dim); }
+
+    p { line-height: 1.75; color: var(--text); margin-bottom: 1rem; }
+    .dim { color: var(--dim); }
+
+    /* ─── Two-up use cases ─────────────────────────────────────────────────── */
+    .use-cases {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem; margin-top: 1.2rem;
+    }
+    @media (max-width: 900px) { .use-cases { grid-template-columns: 1fr; } }
+    .use-case {
+      background: rgba(13,8,32,0.75); backdrop-filter: blur(8px);
+      border: 1px solid rgba(68,136,204,0.15); padding: 1.4rem;
+      position: relative; overflow: hidden;
+    }
+    .use-case::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 3px; height: 100%;
+    }
+    .use-case.uc-vj::before  { background: var(--teal); box-shadow: 0 0 8px var(--glow-t); }
+    .use-case.uc-gig::before { background: var(--violet); box-shadow: 0 0 8px var(--glow-v); }
+    .use-case.uc-wire::before { background: var(--copper); box-shadow: 0 0 8px rgba(238,136,51,0.4); }
+    .use-case.uc-cloud::before { background: var(--blue); box-shadow: 0 0 8px var(--glow-b); }
+    .use-case.uc-bridge::before { background: #cc88ff; box-shadow: 0 0 8px rgba(204,136,255,0.45); }
+    .use-case.uc-self::before { background: #44aa88; box-shadow: 0 0 8px rgba(68,170,136,0.4); }
+    .use-case h3 {
+      font-family: 'Orbitron', sans-serif; font-size: 0.85rem;
+      letter-spacing: 0.1em; margin-bottom: 0.8rem;
+    }
+    .uc-vj  h3 { color: var(--teal); }
+    .uc-gig h3 { color: #cc88ff; }
+    .uc-wire h3 { color: var(--copper); }
+    .use-case p { font-size: 0.88rem; margin: 0; }
+    .use-case ul.uc-list {
+      margin: 0.75rem 0 0 1rem; padding: 0;
+      font-size: 0.85rem; line-height: 1.55; color: var(--text);
+    }
+    .use-case ul.uc-list li { margin-bottom: 0.35rem; }
+    .url-snippet {
+      display: block; margin: 0.55rem 0 0;
+      padding: 0.45rem 0.55rem;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(68,136,204,0.22);
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 0.78rem; line-height: 1.45;
+      word-break: break-all; color: #b8ffd1;
+    }
+    .use-cases-vr { align-items: start; }
+    @media (max-width: 1100px) {
+      .use-cases-vr { grid-template-columns: 1fr; }
+    }
+
+    /* ─── Feature grid ─────────────────────────────────────────────────────── */
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 0.75rem; margin-top: 1.2rem;
+    }
+    .feat {
+      background: rgba(13,8,32,0.7); border: 1px solid rgba(68,136,204,0.10);
+      padding: 0.9rem 1rem; backdrop-filter: blur(6px);
+    }
+    .feat .tag {
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--dim); margin-bottom: 0.35rem;
+    }
+    .feat .label { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+
+    /* ─── Code block ───────────────────────────────────────────────────────── */
+    pre {
+      background: rgba(6,4,15,0.92); backdrop-filter: blur(4px);
+      border: 1px solid rgba(68,136,204,0.15); border-left: 3px solid var(--blue);
+      padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.82rem;
+      line-height: 1.6; margin-top: 0.8rem; color: var(--text);
+    }
+    code { font-family: 'Share Tech Mono', monospace; }
+    pre code { color: inherit; }
+    .cm { color: var(--dim); }   /* comment */
+    .kw { color: var(--violet); } /* keyword */
+    .fn { color: #44ddff; }       /* function */
+    .st { color: var(--teal); }   /* string / value */
+
+    /* ─── Screenshots ──────────────────────────────────────────────────────── */
+    .screenshots {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem; margin-top: 1.2rem;
+    }
+    .slot {
+      aspect-ratio: 16/10; background: var(--surface);
+      border: 1px solid rgba(68,136,204,0.15);
+    }
+    .slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slot.ph { display: flex; align-items: center; justify-content: center;
+      border: 1px dashed rgba(85,68,136,0.4); }
+    .slot.ph img { display: none; }
+    .slot.ph::after { content: attr(data-label); color: var(--dim); font-size: 0.75rem; }
+
+    /* ─── Node decoration ──────────────────────────────────────────────────── */
+    .nodes {
+      display: flex; gap: 1.5rem; align-items: center;
+      justify-content: center; margin: 2rem 0 0; opacity: 0.35;
+    }
+    .node {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue); box-shadow: 0 0 8px var(--glow-b);
+      animation: node-blink 3s ease-in-out infinite;
+    }
+    .node:nth-child(2) { background: var(--violet); box-shadow: 0 0 8px var(--glow-v); animation-delay: 1s; }
+    .node:nth-child(3) { background: var(--teal);   box-shadow: 0 0 8px var(--glow-t); animation-delay: 2s; }
+    .node-line { height: 1px; flex: 1; background: linear-gradient(90deg, var(--blue), var(--violet), var(--teal)); opacity: 0.4; }
+    @keyframes node-blink { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    /* ─── Shader controls strip ────────────────────────────────────────────── */
+    .shader-controls {
+      margin-top: 1.6rem; padding: 1rem 1.2rem 0.8rem;
+      background: rgba(13,8,32,0.65); backdrop-filter: blur(8px);
+      border: 1px solid rgba(68,136,204,0.18);
+      border-radius: 2px;
+    }
+    .shader-controls .ctrl-row {
+      display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; justify-content: center;
+    }
+    .shader-controls label {
+      display: flex; flex-direction: column; gap: 4px; align-items: center;
+    }
+    .shader-controls .ctrl-name {
+      font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--copper);
+    }
+    .shader-controls .ctrl-val { color: var(--teal); }
+    .shader-controls input[type=range] {
+      width: 120px; accent-color: var(--teal); cursor: pointer;
+    }
+    .shader-controls .ctrl-hint {
+      margin-top: 0.75rem; text-align: center;
+      font-size: 10px; color: var(--dim); letter-spacing: .05em;
+      line-height: 1.8;
+    }
+    .shader-controls .ctrl-hint kbd {
+      color: var(--blue); font-family: inherit;
+    }
+
+    /* ─── GLSL lab (easter egg) ────────────────────────────────────────────── */
+    #glsl-lab {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+      background: rgba(6,4,15,0.97); border-top: 1px solid var(--blue);
+      padding: 16px; font-family: 'Share Tech Mono', monospace; font-size: 12px;
+      color: var(--text); max-height: 55vh; overflow-y: auto;
+      box-shadow: 0 -4px 40px rgba(68,136,204,0.25);
+    }
+    #glsl-lab textarea {
+      width: 100%; height: 220px;
+      background: #060410; color: #c0e0ff;
+      border: 1px solid var(--blue); padding: 10px;
+      font-family: inherit; font-size: 11px;
+      resize: vertical; outline: none; line-height: 1.55;
+    }
+    #glsl-lab button {
+      font-family: inherit; letter-spacing: .08em; cursor: pointer;
+    }
+    /* ─── Live deployments mini-block ─────────────────────────────────────── */
+    .deployments {
+      margin: 1.4rem auto 0; max-width: 640px;
+      background: rgba(6, 4, 15, 0.94); backdrop-filter: blur(10px);
+      border: 1px solid rgba(136, 204, 255, 0.32);
+      padding: 0.9rem 1.1rem; font-size: 0.78rem;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+    }
+    .deployments .dep-row { display: grid; grid-template-columns: 110px 1fr; gap: 0.5rem 1rem; align-items: baseline; }
+    .deployments .dep-row > .dep-label { color: #ffb86c; letter-spacing: .12em; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+    .deployments .dep-row > .dep-val { color: #f4f0ff; line-height: 1.55; }
+    .deployments .dep-row > .dep-val a { color: #5dffe0; text-decoration: none; font-weight: 600; }
+    .deployments .dep-row > .dep-val a:hover { color: #a8fff0; text-shadow: 0 0 8px var(--glow-t); }
+    .deployments .dep-row > .dep-val code { color: #ffeccc; background: rgba(0,0,0,0.4); padding: 0.1em 0.35em; border-radius: 3px; }
+    .deployments .dep-note { color: #c9b8e8; font-size: 0.7rem; margin-top: 0.5rem; letter-spacing: .04em; }
+
+    /* ─── Lane status + changelog ─────────────────────────────────────────── */
+    .lane-sync-bar {
+      margin-top: 1rem; padding: 0.65rem 0.85rem;
+      border: 1px solid rgba(0,221,170,0.25);
+      background: rgba(0,221,170,0.06);
+      font-size: 0.78rem; line-height: 1.5; color: var(--text);
+    }
+    .lane-sync-bar.warn { border-color: rgba(238,136,51,0.35); background: rgba(238,136,51,0.07); }
+    .lane-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;
+    }
+    @media (max-width: 720px) { .lane-grid { grid-template-columns: 1fr; } }
+    .lane-card {
+      background: rgba(13,8,32,0.82); border: 1px solid rgba(68,136,204,0.2);
+      padding: 1rem 1.1rem; position: relative;
+    }
+    .lane-card.lane-live { border-color: rgba(0,221,170,0.35); }
+    .lane-card.lane-dev { border-color: rgba(204,136,255,0.3); }
+    .lane-card.lane-private { border-color: rgba(238,136,51,0.28); }
+    .lane-card-head { display: flex; flex-wrap: wrap; gap: 0.35rem 0.75rem; align-items: baseline; margin-bottom: 0.55rem; }
+    .lane-name { font-family: 'Orbitron', sans-serif; font-size: 0.78rem; letter-spacing: 0.12em; color: var(--teal); }
+    .lane-ver { font-size: 0.95rem; color: #fff; font-weight: 700; }
+    .lane-age { color: var(--copper); font-size: 0.75rem; }
+    .lane-meta { font-size: 0.72rem; color: var(--dim); line-height: 1.55; margin-bottom: 0.5rem; }
+    .lane-meta a { color: var(--teal); text-decoration: none; }
+    .lane-meta a:hover { color: #00ffcc; }
+    .lane-feats { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.45rem; }
+    .lane-feat {
+      font-size: 0.65rem; padding: 0.15rem 0.45rem;
+      border: 1px solid rgba(136,51,204,0.35); color: #cc88ff;
+      background: rgba(136,51,204,0.08);
+    }
+    .lane-status-foot { margin-top: 0.75rem; font-size: 0.68rem; color: var(--dim); }
+    .changelog-versions { margin-top: 1rem; }
+    .changelog-ver {
+      border: 1px solid rgba(68,136,204,0.18); padding: 1rem 1.1rem; margin-bottom: 0.85rem;
+      background: rgba(13,8,32,0.65);
+    }
+    .changelog-ver h3 { font-family: 'Orbitron', sans-serif; font-size: 0.82rem; color: var(--blue); margin-bottom: 0.45rem; letter-spacing: 0.08em; }
+    .changelog-ver ul { margin: 0.35rem 0 0 1.1rem; font-size: 0.82rem; line-height: 1.55; }
+
+    /* ─── Demo loops grid ─────────────────────────────────────────────────── */
+    .demos {
+      display: grid; gap: 1rem; margin-top: 1.2rem;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    }
+    .demo {
+      background: rgba(13,8,32,0.7); border: 1px solid rgba(68,136,204,0.18);
+      padding: 0; overflow: hidden; display: flex; flex-direction: column;
+    }
+    .demo video {
+      width: 100%; height: auto; display: block;
+      background: var(--void);
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    .demo figcaption {
+      padding: 0.6rem 0.9rem; font-size: 0.78rem; color: var(--text);
+      border-top: 1px solid rgba(68,136,204,0.10);
+      letter-spacing: .03em;
+    }
+    .demo .demo-tag {
+      display: inline-block; margin-right: 0.5rem;
+      color: var(--copper); letter-spacing: .12em; text-transform: uppercase;
+      font-size: 0.65rem;
+    }
+    .demos-caveat {
+      margin-top: 1rem; font-size: 0.74rem; color: var(--dim);
+      letter-spacing: .04em; line-height: 1.6;
+    }
+    .demos-caveat code { background: rgba(13,8,32,0.7); padding: 1px 5px; }
+
+    /* ─── Help section helpers ────────────────────────────────────────────── */
+    h3.help-h3 {
+      color: var(--teal); margin: 1.1rem 0 .6rem; font-size: .95rem;
+      text-transform: uppercase; letter-spacing: .05em;
+      font-family: 'Orbitron', sans-serif; font-weight: 700;
+    }
+    table.help-table {
+      width: 100%; border-collapse: collapse;
+      font-size: .85rem; color: var(--text);
+    }
+    table.help-table tr { border-bottom: 1px solid rgba(68,136,204,0.10); }
+    table.help-table tr:last-child { border-bottom: none; }
+    table.help-table td { padding: .42rem .6rem; vertical-align: top; }
+    table.help-table td.k { color: var(--violet); white-space: nowrap; min-width: 160px; }
+    table.help-table td kbd {
+      display: inline-block; padding: 1px 6px; border-radius: 3px;
+      background: rgba(68,136,204,0.10); border: 1px solid rgba(68,136,204,0.25);
+      color: var(--blue); font-family: 'Share Tech Mono', monospace;
+      font-size: 0.78rem;
+    }
+
+    /* ─── Footer ───────────────────────────────────────────────────────────── */
+    footer {
+      text-align: center; padding: 2.5rem 0; font-size: 0.78rem; color: var(--dim);
+      border-top: 1px solid rgba(68,136,204,0.08);
+    }
+    footer a { color: var(--dim); text-decoration: none; }
+    footer a:hover { color: var(--blue); }
+    .protocol { letter-spacing: 0.1em; font-size: 0.7rem; color: rgba(85,68,136,0.5); margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <div class="bg-fallback" id="bg-fallback"></div>
+  <div class="ambient"></div>
+  <div class="vignette"></div>
+  <div class="scanline"></div>
+
+  <div class="wrap">
+    <header>
+      <h1>MACROVERSE 42</h1>
+      <p class="tagline">The Wired Atelier</p>
+      <p class="showcase-banner">GitHub Showcase Page // not the primary live app</p>
+      <p class="lain-quote">your whole library, live — search it, tag it, perform it — or open the room to the audience</p>
+      <div class="glow-line"></div>
+      <div class="cta">
+        <a class="btn btn-live" href="https://macroverse.aday.net.au/">Try it live</a>
+        <a class="btn btn-primary" href="https://github.com/aday1/macroverse.aday.net.au/releases">Download</a>
+        <a class="btn btn-secondary" href="https://github.com/aday1/macroverse.aday.net.au">Source on GitHub</a>
+        <a class="btn btn-secondary" href="https://macroverse.aday.net.au/about.html">About MacroVerse</a>
+        <a class="btn btn-secondary" href="#lane-status">Deploy lanes</a>
+        <a class="btn btn-secondary" href="#changelog">Changelog</a>
+        <a class="btn btn-secondary" href="#cloud-edition">Cloud vs local</a>
+        <a class="btn btn-secondary" href="#participatory-vj">Participatory VJ</a>
+        <a class="btn btn-secondary" href="#vr-vj">WebXR / VR</a>
+        <a class="btn btn-secondary" href="#lan-bridge">LAN bridge agent</a>
+        <a class="btn btn-secondary" href="#self-host">Self-host</a>
+        <a class="btn btn-secondary" href="#origin">Origin story</a>
+        <a class="btn btn-secondary" href="#demos">Demo loops</a>
+        <a class="btn btn-secondary" href="#help">Help &amp; Shortcuts</a>
+      </div>
+
+      <div class="deployments" aria-label="Live deployments">
+        <div class="dep-row">
+          <span class="dep-label">Live</span>
+          <span class="dep-val"><a href="https://macroverse.aday.net.au">macroverse.aday.net.au</a> &mdash; cloud edition (public library)</span>
+          <span class="dep-label">Test</span>
+          <span class="dep-val"><a href="https://macroverse-test.aday.net.au">macroverse-test.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://macroverse-dev.aday.net.au">macroverse-dev.aday.net.au</a></span>
+          <span class="dep-label">Private</span>
+          <span class="dep-val"><a href="https://macroverse-private.aday.net.au">macroverse-private.aday.net.au</a> &mdash; full library; basic auth on all paths (invite-only credentials)</span>
+          <span class="dep-label">Showcase</span>
+          <span class="dep-val"><a href="https://aday1.github.io/macroverse.aday.net.au/">aday1.github.io/macroverse.aday.net.au</a></span>
+          <span class="dep-label">Source</span>
+          <span class="dep-val"><a href="https://github.com/aday1/macroverse.aday.net.au">github.com/aday1/macroverse.aday.net.au</a> &mdash; Docker Compose, bridge agent, CI images</span>
+          <span class="dep-label">ArtBastard</span>
+          <span class="dep-val"><a href="https://artbastard.aday.net.au">artbastard.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://artbastard-test.aday.net.au">artbastard-test.aday.net.au</a></span>
+        </div>
+        <p class="dep-note">// this is the GitHub showcase page &mdash; the live runtimes above serve the actual app</p>
+      </div>
+
+      <section id="lane-status" aria-label="Deployment lane status">
+        <h2>Deploy lanes</h2>
+        <p class="dim">Live probe snapshot &mdash; semver, git SHA, deploy age, and feature set per lane. Refreshed when this showcase deploys; ages tick every minute in your browser.</p>
+        <div id="laneSyncBar" class="lane-sync-bar">Loading lane status…</div>
+        <div id="laneGrid" class="lane-grid"></div>
+        <p class="lane-status-foot" id="laneStatusFoot"></p>
+      </section>
+
+      <section id="changelog" aria-label="Version changelog">
+        <h2>Changelog</h2>
+        <p class="dim">Stable semver lines. Full history: <a href="https://github.com/aday1/macroverse.aday.net.au/blob/main/changelog.md">changelog.md on GitHub</a>.</p>
+        <div id="changelogVersions" class="changelog-versions">Loading…</div>
+      </section>
+
+      <div class="shader-controls">
+        <div class="ctrl-row">
+          <label>
+            <span class="ctrl-name">Warp &nbsp;<span class="ctrl-val" id="ov-warp">1.00</span></span>
+            <input type="range" id="ctrl-warp" min="0" max="2" step="0.05" value="1">
+          </label>
+          <label>
+            <span class="ctrl-name">Speed &nbsp;<span class="ctrl-val" id="ov-speed">1.00</span></span>
+            <input type="range" id="ctrl-speed" min="0.1" max="3" step="0.05" value="1">
+          </label>
+          <label>
+            <span class="ctrl-name">Grid &nbsp;<span class="ctrl-val" id="ov-grid">1.00</span></span>
+            <input type="range" id="ctrl-grid" min="0" max="2" step="0.05" value="1">
+          </label>
+          <label>
+            <span class="ctrl-name">Palette &nbsp;<span class="ctrl-val" id="ov-pal">0.00</span></span>
+            <input type="range" id="ctrl-pal" min="-0.5" max="0.5" step="0.01" value="0">
+          </label>
+        </div>
+        <p class="ctrl-hint">
+          move your cursor to warp the field &nbsp;·&nbsp; <kbd>~</kbd> opens the live GLSL editor<br>
+          <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
+          <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex &rarr; Ollama &rarr; AI &middot; A/B deck &middot; crossfader &middot; shader carousel with thumbnails &middot; startup splash shows VJ + audience QRs &middot; gig sessions (stream QR + co-VJ join) &middot; WebXR VR on Quest/headsets (audience dome or VJ controller) &middot; tag &middot; search &middot; perform your whole library &middot; export to Wire on desktop</span>
+        </p>
+      </div>
+    </header>
+
+    <section id="origin">
+      <h2>Origin story</h2>
+      <p>
+        MacroVerse began at
+        <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Melbourne Fringe</a>
+        as a live sonic and visual interpretation of the evolution of the universe &mdash; from energy stasis to heat-death dissipation.
+        Reductionist (Nick Wilson) performed on battery-powered micro-instruments; Aday (Adrian Richardson) ran live video projection improv
+        that bent time and energy flow. Both are longtime Clan Analogue artists; the show ran at Abbotsford Convent&rsquo;s experimental art program
+        (free exhibition 12&ndash;4pm daily, ticketed hour-long performance sessions from 7pm).
+      </p>
+      <p class="dim">
+        <a href="https://macroverse.aday.net.au/about.html">Full about page on the live app</a>
+        &nbsp;&middot;&nbsp;
+        <a href="https://blog.aday.net.au">Timeline on blog.aday.net.au</a>
+      </p>
+    </section>
+
+    <section id="participatory-vj">
+      <h2>Three ways in</h2>
+      <div class="use-cases">
+        <div class="use-case uc-vj">
+          <h3>Standalone VJ Tool</h3>
+          <p>Browse and perform your full GLSL/ISF library. A/B crossfader, mix modes, shader carousel, MIDI/OSC, Roli Lightpad LED blocks. Cloud or desktop. MJPEG / Spout / NDI on desktop. Tag, search, revert. One operator, one window.</p>
+        </div>
+        <div class="use-case uc-gig">
+          <h3>Participatory &amp; multiplayer VJ</h3>
+          <p><strong>Optional.</strong> Two access tiers on the same gig session (salted tokens — no raw session names in QR):</p>
+          <ul style="margin:0.6rem 0 0 1.1rem;font-size:0.92em;line-height:1.55;color:var(--text);">
+            <li><strong>Audience participation</strong> (stream QR / <code>viewToken</code>): phones watch the SSE preview. When you enable <em>Audience participation</em> on the host, they can drag or touch the stream to drive <code>mouseX</code> / <code>mouseY</code> only — playful, restrictive, no deck control.</li>
+            <li><strong>VJ collaboration</strong> (join link / <code>controlToken</code> from the top-bar <b>VJ</b> chip): hands-on co-VJ — full backend desk sync (crossfader, clips, mix, params) over WebSocket.</li>
+            <li><strong>WebXR VR</strong> (VJ deck QR panel &rarr; <b>Copy VR audience</b> / <b>Copy VR VJ</b>): open <code>vj-vr.html</code> on Meta Quest or any WebXR headset. Audience mode streams the live mix inside an immersive dome (or flat screen). VJ controller mode drives crossfader, decks, Auto VJ, and live-code push while the host still renders output.</li>
+          </ul>
+        </div>
+        <div class="use-case uc-wire">
+          <h3>Resolume Wire Pipeline</h3>
+          <p><b>Desktop / self-host.</b> Load any GLSL file, check Wire compatibility, expose magic-number literals as ISF sliders, run the shader fix chain (regex &rarr; Ollama &rarr; AI), and push the finished macro straight into Resolume Wire. Cloud hosts can still use <b>Clipboard to Wire</b>.</p>
+        </div>
+      </div>
+      <p class="dim" style="margin-top:1rem;">
+        Live app: Settings &rarr; <b>VJ Show Session ID</b> &rarr; Apply. VJ deck: toggle <b>Audience participation</b> for touch X/Y on the stream QR. Top-bar <b>VJ</b> chip: collaboration QR / link for co-VJs (full desk). Stream QR on output stays view-only unless participation is on (then touch steers mouse uniforms only). On first launch the loading splash also shows both QRs so you can scan before the index finishes loading.
+      </p>
+    </section>
+
+    <section id="vr-vj">
+      <h2>WebXR / VR VJ</h2>
+      <p>
+        Scan a VR link from the VJ deck QR panel or open <code>vj-vr.html</code> on a Meta Quest (or any WebXR browser). The host desk still renders the mix; VR clients subscribe to the same signed gig session.
+      </p>
+      <div class="use-cases use-cases-vr">
+        <div class="use-case uc-gig">
+          <h3>Audience VR</h3>
+          <p>SSE stream of the live A/B mix inside WebXR.</p>
+          <span class="url-snippet">vj-vr.html?remote=1&amp;viewToken=…</span>
+          <ul class="uc-list">
+            <li>Optional <code>&amp;role=audience</code></li>
+            <li>Default: immersive <strong>360 dome</strong>; flat <strong>screen</strong> via <code>&amp;mode=screen</code></li>
+            <li>With <b>Audience participation</b> on: touch/drag steers <code>mouseX</code> / <code>mouseY</code> only</li>
+          </ul>
+        </div>
+        <div class="use-case uc-vj">
+          <h3>VJ controller VR</h3>
+          <p>Full remote desk over WebSocket; host still renders the mix.</p>
+          <span class="url-snippet">vj-vr.html?role=vj&amp;remote=1&amp;controlToken=…&amp;viewToken=…</span>
+          <ul class="uc-list">
+            <li>Crossfader, deck clips, mix mode, Auto VJ on/off and BPM</li>
+            <li>Live GLSL push to host (<code>vj:shader-live</code>)</li>
+            <li>Immersive WebXR + DOM overlay HUD; exit without stopping outputs</li>
+          </ul>
+        </div>
+        <div class="use-case uc-cloud">
+          <h3>QR panel shortcuts</h3>
+          <p>VJ deck &rarr; show QR panel:</p>
+          <ul class="uc-list">
+            <li><b>Copy VR audience</b> — dome stream link</li>
+            <li><b>Copy VR VJ</b> — controller link with tokens</li>
+            <li>Flat stream stays <code>vj-output.html</code> (Pi HDMI / OBS unchanged)</li>
+          </ul>
+        </div>
+      </div>
+      <p class="dim" style="margin-top:1rem;">
+        Works on cloud lanes (live, test, aday). Quest Browser or any headset with WebXR immersive-vr. Shaders authored as flat 2D GLSL are mapped onto the dome; true ray-marched 360 content looks best inside the sphere.
+      </p>
+    </section>
+
+    <section id="cloud-edition">
+      <h2>Cloud edition vs desktop / self-host</h2>
+      <p class="dim" style="margin-bottom:1rem;">
+        <a href="https://macroverse.aday.net.au/">macroverse.aday.net.au</a> runs the full shader lab, VJ deck, gallery, and gig collaboration in the browser. The server library is <strong>read-only</strong> &mdash; your edits, tags, favorites, and new shaders save in <strong>IndexedDB in this browser</strong> until you export them from Settings.
+      </p>
+      <div class="use-cases">
+        <div class="use-case uc-cloud">
+          <h3>Works on cloud (hosted)</h3>
+          <p>Preview, Code, Split, VJ, Gallery views &middot; A/B deck, crossfader, mix modes, Auto VJ (shader swap + depth motion toggles) &middot; MIDI / OSC / FFT in the browser (Web MIDI, Web Audio) with AKAI/APC performance mapping &middot; Gig sessions: audience stream QR, co-VJ WebSocket sync, audience touch X/Y &middot; WebXR VR: audience dome + VJ controller (<code>vj-vr.html</code>) &middot; Shader fix chain (pattern fixes on server) &middot; Expose, Clipboard to Wire &middot; Command palette, mobile bottom bar &middot; Startup splash with VJ + audience QRs &middot; VJ shader carousel (thumbnail browse above decks) &middot; Export browser-local edits (Settings JSON backup).</p>
+        </div>
+        <div class="use-case uc-wire">
+          <h3>Desktop / self-host only</h3>
+          <p><b>Pipeline</b> and <b>Wire Hub</b> tabs (batch .wire generation, Avenue .avc, Resolume push) &middot; <b>Spout / NDI / MacroCam MJPEG</b> video output &middot; Cursor IDE, Explorer, Notepad, <b>cursor-agent</b> terminal integration &middot; Git scan/rescan, NUKE, Hard Reset, in-app Update (pull + rebuild) &middot; Full disk save + auto git-commit on Save &middot; Ollama / Cursor fix chain with local agents &middot; Refactor / Vibe (AI tokens) toolbar buttons &middot; Native path picker and folder scan.</p>
+        </div>
+      </div>
+      <p class="dim" style="margin-top:1rem;">
+        Run the Go binary next to your shader folder on Windows, or pull the Docker images and compose stack from GitHub for a private hosted instance with <code>MACROVERSE_HOST_MODE=desktop</code> if you mount local shaders and want the full pipeline.
+      </p>
+    </section>
+
+    <section id="lan-bridge">
+      <h2>LAN bridge agent (Ableton Link + venue clock)</h2>
+      <p>
+        The optional <code>macroverse-bridge-agent/</code> Node service runs on a Raspberry Pi or any LAN machine at the venue. It connects to the same cloud (or self-hosted) Macroverse session over WebSocket and bridges the <strong>local subnet</strong> to browsers that cannot see Ableton Link directly.
+      </p>
+      <div class="use-cases">
+        <div class="use-case uc-bridge">
+          <h3>What the bridge does today</h3>
+          <p><strong>Ableton Link sync</strong> &mdash; reads BPM, beat, and bar from Link on the LAN and publishes <code>bridge:clock:state</code> to every browser on the gig session (Auto VJ beat clock, synced tabs). <strong>HDMI helper</strong> &mdash; logs the signed <code>vj-output.html</code> URL for Pi kiosk. <strong>WebSocket bridge role</strong> &mdash; authenticated via <code>POST /api/bridge/token</code>. Full operator docs: <code>docs/BRIDGE.md</code> in the repo.</p>
+        </div>
+        <div class="use-case uc-bridge">
+          <h3>OSC (planned)</h3>
+          <p>The bridge advertises an <code>osc</code> capability in its hello handshake; LAN OSC relay is stubbed today. Browser OSC Listen (UDP to the Macroverse host) works on desktop. For cloud VJ, map MIDI in-browser or use a co-VJ laptop with the collaboration link.</p>
+        </div>
+      </div>
+<pre><code><span class="cm"># Pi quick start (after minting bridge token in Settings / API):</span>
+<span class="kw">cd</span> macroverse-bridge-agent && npm install && npm run build
+<span class="cm"># ~/.macroverse/bridge.json — cloudUrl, token, sessionId, linkEnabled: true</span>
+npm start</code></pre>
+    </section>
+
+    <section id="self-host">
+      <h2>Self-host (source, Docker, images)</h2>
+      <p>
+        Everything needed to run your own lane is in
+        <a href="https://github.com/aday1/macroverse.aday.net.au">github.com/aday1/macroverse.aday.net.au</a>:
+        Go API, Vite frontend, <code>docker-compose.yml</code>, nginx edge config, and CI that publishes
+        <code>ghcr.io/aday1/macroverse.aday.net.au/macroverse:live</code> (and <code>:dev</code>, <code>:aday</code>).
+      </p>
+      <div class="use-cases">
+        <div class="use-case uc-self">
+          <h3>Single binary (simplest)</h3>
+          <p>Download a release binary or <code>go build</code> from <code>api/</code>. Drop next to your shader folder. Open <code>http://localhost:8765</code>. Full desktop mode by default on Windows.</p>
+        </div>
+        <div class="use-case uc-self">
+          <h3>Docker Compose (Linode-style)</h3>
+          <p><code>docker-compose.yml</code> runs nginx + macroverse_live / macroverse_test / macroverse_aday containers. Set env vars, mount shader volumes, use <code>nginx/conf.d/sites.conf</code> for TLS and basic auth. See <code>ops/</code> scripts for DNS, passwords, and deploy.</p>
+        </div>
+      </div>
+<pre><code><span class="cm"># Build from source:</span>
+<span class="kw">git</span> clone https://github.com/aday1/macroverse.aday.net.au.git
+<span class="kw">cd</span> macroverse.aday.net.au/api
+<span class="fn">go build</span> -o ../Macroverse42 .
+<span class="kw">cd</span> .. && ./Macroverse42</code></pre>
+      <p class="dim">Pre-built desktop binaries: <a href="https://github.com/aday1/macroverse.aday.net.au/releases">GitHub Releases</a>. This showcase page is published from the <code>docs/</code> folder via GitHub Pages on push to <code>main</code>.</p>
+    </section>
+
+    <section id="demos">
+      <h2>Live demo loops</h2>
+      <p class="dim">Six short loops covering the core feature areas. Procedural placeholders rendered with ffmpeg &mdash; the live app draws real WebGL shaders.</p>
+
+      <div class="demos">
+        <figure class="demo">
+          <video src="videos/hero-loop.mp4" poster="videos/hero-loop-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="Domain warp hero loop"></video>
+          <figcaption><span class="demo-tag">Hero</span>Domain-warp FBM loop &mdash; the ambient field that backs every panel.</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <video src="videos/vj-crossfade.mp4" poster="videos/vj-crossfade-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="VJ deck A/B crossfade"></video>
+          <figcaption><span class="demo-tag">VJ deck</span>A/B crossfade between two live decks. Mix modes: crossfade, alpha, add, multiply.</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <video src="videos/pipeline-flow.mp4" poster="videos/pipeline-flow-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="GLSL to ISF to Wire pipeline"></video>
+          <figcaption><span class="demo-tag">Pipeline</span>GLSL &rarr; ISF JSON &rarr; <code>.wire</code> &rarr; Resolume. One binary, no installer.</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <video src="videos/gallery-grid.mp4" poster="videos/gallery-grid-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="Gallery grid running 8 shaders"></video>
+          <figcaption><span class="demo-tag">Gallery</span>Eight live shaders running at once. 1, 4, 8, 14, 24-cell layouts. Arrow keys to focus.</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <video src="videos/expose-params.mp4" poster="videos/expose-params-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="Expose magic numbers as ISF sliders"></video>
+          <figcaption><span class="demo-tag">Expose</span>Turn magic-number GLSL literals into ISF parameter sliders for Wire &mdash; one click.</figcaption>
+        </figure>
+
+        <figure class="demo">
+          <video src="videos/fix-chain.mp4" poster="videos/fix-chain-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540" aria-label="Shader fix chain"></video>
+          <figcaption><span class="demo-tag">Fix chain</span>Broken shader? Local regex &rarr; Ollama &rarr; AI. Stop at the first success.</figcaption>
+        </figure>
+      </div>
+
+      <p class="demos-caveat">
+        Loops are deterministic procedural placeholders generated by <code>docs/videos/build-videos.sh</code>.
+        Re-run it any time to rebuild &mdash; ffmpeg <code>mandelbrot</code>, <code>life</code>, and <code>cellauto</code> sources, capped at ~1.5&nbsp;MB each.
+        For the real renderer in motion, hit <a href="https://macroverse.aday.net.au/">the live app</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2>Quick start</h2>
+<pre><code><span class="cm"># Download a release binary, put it in your shader folder, run:</span>
+.\Macroverse42.exe          <span class="cm"># Windows</span>
+./Macroverse42             <span class="cm"># Linux / Mac</span>
+<span class="cm"># open http://localhost:8765</span>
+</code></pre>
+<pre><code><span class="cm"># Or build from source:</span>
+<span class="kw">git</span> clone https://github.com/aday1/macroverse.aday.net.au.git
+<span class="kw">cd</span> macroverse.aday.net.au/api
+<span class="fn">go build</span> -o ../Macroverse42 .
+<span class="kw">cd</span> .. && ./Macroverse42</code></pre>
+    </section>
+
+    <section>
+      <h2>Features</h2>
+      <div class="feat-grid">
+        <div class="feat"><div class="tag">Preview</div><div class="label">Real-time WebGL preview for any GLSL/ISF shader</div></div>
+        <div class="feat"><div class="tag">Cloud</div><div class="label">Hosted lab + VJ; browser-local IndexedDB edits; export/import JSON backup</div></div>
+        <div class="feat"><div class="tag">Expose</div><div class="label">One-click: turn magic numbers into ISF sliders for Wire</div></div>
+        <div class="feat"><div class="tag">Fix chain</div><div class="label">Broken shader? Regex &rarr; Ollama &rarr; AI (desktop); pattern fixes on cloud</div></div>
+        <div class="feat"><div class="tag">VJ deck</div><div class="label">A/B crossfader, carousel thumbnails, touch layout, MIDI/OSC, Auto VJ</div></div>
+        <div class="feat"><div class="tag">Splash QR</div><div class="label">Startup screen: scan VJ collaboration + audience stream before index loads</div></div>
+        <div class="feat"><div class="tag">WebXR VR</div><div class="label">Quest/headset: audience dome stream or VJ controller with immersive HUD</div></div>
+        <div class="feat"><div class="tag">Gig sessions</div><div class="label">Salted tokens; stream QR (view) + optional audience touch X/Y; co-VJ link</div></div>
+        <div class="feat"><div class="tag">Multiplayer</div><div class="label">WebSocket sync: crossfader, clips, mix across browsers on one session</div></div>
+        <div class="feat"><div class="tag">Bridge agent</div><div class="label">Pi/LAN Node agent: Ableton Link clock into the cloud session</div></div>
+        <div class="feat"><div class="tag">Wire export</div><div class="label">Desktop: Pipeline + Wire Hub, push .wire with params; cloud: Clipboard to Wire</div></div>
+        <div class="feat"><div class="tag">OBS stream</div><div class="label">Desktop: MJPEG at /api/output/macrocam/stream, Spout/NDI</div></div>
+        <div class="feat"><div class="tag">Self-host</div><div class="label">Docker Compose, GHCR images, nginx lanes — full repo on GitHub</div></div>
+        <div class="feat"><div class="tag">Library</div><div class="label">2000+ shaders: tags, sets, emoji badges, search, gallery grid</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Screenshots</h2>
+      <p class="dim">Live screenshots of the desktop UI. See the <a href="#demos">Demo loops</a> section above for procedural feature loops.</p>
+      <div class="screenshots">
+        <div class="slot ph" data-label="full-ui-layout.webp"><img src="screenshots/full-ui-layout.webp" alt="Full UI" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
+        <div class="slot ph" data-label="context-menu.webp"><img src="screenshots/context-menu.webp" alt="Context menu" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
+        <div class="slot ph" data-label="grid-view.webp"><img src="screenshots/grid-view.webp" alt="Grid view" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
+        <div class="slot ph" data-label="emoji-picker.webp"><img src="screenshots/emoji-picker.webp" alt="Emoji picker" onload="this.parentElement.classList.remove('ph')" onerror="this.parentElement.classList.add('ph')"></div>
+      </div>
+    </section>
+
+    <section id="help">
+      <h2>Help, Keyboard Shortcuts &amp; Feature Reference</h2>
+      <p class="dim">A comprehensive tour. Mirrors the in-app Help modal (Settings &raquo; <code>?</code> Help button).</p>
+
+      <h3 class="help-h3">1. Getting started</h3>
+      <table class="help-table">
+        <tr><td class="k">1.</td><td>Click a shader in the index list (left panel) to preview it.</td></tr>
+        <tr><td class="k">2.</td><td>Use the view tabs (Preview / Code / Split / VJ / Gallery; Pipeline / Wire on desktop only).</td></tr>
+        <tr><td class="k">3.</td><td>Adjust parameter sliders in the right panel.</td></tr>
+        <tr><td class="k">4.</td><td>Click <b>Save</b> (or <kbd>Ctrl+S</kbd>) to persist. On cloud, saves go to IndexedDB in this browser; on desktop, writes disk + optional git commit.</td></tr>
+      </table>
+
+      <h3 class="help-h3">2. View tabs</h3>
+      <table class="help-table">
+        <tr><td class="k">Preview</td><td>Live WebGL render of the current shader. Right-click for output options (Spout/NDI on Windows, browser fallbacks elsewhere).</td></tr>
+        <tr><td class="k">Code</td><td>GLSL editor with syntax highlighting, gold dashed underlines on exposable literals (sweet spots), Ctrl+Z undo.</td></tr>
+        <tr><td class="k">Split</td><td>Side-by-side or stacked code + preview (configurable in Settings &rarr; Default View).</td></tr>
+        <tr><td class="k">VJ</td><td>A/B deck mixer: Decks A and B with crossfader, mix modes (Crossfade / Alpha Layer / Add / Multiply), Auto VJ cycling, MIDI/OSC, pop-out output.</td></tr>
+        <tr><td class="k">Gallery</td><td>Live grid of every cell running its own shader. 1, 4, 8, 14, 24-cell layouts. Full keyboard navigation.</td></tr>
+        <tr><td class="k">Pipeline</td><td><b>Desktop only.</b> Signal-flow diagram: shader source &rarr; backend &rarr; renderer &rarr; ISF &rarr; Wire export. Hidden on macroverse.aday.net.au cloud.</td></tr>
+        <tr><td class="k">Wire Hub</td><td><b>Desktop only.</b> Check ISF Wire, Clipboard to Wire, push to Wire, batch export. Hidden on cloud hosts.</td></tr>
+      </table>
+
+      <h3 class="help-h3">3. Top app bar</h3>
+      <table class="help-table">
+        <tr><td class="k">Logo (M42)</td><td>Opens Settings panel.</td></tr>
+        <tr><td class="k">Shader name</td><td>Current loaded shader. A copper dot appears when there are unsaved changes.</td></tr>
+        <tr><td class="k">View dropdown</td><td>Mirrors the .view-tabs strip - useful when the strip is hidden on phone.</td></tr>
+        <tr><td class="k">Last build</td><td>Build date + git short-SHA from <code>/api/version</code>. Hidden under 900px.</td></tr>
+        <tr><td class="k">Save (disk)</td><td>Saves current shader; flashes when dirty.</td></tr>
+        <tr><td class="k">Palette (&gt;_)</td><td>Opens the command palette. Same as <kbd>Ctrl+K</kbd>.</td></tr>
+        <tr><td class="k">Hamburger</td><td>Opens the More sheet (mobile) or Settings (desktop fallback).</td></tr>
+        <tr><td class="k">VJ session chip</td><td>Tap <b>VJ</b> in the top bar for session name, collaboration QR, and copy link (<code>controlToken</code>). Audience stream QR also on startup splash, VJ output, and Settings.</td></tr>
+      </table>
+
+      <h3 class="help-h3">4. Mobile bottom tab bar</h3>
+      <p class="dim">Visible automatically on viewports under 640px. Five fixed tabs:</p>
+      <table class="help-table">
+        <tr><td class="k">Library</td><td>Toggles the left dock (shader index).</td></tr>
+        <tr><td class="k">Preview</td><td>Switches to Preview view (or Split if currently in Code).</td></tr>
+        <tr><td class="k">Code</td><td>Switches to Code view, closes side docks.</td></tr>
+        <tr><td class="k">Params</td><td>Toggles the right dock (parameter sliders).</td></tr>
+        <tr><td class="k">More</td><td>Opens the More sheet: VJ deck, Gallery, Split view, Commands, Settings, Help. Pipeline / Wire Hub listed on desktop only (hidden on cloud).</td></tr>
+      </table>
+
+      <h3 class="help-h3">5. Command palette</h3>
+      <table class="help-table">
+        <tr><td class="k">Open</td><td><kbd>Ctrl+K</kbd> or <kbd>Cmd+K</kbd> &mdash; toggles the palette open/closed.</td></tr>
+        <tr><td class="k">Quick open</td><td><kbd>/</kbd> when no input is focused (Slack/Discord style).</td></tr>
+        <tr><td class="k">Navigate</td><td><kbd>Up</kbd> / <kbd>Down</kbd> to move, <kbd>Home</kbd> / <kbd>End</kbd> for first/last.</td></tr>
+        <tr><td class="k">Run</td><td><kbd>Enter</kbd> to execute selected command.</td></tr>
+        <tr><td class="k">Close</td><td><kbd>Esc</kbd> or click outside.</td></tr>
+        <tr><td class="k">Categories</td><td>Editor &middot; Parameters &middot; Wire &middot; External &middot; View &middot; App &middot; Display effects &middot; Panels.</td></tr>
+      </table>
+
+      <h3 class="help-h3">6. Gallery shortcuts</h3>
+      <div class="feat-grid" style="margin-bottom:1.5rem;">
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>&uarr;</kbd> <kbd>&darr;</kbd> &mdash; navigate between cells</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>Alt+&larr;</kbd> / <kbd>Alt+&rarr;</kbd> &mdash; previous / next page</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>1</kbd>&ndash;<kbd>9</kbd> &mdash; toggle preset tag (same key removes it)</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>Shift+1</kbd>&ndash;<kbd>Shift+9</kbd> &mdash; toggle preset VJ Set</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>A</kbd> &mdash; set-toggle prompt (all sets + membership)</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>F</kbd> &mdash; toggle favourite</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>R</kbd> &mdash; rename focused shader</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>?</kbd> &mdash; show / hide shortcut HUD</div></div>
+        <div class="feat"><div class="tag">Gallery</div><div class="label"><kbd>Space</kbd> &mdash; toggle auto-advance</div></div>
+        <div class="feat"><div class="tag">Export</div><div class="label">Export &#9662; menu: CSV &middot; JSON &middot; paths (.txt &mdash; load directly into Resolume Avenue)</div></div>
+      </div>
+
+      <h3 class="help-h3">7. Preset VJ Sets (<kbd>Shift+1</kbd> &ndash; <kbd>Shift+9</kbd>)</h3>
+      <div class="feat-grid" style="margin-bottom:1.5rem;">
+        <div class="feat"><div class="tag">1</div><div class="label">vj-ambient</div></div>
+        <div class="feat"><div class="tag">2</div><div class="label">vj-techno</div></div>
+        <div class="feat"><div class="tag">3</div><div class="label">vj-cosmic</div></div>
+        <div class="feat"><div class="tag">4</div><div class="label">vj-glitch</div></div>
+        <div class="feat"><div class="tag">5</div><div class="label">vj-geometric</div></div>
+        <div class="feat"><div class="tag">6</div><div class="label">vj-organic</div></div>
+        <div class="feat"><div class="tag">7</div><div class="label">vj-wire-ready</div></div>
+        <div class="feat"><div class="tag">8</div><div class="label">vj-dark</div></div>
+        <div class="feat"><div class="tag">9</div><div class="label">vj-colour</div></div>
+      </div>
+      <p class="dim" style="margin-top:-0.5rem;">Hit <b>Seed VJ Sets</b> in Gallery to auto-assign shaders to all 9 sets by name/format heuristics.</p>
+
+      <h3 class="help-h3">8. Common actions</h3>
+      <table class="help-table">
+        <tr><td class="k">Preview shader</td><td>Click it in the list, or drag and drop on the preview / code area.</td></tr>
+        <tr><td class="k">Search</td><td>Type in the filter box: name, tags, category, format.</td></tr>
+        <tr><td class="k">Rename</td><td>Double-click name, or right-click &rarr; Rename.</td></tr>
+        <tr><td class="k">Move category</td><td>Right-click &rarr; Move to category.</td></tr>
+        <tr><td class="k">Add tags</td><td>Click <b>+</b> next to tags, or right-click &rarr; Edit tags.</td></tr>
+        <tr><td class="k">Trash / restore</td><td>Right-click &rarr; Move to trash. Show/hide trash via the trash badge.</td></tr>
+        <tr><td class="k">Mark dead</td><td>Auto-fix gives up &rarr; tagged DEAD. Show/hide via the dead badge.</td></tr>
+        <tr><td class="k">Sets</td><td>Manage sets, filter by set, rename / remove via the Sets menu.</td></tr>
+        <tr><td class="k">List views</td><td>List &middot; Compact &middot; Grid (with thumbnail previews).</td></tr>
+        <tr><td class="k">Version history</td><td>Right-click &rarr; See versions &rarr; click any to revert.</td></tr>
+      </table>
+
+      <h3 class="help-h3">9. Expose parameters &amp; Wire export</h3>
+      <table class="help-table">
+        <tr><td class="k">Expose (instant)</td><td>Click <b>Expose</b> in the code toolbar. Regex-based literal detection. Local-first, zero tokens, zero latency.</td></tr>
+        <tr><td class="k">Search params</td><td>Click <b>Search</b>. Popover lists every literal + named value. Click <b>Expose</b> next to any to make it a slider.</td></tr>
+        <tr><td class="k">Sweet spots</td><td>Gold dashed underlines in the code = exposable values. Right-click one to expose just that literal.</td></tr>
+        <tr><td class="k">Refactor (AI)</td><td><b>Refactor</b> button: deeper LLM-based discovery and structural improvements via Ollama or Cursor.</td></tr>
+        <tr><td class="k">Visual modify (Vibe)</td><td><b>Vibe</b> sends screenshot + your description to the AI agent (Cursor or GitHub Copilot variant).</td></tr>
+        <tr><td class="k">Format written</td><td><code>uniform float name; // @expose min max</code> &mdash; emitted into the ISF JSON block as well.</td></tr>
+        <tr><td class="k">Check ISF Wire</td><td>Validates ISF block compatibility with Resolume Wire (params, sampler2D handling).</td></tr>
+        <tr><td class="k">Clipboard to Wire</td><td>Copies the ISF (with INPUTS array, useFrameIndex toggle, fps, timeScale, mouseX/Y) to the system clipboard for paste into Wire.</td></tr>
+        <tr><td class="k">Texture handling</td><td>sampler2D uniforms become ISF image INPUTS; texture2D() rewritten to IMG_NORM_PIXEL().</td></tr>
+      </table>
+
+      <h3 class="help-h3">10. Vibe Station (create new shaders)</h3>
+      <table class="help-table">
+        <tr><td class="k">Modify current</td><td>Screenshot + your prompt &rarr; AI rewrites the active shader.</td></tr>
+        <tr><td class="k">Create new</td><td>Pick a name, choose a genre, optionally describe the vision. Click <b>Create</b>.</td></tr>
+        <tr><td class="k">Genres</td><td>Particles &middot; Fractal &middot; 3D Sphere / Cube / Torus (raymarched SDFs) &middot; Tunnel &middot; Kaleidoscope &middot; Audio &middot; Gradient.</td></tr>
+        <tr><td class="k">3D objects</td><td>3D genres scaffold a real raymarcher with SDF helpers in a single fragment shader.</td></tr>
+      </table>
+
+      <h3 class="help-h3">11. VJ deck</h3>
+      <table class="help-table">
+        <tr><td class="k">Open</td><td>Click the <b>VJ</b> tab.</td></tr>
+        <tr><td class="k">Startup QRs</td><td>Loading splash shows <b>VJ collaboration</b> and <b>Audience stream</b> QRs while the index loads. Tap splash to dismiss.</td></tr>
+        <tr><td class="k">Shader carousel</td><td>Horizontal thumbnail strip above Deck A/B. Filter, scroll, tap <b>A</b> or <b>B</b> to load, or drag a card onto a deck.</td></tr>
+        <tr><td class="k">Layout</td><td>Single-viewport: decks + crossfader + master preview + controls. Drag row resizers (double-click to reset). Touch-friendly on Steam Deck / phone / tablet.</td></tr>
+        <tr><td class="k">Decks A and B</td><td>Load different shaders, tweak params independently, Prev/Next through the library.</td></tr>
+        <tr><td class="k">Crossfader</td><td>Smooth blend between decks. Mappable to MIDI fader / OSC.</td></tr>
+        <tr><td class="k">Mix modes</td><td>Crossfade &middot; Alpha Layer &middot; Add &middot; Multiply.</td></tr>
+        <tr><td class="k">Auto VJ</td><td>Auto-cycles shaders with configurable timing. Independent toggles for <b>shader swap</b> vs <b>depth/param motion</b> when Auto VJ is on.</td></tr>
+        <tr><td class="k">FFT A/B</td><td>Audio FFT on each deck independently.</td></tr>
+        <tr><td class="k">OSC A/B</td><td>OSC routing per deck.</td></tr>
+        <tr><td class="k">AKAI/APC MIDI</td><td>VJ tab &rarr; MIDI &rarr; <b>APC40 / Akai</b>. Grid and scene buttons load Deck A; hold Shift and press grid/scene to load Deck B. Track knobs control Deck A params, Device knobs control Deck B params, faders follow Shift, CC14 is the crossfader, and page/bank controls move Deck A/B pages.</td></tr>
+        <tr><td class="k">Pop-out output</td><td>Open VJ output in its own window for full-screen on a second display. Uses BroadcastChannel for low-latency sync.</td></tr>
+        <tr><td class="k">Text templates</td><td>Built-in neon, dotmatrix, LCD, 16-segment text overlays.</td></tr>
+        <tr><td class="k">Mouse XY pad</td><td>Drag in the preview to drive mouseX/Y uniforms.</td></tr>
+        <tr><td class="k">Gig session (optional)</td><td>Settings &rarr; <b>VJ Show Session ID</b> &rarr; Apply. Salted <code>viewToken</code> / <code>controlToken</code> URLs so guessing a session name cannot hijack the show.</td></tr>
+        <tr><td class="k">Audience stream QR</td><td>VJ deck &rarr; show QR on output. Encodes <code>vj-output.html</code> with <code>viewToken</code> (SSE stream). Watch-only unless <b>Audience participation</b> is enabled — then phones can touch/drag the preview to send <code>mouseX</code> / <code>mouseY</code> only.</td></tr>
+        <tr><td class="k">Audience participation</td><td>VJ deck QR panel checkbox. Restrictive: touch X/Y on the stream preview feeds the host shader mouse uniforms. No crossfader, clips, or params.</td></tr>
+        <tr><td class="k">Co-VJ join QR</td><td>Top bar <b>VJ</b> chip &rarr; collaboration QR / copy link with <code>controlToken</code>. Full VJ desk: WebSocket syncs crossfader, clips, mix mode, and deck params across browsers.</td></tr>
+        <tr><td class="k">VR audience link</td><td>VJ deck QR panel &rarr; <b>Copy VR audience</b>. Opens <code>vj-vr.html</code> with <code>viewToken</code>. Immersive dome (default) or <code>mode=screen</code>. SSE mix stream; optional mouse X/Y when participation is on.</td></tr>
+        <tr><td class="k">VR VJ controller</td><td>VJ deck QR panel &rarr; <b>Copy VR VJ</b>. <code>role=vj</code> + <code>controlToken</code> + <code>viewToken</code>. WebSocket remote desk + live shader push; WebXR enter/exit keeps host outputs running.</td></tr>
+        <tr><td class="k">Pi / OBS output</td><td>Open <code>vj-output.html?remote=1</code> on a Pi HDMI display or OBS Browser Source. Same signed stream URL as the burned-in QR. On <code>macroverse-private</code>, stream URLs require the same basic auth as the main app.</td></tr>
+      </table>
+
+      <h3 class="help-h3">12. LAN bridge agent</h3>
+      <table class="help-table">
+        <tr><td class="k">Purpose</td><td>Run on a Pi or LAN box at the venue. Bridges <strong>Ableton Link</strong> (BPM/beat/bar) from the local subnet into the cloud Macroverse WebSocket session so all browsers share the same clock.</td></tr>
+        <tr><td class="k">Setup</td><td><code>POST /api/bridge/token</code> &rarr; config in <code>~/.macroverse/bridge.json</code> &rarr; <code>macroverse-bridge-agent/</code> (<code>npm start</code>). See <code>docs/BRIDGE.md</code>.</td></tr>
+        <tr><td class="k">OSC</td><td>Capability advertised; LAN OSC relay is planned. Use in-browser OSC Listen on desktop Macroverse, or MIDI on cloud.</td></tr>
+        <tr><td class="k">ArtBastard</td><td>Pair a second bridge on the same Pi with a different session ID for DMX (see ArtBastard repo <code>DOCS/BRIDGE.md</code>).</td></tr>
+      </table>
+
+      <h3 class="help-h3">13. Roliblock (multi-device, BLE / USB)</h3>
+      <table class="help-table">
+        <tr><td class="k">Multi-device</td><td>N simultaneous Roli Lightpad blocks, each with independent MIDI in/out, handshake, LED buffer, and per-device settings.</td></tr>
+        <tr><td class="k">USB auto-rig</td><td><b>Request MIDI</b> auto-detects Roli USB touch/LED pairs, enables them, and defaults to <b>Shared output / Mirror</b> so every enabled block shows the master VJ output.</td></tr>
+        <tr><td class="k">Deck assign</td><td>Per-device: shared / deckA / deckB / auto. Shared is the default; Deck A/B is available when you want independent deck pads.</td></tr>
+        <tr><td class="k">Deck A/B XY</td><td>In Independent mode, a block assigned to <b>deckA</b> drives Deck A mouse/XY, and a block assigned to <b>deckB</b> drives Deck B mouse/XY. Shared output mode drives the global VJ mouse from every enabled block.</td></tr>
+        <tr><td class="k">BLE MIDI</td><td>Web Bluetooth pairing. Device A can be BLE while Device B is USB. 250ms handshake / 80ms LED stream on BLE; 150ms / 50ms on USB. SysEx chunked for BLE MTU.</td></tr>
+        <tr><td class="k">LED filters</td><td>Per-device contrast, brightness, saturation, gamma, grayscale, invert, posterize, channel isolation.</td></tr>
+        <tr><td class="k">LED drawing</td><td>LED output samples the shader/output canvas and streams frames to each enabled block after MIDI output handshake. Modes include Shared output / Mirror, independent per-deck output, linked XY, and stretched 30x15 split across two blocks.</td></tr>
+        <tr><td class="k">Stretched mode</td><td>Sample 30x15 from the output canvas, split left/right to two devices for a wide LED display.</td></tr>
+        <tr><td class="k">Debug page</td><td>Dual-device debug with independent shaders, mouse XY pads, WebGL preview, and per-device LED stream. Library cycling: Prev / Next / Random / Auto.</td></tr>
+        <tr><td class="k">View modes</td><td>A Only &middot; B Only &middot; Both (default) &middot; Combined (30x15 side-by-side LED preview).</td></tr>
+        <tr><td class="k">Background render</td><td>LED streaming continues when the browser tab is hidden (setInterval fallback).</td></tr>
+      </table>
+
+      <h3 class="help-h3">14. External controls</h3>
+      <table class="help-table">
+        <tr><td class="k">OSC Listen</td><td>Right panel &rarr; OSC &rarr; set port, click <b>Listen</b>. Send UDP messages to <code>/shader/&lt;paramName&gt;</code>.</td></tr>
+        <tr><td class="k">MIDI Learn</td><td>Right panel &rarr; MIDI &rarr; <b>Enable</b>. Click <b>Learn</b> next to any param, then move a CC knob.</td></tr>
+        <tr><td class="k">VJ MIDI template</td><td>VJ tab or Settings &rarr; MIDI / OSC - VJ controller. <b>APC40 / Akai</b> loads the default performance map; <b>Custom</b> keeps learned mappings.</td></tr>
+        <tr><td class="k">Audio FFT</td><td>Right panel &rarr; Audio &rarr; <b>Start</b>. Map frequency bands (Sub-Brilliance) to params.</td></tr>
+        <tr><td class="k">Texture inputs</td><td>Right panel &rarr; Texture inputs &rarr; <b>Add sampler2D</b> &rarr; <b>Webcam</b> or <b>Image</b>.</td></tr>
+        <tr><td class="k">Webcam input</td><td>Right panel &rarr; Texture inputs &rarr; <b>Webcam</b>. Resolume Avenue / OBS can chain to this.</td></tr>
+      </table>
+
+      <h3 class="help-h3">15. Output &amp; streaming</h3>
+      <p class="dim"><b>Desktop / self-host only</b> for Spout, NDI, and MacroCam MJPEG. Cloud VJ uses browser pop-out and <code>vj-output.html</code> SSE stream.</p>
+      <pre><code><span class="cm"># MJPEG stream (MacroCam) for OBS Browser Source:</span>
+http://localhost:8765/api/output/macrocam/stream
+
+<span class="cm"># Linux virtual webcam (requires v4l2loopback):</span>
+ffmpeg -i http://localhost:8765/api/output/macrocam/stream -f v4l2 /dev/video0
+
+<span class="cm"># Spout / NDI: right-click the preview canvas (Windows / where supported)</span></code></pre>
+
+      <h3 class="help-h3">16. Display effects</h3>
+      <table class="help-table">
+        <tr><td class="k">Scanlines</td><td><b>Scan</b> in status bar (or <code>effects.scanlines</code> in palette). Horizontal scan-line overlay on preview.</td></tr>
+        <tr><td class="k">Vignette</td><td><b>Vignette</b> in status bar. Darkens preview corners.</td></tr>
+        <tr><td class="k">CRT code</td><td><b>CRT</b> in status bar. Phosphor glow on the code editor.</td></tr>
+        <tr><td class="k">Full screen</td><td><b>Full Screen</b> in status bar, or <kbd>F11</kbd>.</td></tr>
+        <tr><td class="k">Theme</td><td>Settings &rarr; HSV sliders for full theme customisation. Light theme preset available.</td></tr>
+      </table>
+
+      <h3 class="help-h3">17. Update button</h3>
+      <p class="dim">Desktop only — hidden on cloud hosts.</p>
+      <table class="help-table">
+        <tr><td class="k">Background check</td><td>5 seconds after launch the app silently runs <code>git fetch</code> + <code>git log HEAD..origin/HEAD</code>.</td></tr>
+        <tr><td class="k">Indicator</td><td>If the remote is ahead, the toolbar Update button turns amber and shows <code>Update (N)</code>.</td></tr>
+        <tr><td class="k">Apply &amp; Restart</td><td>Click Update &rarr; modal lists incoming commits &rarr; <b>Apply &amp; Restart</b> writes a temp script that runs <code>git pull origin</code> + <code>build.bat</code> / <code>build.sh</code>, launches the new binary, and exits the current process.</td></tr>
+        <tr><td class="k">Cross-platform</td><td>Windows uses build.bat, Linux/macOS uses build.sh. Gracefully no-ops outside a git repo.</td></tr>
+      </table>
+
+      <h3 class="help-h3">18. Settings reference</h3>
+      <table class="help-table">
+        <tr><td class="k">Browser-local edits</td><td><b>Cloud:</b> Settings &rarr; export/import JSON backup of IndexedDB overrides (tags, code edits, favorites). Clear local store to revert to server library.</td></tr>
+        <tr><td class="k">Source paths</td><td><b>Desktop:</b> Add / remove folders to scan. Default: <code>shaders/</code> next to the binary.</td></tr>
+        <tr><td class="k">LLM Provider Chain</td><td>Local regex &rarr; Ollama &rarr; Cursor. Enable / disable / reorder per provider. Per-provider model + endpoint config.</td></tr>
+        <tr><td class="k">Hard Reset (git)</td><td>Zips the configured target folder, then restores it from the first git commit on main. Target path configurable in Settings &rarr; Hard Reset Path. Always creates a timestamped <code>.zip</code> backup first.</td></tr>
+        <tr><td class="k">NUKE</td><td>BACKUP the index &rarr; CLEAR all DB tables &rarr; RESCAN every source path. Files on disk untouched.</td></tr>
+        <tr><td class="k">READONLY / cloud</td><td>Hosted lanes set <code>MACROVERSE_HOST_MODE=cloud</code>. Server writes blocked; local browser store enabled. Pipeline / Wire / video output / shell agents disabled in UI.</td></tr>
+        <tr><td class="k">DEMO_BANNER</td><td>Set <code>DEMO_BANNER=true</code> for the persistent orange "Read-only demo instance" banner.</td></tr>
+        <tr><td class="k">Default view</td><td>Preview / Code / Split V / Split H / VJ. Persists across sessions.</td></tr>
+        <tr><td class="k">Mobile / Desktop</td><td>Status-bar toggle to force-mobile CSS on any device. Persisted to localStorage.</td></tr>
+        <tr><td class="k">Graveyard log</td><td><code>unrecoverable-shaders.json</code> next to <code>macroverse.db</code>. Path shown in Settings.</td></tr>
+      </table>
+
+      <h3 class="help-h3">19. Master keyboard shortcuts</h3>
+      <table class="help-table">
+        <tr><td class="k"><kbd>Ctrl+S</kbd></td><td>Save shader (auto git-commit if enabled)</td></tr>
+        <tr><td class="k"><kbd>Ctrl+Z</kbd></td><td>Undo in editor</td></tr>
+        <tr><td class="k"><kbd>Ctrl+K</kbd> / <kbd>Cmd+K</kbd></td><td>Toggle command palette</td></tr>
+        <tr><td class="k"><kbd>/</kbd></td><td>Open command palette (when no input focused)</td></tr>
+        <tr><td class="k"><kbd>F11</kbd></td><td>Toggle full screen</td></tr>
+        <tr><td class="k"><kbd>?</kbd></td><td>Show / hide Gallery shortcut HUD (in Gallery)</td></tr>
+        <tr><td class="k"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>&uarr;</kbd> <kbd>&darr;</kbd></td><td>Gallery navigation</td></tr>
+        <tr><td class="k"><kbd>Alt+&larr;</kbd> / <kbd>Alt+&rarr;</kbd></td><td>Gallery: previous / next page</td></tr>
+        <tr><td class="k"><kbd>1</kbd> &ndash; <kbd>9</kbd></td><td>Gallery: toggle preset tag</td></tr>
+        <tr><td class="k"><kbd>Shift+1</kbd> &ndash; <kbd>Shift+9</kbd></td><td>Gallery: toggle preset VJ Set</td></tr>
+        <tr><td class="k"><kbd>A</kbd></td><td>Gallery: set-toggle prompt</td></tr>
+        <tr><td class="k"><kbd>F</kbd></td><td>Gallery: toggle favourite</td></tr>
+        <tr><td class="k"><kbd>R</kbd></td><td>Gallery: rename focused shader</td></tr>
+        <tr><td class="k"><kbd>Space</kbd></td><td>Gallery: toggle auto-advance</td></tr>
+        <tr><td class="k">Right-click preview</td><td>Output options (Spout / NDI on Windows)</td></tr>
+        <tr><td class="k">Right-click code</td><td>AI actions (Explain, Enhance, Refactor, Generate)</td></tr>
+        <tr><td class="k">Right-click shader</td><td>Rename / Move / Tags / Trash / Versions</td></tr>
+        <tr><td class="k">Drag &amp; drop</td><td>Drag a shader from the list onto the preview or code area to load it</td></tr>
+        <tr><td class="k"><kbd>~</kbd> / <kbd>`</kbd></td><td><b>Showcase only:</b> open the GLSL Lab on this page</td></tr>
+        <tr><td class="k">Triple-click title</td><td><b>Showcase only:</b> open the GLSL Lab</td></tr>
+      </table>
+    </section>
+
+    <div class="nodes">
+      <div class="node"></div>
+      <div class="node-line"></div>
+      <div class="node"></div>
+      <div class="node-line"></div>
+      <div class="node"></div>
+    </div>
+
+    <footer>
+      <a href="https://github.com/aday1/macroverse.aday.net.au">Macroverse 42</a> &mdash; The Wired Atelier &mdash; GLSL lab for Resolume Wire
+      <div class="protocol">PROTOCOL: ISF 2.0 &nbsp;/&nbsp; SIGNAL: GLSL ES 1.0 &nbsp;/&nbsp; PORT: 8765</div>
+    </footer>
+  </div>
+
+  <script>
+  // ─── WebGL background: live GLSL — Macroverse palette ──────────────────────
+  (function () {
+    var C  = document.getElementById('bg');
+    var gl = C.getContext('webgl') || C.getContext('experimental-webgl');
+    if (!gl) { document.getElementById('bg-fallback').style.display = 'block'; return; }
+
+    var VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+
+    // Fragment shader — also exposed in the easter-egg GLSL Lab (press ~ or triple-click title)
+    var FS_DEFAULT = [
+      'precision mediump float;',
+      'uniform float T;',        // time (seconds)
+      'uniform vec2  R;',        // resolution
+      'uniform vec2  M;',        // mouse  0..1  (x right, y up)
+      'uniform float uWarp;',    // domain-warp intensity  0..2
+      'uniform float uSpeed;',   // time scale             0.1..3
+      'uniform float uGrid;',    // grid-node brightness   0..2
+      'uniform float uPal;',     // palette shift         -0.5..0.5
+
+      // ── Hash & value noise ──────────────────────────────────────────────
+      'float H(vec2 p){p=fract(p*vec2(127.1,311.7));p+=dot(p,p+17.5);return fract(p.x*p.y);}',
+      'float N(vec2 p){',
+      '  vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);',
+      '  return mix(mix(H(i),H(i+vec2(1,0)),f.x),mix(H(i+vec2(0,1)),H(i+vec2(1,1)),f.x),f.y);',
+      '}',
+
+      // ── FBM (6-octave fractional Brownian motion) ───────────────────────
+      'float fbm(vec2 p){',
+      '  float v=0.,w=.5;',
+      '  for(int i=0;i<6;i++){v+=w*N(p);p=p*2.08+vec2(1.7,9.2);w*=.46;}',
+      '  return v;',
+      '}',
+
+      // ── Macroverse colour palette ───────────────────────────────────────
+      // void -> deep purple -> indigo -> electric blue -> DMT teal -> white-hot
+      // palette hue drifts slowly over time; uPal shifts the blend point
+      'vec3 pal(float f,float t){',
+      '  float drift=sin(t*.07)*.08+cos(t*.05)*.06;',
+      '  f=clamp(f+drift,0.,1.);',
+      '  vec3 c;',
+      '  if(f<.20) c=mix(vec3(.024,.016,.047),vec3(.12,.04,.28),f/.20);',
+      '  else if(f<.42) c=mix(vec3(.12,.04,.28),vec3(.18,.08,.55),(f-.20)/.22);',
+      '  else if(f<.62) c=mix(vec3(.18,.08,.55),vec3(.27,.53,.80),(f-.42)/.20);',
+      '  else if(f<.78) c=mix(vec3(.27,.53,.80),vec3(.0,.80,.68),(f-.62)/.16);',
+      '  else c=mix(vec3(.0,.80,.68),vec3(.93,.82,.94),(f-.78)/.22);',
+      '  c+=vec3(.60,.22,.0)*smoothstep(.68,.76,f)*smoothstep(.84,.76,f)*.28;', // copper bloom
+      '  return c;',
+      '}',
+
+      // ── Network grid nodes (the Wired) ─────────────────────────────────
+      'float grid(vec2 uv,float asp){',
+      '  vec2 g=fract(vec2(uv.x*asp*18.,uv.y*18.))-.5;',
+      '  return exp(-dot(g,g)*80.)*0.25;',
+      '}',
+
+      // ── Main ───────────────────────────────────────────────────────────
+      'void main(){',
+      '  vec2 uv=gl_FragCoord.xy/R;',
+      '  float asp=R.x/R.y;',
+      // Mouse pulls the domain-warp origin — cursor warps the field
+      '  vec2 mp=(M-.5)*0.7;',
+      '  vec2 p=uv+mp; p.x*=asp;',
+      '  float t=T*.055*uSpeed;',
+      '  vec2 w1=vec2(fbm(p+vec2(t,t*.75)), fbm(p+vec2(t*.8,t*.5)+2.3));',
+      '  vec2 w2=vec2(fbm(p+w1*1.1+vec2(1.7,9.2)+t*.18),',
+      '               fbm(p+w1      +vec2(8.3,2.8)));',
+      '  float f=fbm(p+w2*(.80*uWarp));',
+      '  float fpal=clamp(f+uPal,0.,1.);',
+      '  vec3 col=pal(fpal,T)*0.88;',
+      // Grid nodes — brightest in dark void regions
+      '  float dark=1.-smoothstep(.18,.42,f);',
+      '  col+=vec3(.27,.53,.80)*grid(uv,asp)*dark*.6*uGrid;',
+      // Signal scan line
+      '  float scanY=fract(T*.08);',
+      '  float sline=exp(-abs(uv.y-scanY)*40.)*0.07;',
+      '  col+=vec3(.28,.55,.90)*sline;',
+      // Vignette
+      '  vec2 vig=uv-.5; col*=1.-dot(vig,vig)*1.05;',
+      '  gl_FragColor=vec4(col,1.);',
+      '}'
+    ].join('\n');
+
+    // ── Shader compilation with error reporting ──────────────────────────
+    var prog = null;
+    var uT, uR, uM, uWarp, uSpeed, uGrid, uPal, aP;
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER,
+      new Float32Array([-1,-1, 1,-1, -1,1, 1,-1, 1,1, -1,1]), gl.STATIC_DRAW);
+
+    function compile(fsSrc) {
+      function sh(type, src) {
+        var s = gl.createShader(type);
+        gl.shaderSource(s, src); gl.compileShader(s);
+        return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
+      }
+      function shErr(type, src) {
+        var s = gl.createShader(type);
+        gl.shaderSource(s, src); gl.compileShader(s);
+        return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? null : gl.getShaderInfoLog(s);
+      }
+      var vsErr = shErr(gl.VERTEX_SHADER, VS);
+      var fsErr = shErr(gl.FRAGMENT_SHADER, fsSrc);
+      if (vsErr || fsErr) return vsErr || fsErr;
+      var vs = sh(gl.VERTEX_SHADER, VS);
+      var fs = sh(gl.FRAGMENT_SHADER, fsSrc);
+      var p = gl.createProgram();
+      gl.attachShader(p, vs); gl.attachShader(p, fs);
+      gl.linkProgram(p);
+      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) return gl.getProgramInfoLog(p);
+      if (prog) gl.deleteProgram(prog);
+      prog = p; gl.useProgram(prog);
+      uT    = gl.getUniformLocation(prog, 'T');
+      uR    = gl.getUniformLocation(prog, 'R');
+      uM    = gl.getUniformLocation(prog, 'M');
+      uWarp = gl.getUniformLocation(prog, 'uWarp');
+      uSpeed= gl.getUniformLocation(prog, 'uSpeed');
+      uGrid = gl.getUniformLocation(prog, 'uGrid');
+      uPal  = gl.getUniformLocation(prog, 'uPal');
+      aP    = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(aP);
+      gl.vertexAttribPointer(aP, 2, gl.FLOAT, false, 0, 0);
+      return null;
+    }
+    var initErr = compile(FS_DEFAULT);
+    if (initErr) { console.warn('[Macroverse] shader error:', initErr); return; }
+
+    // ── Live params (driven by sliders + smooth mouse) ───────────────────
+    var params = { mx:0.5, my:0.5, warp:1.0, speed:1.0, grid:1.0, pal:0.0 };
+    var tgtMx = 0.5, tgtMy = 0.5;
+    document.addEventListener('mousemove', function(e) {
+      tgtMx = e.clientX / window.innerWidth;
+      tgtMy = 1.0 - e.clientY / window.innerHeight;
+    });
+
+    // ── Bind visible page sliders ────────────────────────────────────────
+    function bindSlider(id, ovId, key, dp) {
+      var sl = document.getElementById(id);
+      var ov = document.getElementById(ovId);
+      if (!sl) return;
+      sl.addEventListener('input', function() {
+        params[key] = parseFloat(sl.value);
+        if (ov) ov.textContent = parseFloat(sl.value).toFixed(dp !== undefined ? dp : 2);
+      });
+    }
+    bindSlider('ctrl-warp',  'ov-warp',  'warp',  2);
+    bindSlider('ctrl-speed', 'ov-speed', 'speed', 2);
+    bindSlider('ctrl-grid',  'ov-grid',  'grid',  2);
+    bindSlider('ctrl-pal',   'ov-pal',   'pal',   2);
+
+    // ── Resize ───────────────────────────────────────────────────────────
+    function resize() {
+      C.width = window.innerWidth; C.height = window.innerHeight;
+      gl.viewport(0, 0, C.width, C.height);
+    }
+    window.addEventListener('resize', resize); resize();
+
+    // ── Render loop ──────────────────────────────────────────────────────
+    var t0 = null;
+    function frame(ts) {
+      if (!t0) t0 = ts;
+      var t = (ts - t0) / 1000;
+      // Smooth mouse lerp — gentle pull, not jittery
+      params.mx += (tgtMx - params.mx) * 0.035;
+      params.my += (tgtMy - params.my) * 0.035;
+      gl.uniform1f(uT,    t);
+      gl.uniform2f(uR,    C.width, C.height);
+      gl.uniform2f(uM,    params.mx, params.my);
+      gl.uniform1f(uWarp, params.warp);
+      gl.uniform1f(uSpeed,params.speed);
+      gl.uniform1f(uGrid, params.grid);
+      gl.uniform1f(uPal,  params.pal);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    // ── Easter egg: GLSL Lab ─────────────────────────────────────────────
+    // Activate: press  ~  or  `  (backtick),  or triple-click the h1 title.
+    // The live GLSL source is right here in the page — edit and recompile.
+    var labEl = null;
+    var clickCount = 0, clickTimer = null;
+
+    function syncLabSliders() {
+      ['warp','speed','grid','pal'].forEach(function(k) {
+        var sl = document.getElementById('lab-sl-'+k);
+        var lv = document.getElementById('lab-lv-'+k);
+        if (sl) { sl.value = params[k]; }
+        if (lv) { lv.textContent = parseFloat(params[k]).toFixed(2); }
+        // Keep page sliders in sync too
+        var ps = document.getElementById('ctrl-'+k);
+        var pv = document.getElementById('ov-'+k);
+        if (ps) ps.value = params[k];
+        if (pv) pv.textContent = parseFloat(params[k]).toFixed(2);
+      });
+    }
+
+    function buildLab() {
+      if (labEl) {
+        labEl.style.display = labEl.style.display === 'none' ? 'block' : 'none';
+        if (labEl.style.display === 'block') syncLabSliders();
+        return;
+      }
+      labEl = document.createElement('div');
+      labEl.id = 'glsl-lab';
+      labEl.innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">' +
+          '<span style="color:#00ddaa;letter-spacing:.12em;font-size:13px;">// GLSL LAB — live fragment shader editor</span>' +
+          '<button id="lab-close" style="background:transparent;color:#9977cc;border:1px solid #4488cc;padding:4px 12px;">close&nbsp;[~]</button>' +
+        '</div>' +
+        '<div style="font-size:9px;color:#9977cc;margin-bottom:10px;letter-spacing:.06em;">' +
+          'This is the actual GLSL running behind the page. Edit it. Press Ctrl+Enter or COMPILE to apply.' +
+        '</div>' +
+        '<div style="display:flex;gap:20px 32px;flex-wrap:wrap;margin-bottom:14px;padding:12px;background:rgba(13,8,32,0.85);border:1px solid rgba(68,136,204,0.2);">' +
+          ['warp','speed','grid','pal'].map(function(k) {
+            var cfg = {warp:{min:0,max:2,step:.05},speed:{min:.1,max:3,step:.05},grid:{min:0,max:2,step:.05},pal:{min:-.5,max:.5,step:.01}}[k];
+            return '<label style="display:flex;flex-direction:column;gap:4px;min-width:130px;">' +
+              '<span style="color:#ee8833;font-size:9px;letter-spacing:.12em;">' + k.toUpperCase() +
+              ' <span id="lab-lv-' + k + '">' + parseFloat(params[k]).toFixed(2) + '</span></span>' +
+              '<input type="range" id="lab-sl-' + k + '" min="' + cfg.min + '" max="' + cfg.max + '" step="' + cfg.step + '" value="' + params[k] + '" style="accent-color:#00ddaa;width:130px;">' +
+            '</label>';
+          }).join('') +
+        '</div>' +
+        '<div style="margin-bottom:6px;color:#9977cc;font-size:9px;letter-spacing:.1em;">FRAGMENT SHADER SOURCE — edit below, Ctrl+Enter to recompile</div>' +
+        '<textarea id="lab-src" spellcheck="false">' + FS_DEFAULT.replace(/</g,'&lt;') + '</textarea>' +
+        '<div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap;">' +
+          '<button id="lab-compile" style="background:#00ddaa;color:#06040f;border:none;padding:6px 20px;">COMPILE [Ctrl+Enter]</button>' +
+          '<button id="lab-reset" style="background:transparent;color:#ee8833;border:1px solid #ee8833;padding:6px 14px;">RESET</button>' +
+          '<span id="lab-status" style="font-size:11px;color:#9977cc;"></span>' +
+        '</div>';
+      document.body.appendChild(labEl);
+
+      var srcEl = document.getElementById('lab-src');
+      // Unescape the textarea content
+      srcEl.value = FS_DEFAULT;
+      var statusEl = document.getElementById('lab-status');
+
+      function doCompile() {
+        var e = compile(srcEl.value);
+        if (e) {
+          statusEl.style.color = '#ff6666';
+          statusEl.textContent = e.split('\n').slice(0,2).join(' | ');
+        } else {
+          statusEl.style.color = '#00ddaa';
+          statusEl.textContent = 'compiled OK ✓';
+          setTimeout(function(){ if (statusEl.textContent === 'compiled OK ✓') statusEl.textContent = ''; }, 2500);
+        }
+      }
+
+      document.getElementById('lab-compile').onclick = doCompile;
+      document.getElementById('lab-reset').onclick = function() {
+        srcEl.value = FS_DEFAULT;
+        doCompile();
+        statusEl.textContent = 'reset to original';
+      };
+      document.getElementById('lab-close').onclick = function() { labEl.style.display = 'none'; };
+
+      srcEl.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); doCompile(); }
+      });
+
+      // Lab sliders sync with params AND the page sliders
+      ['warp','speed','grid','pal'].forEach(function(k) {
+        var sl = document.getElementById('lab-sl-'+k);
+        var lv = document.getElementById('lab-lv-'+k);
+        sl.addEventListener('input', function() {
+          params[k] = parseFloat(sl.value);
+          if (lv) lv.textContent = parseFloat(sl.value).toFixed(2);
+          var ps = document.getElementById('ctrl-'+k);
+          var pv = document.getElementById('ov-'+k);
+          if (ps) ps.value = params[k];
+          if (pv) pv.textContent = parseFloat(params[k]).toFixed(2);
+        });
+      });
+    }
+
+    // Keyboard trigger: ~ or `
+    document.addEventListener('keydown', function(e) {
+      if (e.key === '`' || e.key === '~') buildLab();
+    });
+
+    // Triple-click h1 trigger
+    var h1 = document.querySelector('h1');
+    if (h1) {
+      h1.title = 'triple-click to open GLSL lab';
+      h1.style.cursor = 'pointer';
+      h1.addEventListener('click', function() {
+        clickCount++;
+        if (clickTimer) clearTimeout(clickTimer);
+        if (clickCount >= 3) { clickCount = 0; buildLab(); return; }
+        clickTimer = setTimeout(function(){ clickCount = 0; }, 600);
+      });
+    }
+
+  })();
+
+  (function laneStatusPanel() {
+    var ORDER = ['live', 'test', 'dev', 'private'];
+    var laneData = null;
+    var featData = null;
+
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+    }
+
+    function isoMs(iso) {
+      if (!iso) return null;
+      var t = new Date(iso.indexOf('T') >= 0 ? iso : iso.replace(' ', 'T')).getTime();
+      return isNaN(t) ? null : t;
+    }
+
+    function ageSince(iso, kind) {
+      var t = isoMs(iso);
+      if (t === null) return '';
+      var tag = kind === 'deploy' ? 'deploy' : 'build';
+      var sec = Math.round((Date.now() - t) / 1000);
+      if (sec < 45) return 'just now';
+      if (sec < 3600) return Math.round(sec / 60) + 'm ago (' + tag + ')';
+      if (sec < 86400) return Math.round(sec / 3600) + 'h ago (' + tag + ')';
+      if (sec < 604800) return Math.round(sec / 86400) + 'd ago (' + tag + ')';
+      return Math.round(sec / 604800) + 'wk ago (' + tag + ')';
+    }
+
+    function fmtIso(iso) {
+      if (!iso) return '(unknown)';
+      try {
+        var d = new Date(iso.indexOf('T') >= 0 ? iso : iso.replace(' ', 'T'));
+        if (isNaN(d.getTime())) return iso;
+        return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+      } catch (e) { return iso; }
+    }
+
+    function renderSyncBar(data) {
+      var el = document.getElementById('laneSyncBar');
+      if (!el || !data) return;
+      var s = data.branch_sync || {};
+      var stable = data.current_stable || '?';
+      var parts = [];
+      parts.push('Current stable semver: <strong>' + esc(stable) + '</strong>');
+      if (s.live_sha_short) parts.push('live SHA <code>' + esc(String(s.live_sha_short).slice(0, 7)) + '</code>');
+      if (s.dev_sha_short && s.dev_sha_short !== s.live_sha_short) {
+        parts.push('dev SHA <code>' + esc(String(s.dev_sha_short).slice(0, 7)) + '</code>');
+      }
+      if (s.dev_ahead_of_live > 0) {
+        parts.push('dev is <strong>' + s.dev_ahead_of_live + '</strong> commit(s) ahead of live');
+        el.className = 'lane-sync-bar warn';
+      } else if (s.branches_aligned) {
+        parts.push('main and dev aligned');
+        el.className = 'lane-sync-bar';
+      } else {
+        el.className = 'lane-sync-bar warn';
+      }
+      if (s.promote_ready) parts.push('<strong>promote ready</strong> (merge dev → main)');
+      el.innerHTML = parts.join(' · ');
+    }
+
+    function renderLaneCard(lane) {
+      var cls = 'lane-card';
+      if (lane.id === 'live') cls += ' lane-live';
+      else if (lane.id === 'test' || lane.id === 'dev') cls += ' lane-dev';
+      else if (lane.id === 'private') cls += ' lane-private';
+
+      if (lane.auth_required && !lane.ok) {
+        return '<article class="' + cls + '"><div class="lane-card-head"><span class="lane-name">' + esc(lane.name) + '</span></div><p class="lane-meta">' + esc(lane.error || 'unavailable') + '</p></article>';
+      }
+
+      var host = lane.url.replace(/^https:\/\//, '');
+      var sha = lane.git_sha_short ? String(lane.git_sha_short).slice(0, 7) : '?';
+      var shaLink = lane.git_url ? '<a href="' + esc(lane.git_url) + '" target="_blank" rel="noopener">' + esc(sha) + '</a>' : esc(sha);
+      var deployAge = ageSince(lane.deployed_at, 'deploy');
+      var buildAge = ageSince(lane.built_at, 'build');
+      var ageLine = deployAge || buildAge || '';
+      if (buildAge && deployAge && buildAge !== deployAge) ageLine = deployAge + ' · ' + buildAge;
+
+      var semverLine = esc(lane.semver || '?');
+      if (lane.semver_reported && lane.semver_reported !== lane.semver) {
+        semverLine += ' <span class="dim">(api reports ' + esc(lane.semver_reported) + ')</span>';
+      }
+
+      var feats = (lane.features || []).slice(0, 8).map(function(f) {
+        return '<span class="lane-feat">' + esc(f) + '</span>';
+      }).join('');
+
+      var extra = '';
+      if (lane.promote_ready) extra = '<div class="lane-meta" style="color:var(--copper)">promote ready — dev queue ahead of live</div>';
+      if (lane.mirrored_from) extra = '<div class="lane-meta">Status mirrored from live (:aday on main)</div>';
+      if (lane.semver_note) extra += '<div class="lane-meta">' + esc(lane.semver_note) + '</div>';
+
+      return '<article class="' + cls + '" data-lane="' + esc(lane.id) + '">' +
+        '<div class="lane-card-head">' +
+          '<span class="lane-name">' + esc(lane.name) + '</span>' +
+          '<span class="lane-ver">v' + semverLine + '</span>' +
+          (ageLine ? '<span class="lane-age">' + esc(ageLine) + '</span>' : '') +
+        '</div>' +
+        '<div class="lane-meta">' +
+          '<a href="' + esc(lane.url) + '/">' + esc(host) + '</a> · track <code>:' + esc(lane.image_track || lane.track) + '</code> · branch <code>' + esc(lane.built_branch || lane.branch) + '</code><br>' +
+          'git ' + shaLink + ' · deployed ' + esc(fmtIso(lane.deployed_at)) +
+        '</div>' +
+        extra +
+        '<div class="lane-feats">' + feats + '</div>' +
+      '</article>';
+    }
+
+    function renderLanes(data) {
+      var grid = document.getElementById('laneGrid');
+      if (!grid || !data || !data.lanes) return;
+      var html = ORDER.map(function(id) {
+        return data.lanes[id] ? renderLaneCard(data.lanes[id]) : '';
+      }).join('');
+      grid.innerHTML = html;
+      var foot = document.getElementById('laneStatusFoot');
+      if (foot) {
+        foot.textContent = 'Snapshot generated ' + fmtIso(data.generated_at) + ' UTC-ish · source: docs/lane-status.json (CI refresh on showcase deploy)';
+      }
+    }
+
+    function renderChangelog(feat) {
+      var el = document.getElementById('changelogVersions');
+      if (!el || !feat || !feat.versions) return;
+      el.innerHTML = feat.versions.map(function(v) {
+        var items = (v.features || []).map(function(f) { return '<li>' + esc(f) + '</li>'; }).join('');
+        return '<div class="changelog-ver"><h3>Version ' + esc(v.semver) + ' — ' + esc(v.title) + '</h3><ul>' + items + '</ul></div>';
+      }).join('');
+    }
+
+    function refreshAges() {
+      if (!laneData) return;
+      renderLanes(laneData);
+    }
+
+    Promise.all([
+      fetch('lane-status.json', { cache: 'no-store' }).then(function(r) { return r.ok ? r.json() : null; }),
+      fetch('lane-features.json', { cache: 'no-store' }).then(function(r) { return r.ok ? r.json() : null; })
+    ]).then(function(res) {
+      laneData = res[0];
+      featData = res[1];
+      if (laneData) {
+        renderSyncBar(laneData);
+        renderLanes(laneData);
+      } else {
+        var bar = document.getElementById('laneSyncBar');
+        if (bar) bar.textContent = 'lane-status.json unavailable';
+      }
+      if (featData) renderChangelog(featData);
+      setInterval(refreshAges, 60000);
+    }).catch(function() {
+      var bar = document.getElementById('laneSyncBar');
+      if (bar) bar.textContent = 'Failed to load lane status';
+    });
+  })();
+
+  </script>
+</body>
+</html>

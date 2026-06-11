@@ -1,0 +1,16 @@
+{
+  "sourcePaths": ["shaders"],
+  "indexPath": "shader-index.json",
+  "vfxRoot": "shaders",
+  "previewWidth": 854,
+  "previewHeight": 480,
+  "targetFps": 30,
+  "enablePipeline": false,
+  "enableOutput": false,
+  "enableGit": false,
+  "showThumbnails": true,
+  "listViewMode": "list",
+  "skipSplash": false,
+  "autoOptimizeQuality": true,
+  "watchFolders": false
+}

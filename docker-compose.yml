@@ -1,0 +1,95 @@
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: edge_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
+      - ./nginx/auth:/etc/nginx/auth:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - macroverse_test
+      - macroverse_live
+      - macroverse_aday
+      - artbastard_test
+      - artbastard_live
+    networks:
+      - edge
+
+  macroverse_test:
+    image: ghcr.io/aday1/macroverse.aday.net.au/macroverse:dev
+    restart: unless-stopped
+    environment:
+      - MACROVERSE_HOST_MODE=cloud
+    expose:
+      - "8765"
+    volumes:
+      - macroverse_test_data:/app/data
+      - macroverse_test_shaders:/app/shaders-extra
+    networks:
+      - edge
+
+  macroverse_live:
+    image: ghcr.io/aday1/macroverse.aday.net.au/macroverse:live
+    restart: unless-stopped
+    environment:
+      - MACROVERSE_HOST_MODE=cloud
+    expose:
+      - "8765"
+    volumes:
+      - macroverse_live_data:/app/data
+      - macroverse_live_shaders:/app/shaders-extra
+    networks:
+      - edge
+
+  macroverse_aday:
+    image: ghcr.io/aday1/macroverse.aday.net.au/macroverse:aday
+    restart: unless-stopped
+    environment:
+      - MACROVERSE_HOST_MODE=cloud
+    expose:
+      - "8765"
+    volumes:
+      - macroverse_aday_data:/app/data
+      # Full private library synced from this machine (ops/deploy-aday-shaders.ps1); never in public git
+      - ./private-data/aday-shaders:/app/shaders
+    networks:
+      - edge
+
+  artbastard_test:
+    image: ghcr.io/aday1/artbastard.aday.net.au/artbastard:dev
+    restart: unless-stopped
+    expose:
+      - "3030"
+    volumes:
+      - artbastard_test_data:/app/data
+    networks:
+      - edge
+
+  artbastard_live:
+    image: ghcr.io/aday1/artbastard.aday.net.au/artbastard:live
+    restart: unless-stopped
+    expose:
+      - "3030"
+    volumes:
+      - artbastard_live_data:/app/data
+    networks:
+      - edge
+
+volumes:
+  macroverse_test_data:
+  macroverse_test_shaders:
+  macroverse_live_data:
+  macroverse_live_shaders:
+  macroverse_aday_data:
+  macroverse_aday_assets:
+  artbastard_test_data:
+  artbastard_live_data:
+
+networks:
+  edge:
+    driver: bridge
