@@ -1,21 +1,25 @@
 /*{
     "DESCRIPTION": "Energy Field",
-    "CREDIT": "Macroverse — Microvirtuosity",
+    "CREDIT": "Aday / MacroVerse Origin",
     "ISFVSN": "2.0",
     "CATEGORIES": ["macroverse"],
-    "TAGS": ["macroverse-set", "cosmic", "energy", "origin"],
+    "TAGS": ["macroverse", "macroverse-origin", "chapter-01", "cosmic", "ambient"],
     "INPUTS": [
         { "NAME": "useFrameIndex", "TYPE": "bool", "DEFAULT": 0, "LABEL": "Use frame index" },
         { "NAME": "fps", "TYPE": "float", "DEFAULT": 60.0, "MIN": 24.0, "MAX": 120.0 },
-        { "NAME": "waveIntensity", "TYPE": "float", "DEFAULT": 1.0, "MIN": 0.1, "MAX": 3.0, "LABEL": "Wave intensity" },
-        { "NAME": "rippleSpeed", "TYPE": "float", "DEFAULT": 1.0, "MIN": 0.1, "MAX": 4.0, "LABEL": "Ripple speed" },
-        { "NAME": "colorIntensity", "TYPE": "float", "DEFAULT": 1.0, "MIN": 0.2, "MAX": 2.5, "LABEL": "Color intensity" },
-        { "NAME": "mouseInfluence", "TYPE": "float", "DEFAULT": 0.35, "MIN": 0.0, "MAX": 1.0, "LABEL": "Mouse drift" }
+        { "NAME": "rippleAmp", "TYPE": "float", "DEFAULT": 0.35, "MIN": 0.0, "MAX": 1.0, "LABEL": "Ripple amplitude" },
+        { "NAME": "driftSpeed", "TYPE": "float", "DEFAULT": 0.12, "MIN": 0.0, "MAX": 0.5, "LABEL": "Drift speed" },
+        { "NAME": "fieldScale", "TYPE": "float", "DEFAULT": 2.4, "MIN": 0.5, "MAX": 5.0, "LABEL": "Field scale" },
+        { "NAME": "voidDepth", "TYPE": "float", "DEFAULT": 0.85, "MIN": 0.0, "MAX": 1.0, "LABEL": "Void depth" }
     ]
 }*/
 
 #define time (useFrameIndex ? (float(FRAMEINDEX) / fps) : TIME)
 #define resolution RENDERSIZE
+
+#ifdef GL_ES
+precision highp float;
+#endif
 
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -32,30 +36,42 @@ float noise(vec2 p) {
     return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
 }
 
-void main(void) {
+float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    for (int i = 0; i < 5; i++) {
+        v += a * noise(p);
+        p *= 2.1;
+        a *= 0.5;
+    }
+    return v;
+}
+
+void main() {
     vec2 uv = gl_FragCoord.xy / resolution.xy;
-    vec2 aspect = vec2(resolution.x / resolution.y, 1.0);
-    vec2 p = (uv - 0.5) * aspect;
+    vec2 p = (uv - 0.5) * vec2(resolution.x / resolution.y, 1.0) * fieldScale;
+    float t = time * driftSpeed;
 
-    float t = time * rippleSpeed;
-    vec2 mouse = vec2(mouseX, mouseY) * 2.0 - 1.0;
-    vec2 pos = p + mouse * mouseInfluence * 0.25;
+    vec2 warp = vec2(
+        fbm(p * 0.7 + vec2(t * 0.15, 0.0)),
+        fbm(p * 0.7 + vec2(0.0, t * 0.12) + 4.2)
+    );
+    p += (warp - 0.5) * rippleAmp * 0.6;
 
-    float field = 0.0;
-    field += sin(pos.x * cos(t * 0.8) * 18.0 + pos.y * 2.5);
-    field += cos(pos.y * sin(t * 0.6) * 14.0 - pos.x * 3.0);
-    field += sin((pos.x + pos.y) * sin(t * 0.35) * 9.0);
-    field += noise(pos * 4.0 + t * 0.15) * 2.0 - 1.0;
-    field *= sin(t * 0.5) * 0.35 + 0.65;
-    field *= waveIntensity;
+    float field = fbm(p + t * 0.08);
+    float ripple = sin(p.x * 3.0 + t * 0.4) * sin(p.y * 2.5 - t * 0.35);
+    field += ripple * rippleAmp * 0.08;
 
-    float glow = smoothstep(0.2, 1.4, abs(field));
-    vec3 deep = vec3(0.02, 0.04, 0.14);
-    vec3 teal = vec3(0.05, 0.55, 0.72);
-    vec3 violet = vec3(0.45, 0.12, 0.65);
-    vec3 col = mix(deep, mix(teal, violet, 0.5 + 0.5 * sin(field * 1.7 + t)), glow);
-    col += vec3(0.08, 0.18, 0.35) * (0.35 + 0.65 * noise(uv * 3.0 + t * 0.05));
-    col *= colorIntensity;
+    vec3 deep = vec3(0.01, 0.005, 0.03) * voidDepth;
+    vec3 energy = mix(
+        vec3(0.02, 0.08, 0.12),
+        vec3(0.15, 0.35, 0.55),
+        smoothstep(0.35, 0.75, field)
+    );
+    vec3 glow = vec3(0.0, 0.45, 0.38) * pow(max(field - 0.5, 0.0), 3.0) * rippleAmp;
+
+    vec3 col = deep + energy * (0.25 + 0.55 * field) + glow;
+    col *= 0.92 + 0.08 * sin(t * 0.3 + field * 6.28);
 
     gl_FragColor = vec4(col, 1.0);
 }

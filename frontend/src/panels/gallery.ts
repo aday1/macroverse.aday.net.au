@@ -681,6 +681,12 @@ function buildToolbar(): void {
       if (dirCat === 'noise' && !sets.includes('vj-ambient')) sets.push('vj-ambient');
       if (dirCat === 'water' && !sets.includes('vj-ambient') && !sets.includes('vj-organic')) sets.push('vj-ambient');
       if (dirCat === 'space' && !sets.includes('vj-cosmic')) sets.push('vj-cosmic');
+      if (dirCat === 'macroverse') {
+        if (!sets.includes('macroverse-origin')) sets.push('macroverse-origin');
+        if (!sets.includes('vj-cosmic')) sets.push('vj-cosmic');
+        if (!sets.includes('vj-ambient')) sets.push('vj-ambient');
+        if (e.format === 'isf' && !sets.includes('vj-wire-ready')) sets.push('vj-wire-ready');
+      }
       if (dirCat === 'abstract' && !sets.includes('vj-ambient') && !sets.includes('vj-geometric')) sets.push('vj-ambient');
       if (dirCat === 'color' && !sets.includes('vj-colour')) sets.push('vj-colour');
       if (dirCat === 'concept' && !GALLERY_PRESET_SETS.some((s) => sets.includes(s))) sets.push('vj-ambient');

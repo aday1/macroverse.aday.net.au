@@ -92,6 +92,7 @@ export function initWirePipeline(): void {
             <option value="vj-ambient">vj-ambient</option>
             <option value="vj-techno">vj-techno</option>
             <option value="vj-cosmic">vj-cosmic</option>
+            <option value="macroverse-origin">macroverse-origin</option>
             <option value="vj-glitch">vj-glitch</option>
             <option value="vj-geometric">vj-geometric</option>
             <option value="vj-organic">vj-organic</option>

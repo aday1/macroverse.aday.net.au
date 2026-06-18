@@ -42,3 +42,9 @@ color/smpte-bars.fs	<- isf/SMPTE-ColorBars.fs
 misc/feedback-blur.fs	<- isf/feedback-blur.fs
 misc/chroma-warp.fs	<- isf/TextureFX-ChromaWarp.fs
 misc/spinner-glow.fs	<- isf/Spinner.fs
+macroverse/energy-field.fs	<- authored in-repo (MacroVerse Origin ch.1)
+macroverse/particles.fs	<- authored in-repo (MacroVerse Origin ch.2)
+macroverse/blue-giants.fs	<- authored in-repo (MacroVerse Origin ch.3)
+macroverse/orbits.fs	<- authored in-repo (MacroVerse Origin ch.4)
+macroverse/life-as-we-know-it.fs	<- authored in-repo (MacroVerse Origin ch.5)
+macroverse/living-our-best-life.fs	<- authored in-repo (MacroVerse Origin ch.6)

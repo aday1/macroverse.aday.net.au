@@ -475,7 +475,106 @@
     }
     .shader-controls .ctrl-val { color: var(--teal); }
     .shader-controls input[type=range] {
-      width: min(100%, 148px); accent-color: var(--teal); cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      width: min(100%, 168px);
+      height: 10px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, rgba(68,136,204,0.15), rgba(0,221,170,0.25), rgba(136,51,204,0.15));
+      border: 1px solid rgba(0,221,170,0.22);
+      cursor: pointer;
+      transition: box-shadow 0.25s ease, filter 0.25s ease;
+    }
+    .shader-controls input[type=range]:hover {
+      box-shadow: 0 0 12px rgba(0,221,170,0.35);
+    }
+    .shader-controls input[type=range].slider-active,
+    .shader-controls input[type=range]:active {
+      box-shadow: 0 0 18px rgba(0,221,170,0.65), 0 0 32px rgba(136,51,204,0.35);
+      filter: brightness(1.15);
+      animation: slider-sparkle 0.45s ease-in-out infinite alternate;
+    }
+    .shader-controls input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff 0%, var(--teal) 45%, #008866 100%);
+      border: 2px solid rgba(255,255,255,0.55);
+      box-shadow: 0 0 10px rgba(0,221,170,0.7), 0 0 20px rgba(0,221,170,0.35);
+      cursor: grab;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .shader-controls input[type=range].slider-active::-webkit-slider-thumb,
+    .shader-controls input[type=range]:active::-webkit-slider-thumb {
+      transform: scale(1.18);
+      box-shadow: 0 0 14px #fff, 0 0 24px var(--teal), 0 0 40px rgba(136,51,204,0.5);
+      cursor: grabbing;
+    }
+    .shader-controls input[type=range]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff 0%, var(--teal) 45%, #008866 100%);
+      border: 2px solid rgba(255,255,255,0.55);
+      box-shadow: 0 0 10px rgba(0,221,170,0.7), 0 0 20px rgba(0,221,170,0.35);
+      cursor: grab;
+    }
+    .shader-controls input[type=range].slider-active::-moz-range-thumb,
+    .shader-controls input[type=range]:active::-moz-range-thumb {
+      transform: scale(1.18);
+      box-shadow: 0 0 14px #fff, 0 0 24px var(--teal), 0 0 40px rgba(136,51,204,0.5);
+    }
+    .shader-controls input[type=range]::-moz-range-track {
+      height: 10px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, rgba(68,136,204,0.15), rgba(0,221,170,0.25), rgba(136,51,204,0.15));
+      border: 1px solid rgba(0,221,170,0.22);
+    }
+    @keyframes slider-sparkle {
+      0% { filter: brightness(1.05) saturate(1.1); }
+      100% { filter: brightness(1.25) saturate(1.35); }
+    }
+    .hero-pipeline-inline {
+      margin-top: 0.75rem;
+      border-top: 1px solid rgba(0,221,170,0.18);
+      padding-top: 0.65rem;
+    }
+    .hero-pipeline-inline video {
+      width: 100%;
+      display: block;
+      border-radius: 6px;
+      border: 1px solid rgba(68,136,204,0.28);
+      background: var(--void);
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    .hero-pipeline-inline figcaption {
+      margin-top: 0.4rem;
+      font-size: 0.68rem;
+      line-height: 1.45;
+      color: #c9b8e8;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .hero-pipeline-inline .demo-tag {
+      display: inline-block;
+      margin-right: 0.4rem;
+      color: var(--copper);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.6rem;
+      font-weight: 700;
+    }
+    .hero-panel-demo {
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-panel-demo .shader-controls.hero-shader {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     .shader-controls .ctrl-hint {
       margin-top: 0.45rem; text-align: center;
@@ -753,6 +852,12 @@
               <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
               <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex &rarr; Ollama &rarr; AI &middot; A/B deck &middot; crossfader &middot; shader carousel with thumbnails &middot; startup splash shows VJ + audience QRs &middot; gig sessions (stream QR + co-VJ join) &middot; WebXR VR on Quest/headsets (audience dome or VJ controller) &middot; tag &middot; search &middot; perform your whole library &middot; export to Wire on desktop</span></span>
             </p>
+            <figure class="hero-pipeline-inline" aria-label="GLSL to Resolume Wire pipeline">
+              <video src="videos/pipeline-flow.mp4" poster="videos/pipeline-flow-poster.webp"
+                     autoplay loop muted playsinline preload="metadata"
+                     width="960" height="540"></video>
+              <figcaption><span class="demo-tag">Pipeline</span>GLSL &rarr; ISF JSON &rarr; <code>.wire</code> &rarr; Resolume. One binary, no installer.</figcaption>
+            </figure>
           </div>
         </div>
 
@@ -1505,10 +1610,19 @@ ffmpeg -i http://localhost:8765/api/output/macrocam/stream -f v4l2 /dev/video0
       var sl = document.getElementById(id);
       var ov = document.getElementById(ovId);
       if (!sl) return;
+      var clearGlow = null;
+      function pulseGlow() {
+        sl.classList.add('slider-active');
+        if (clearGlow) clearTimeout(clearGlow);
+        clearGlow = setTimeout(function() { sl.classList.remove('slider-active'); }, 420);
+      }
       sl.addEventListener('input', function() {
         params[key] = parseFloat(sl.value);
         if (ov) ov.textContent = parseFloat(sl.value).toFixed(dp !== undefined ? dp : 2);
+        pulseGlow();
       });
+      sl.addEventListener('pointerdown', pulseGlow);
+      sl.addEventListener('touchstart', pulseGlow, { passive: true });
     }
     bindSlider('ctrl-warp',  'ov-warp',  'warp',  2);
     bindSlider('ctrl-speed', 'ov-speed', 'speed', 2);

@@ -1,67 +1,82 @@
 /*{
     "DESCRIPTION": "Orbits",
-    "CREDIT": "Macroverse — Microvirtuosity",
+    "CREDIT": "Aday / MacroVerse Origin",
     "ISFVSN": "2.0",
     "CATEGORIES": ["macroverse"],
-    "TAGS": ["macroverse-set", "galaxy", "orbit", "planets"],
+    "TAGS": ["macroverse", "macroverse-origin", "chapter-04", "cosmic", "orbit"],
     "INPUTS": [
         { "NAME": "useFrameIndex", "TYPE": "bool", "DEFAULT": 0, "LABEL": "Use frame index" },
         { "NAME": "fps", "TYPE": "float", "DEFAULT": 60.0, "MIN": 24.0, "MAX": 120.0 },
-        { "NAME": "armCount", "TYPE": "float", "DEFAULT": 3.0, "MIN": 2.0, "MAX": 5.0, "LABEL": "Spiral arms" },
-        { "NAME": "spin", "TYPE": "float", "DEFAULT": 0.35, "MIN": 0.05, "MAX": 1.5, "LABEL": "Galaxy spin" },
-        { "NAME": "orbitGlow", "TYPE": "float", "DEFAULT": 1.0, "MIN": 0.3, "MAX": 2.0, "LABEL": "Orbit glow" }
+        { "NAME": "orbitSpeed", "TYPE": "float", "DEFAULT": 0.35, "MIN": 0.0, "MAX": 1.5, "LABEL": "Orbit speed" },
+        { "NAME": "bodyCount", "TYPE": "float", "DEFAULT": 5.0, "MIN": 2.0, "MAX": 8.0, "LABEL": "Body count" },
+        { "NAME": "trailLength", "TYPE": "float", "DEFAULT": 0.55, "MIN": 0.0, "MAX": 1.0, "LABEL": "Trail length" },
+        { "NAME": "galaxyTilt", "TYPE": "float", "DEFAULT": 0.25, "MIN": -0.5, "MAX": 0.5, "LABEL": "Galaxy tilt" }
     ]
 }*/
 
 #define time (useFrameIndex ? (float(FRAMEINDEX) / fps) : TIME)
 #define resolution RENDERSIZE
 
-float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+#ifdef GL_ES
+precision highp float;
+#endif
+
+const float PI = 3.14159265;
+
+float hash(float n) {
+    return fract(sin(n) * 43758.5453);
 }
 
-void main(void) {
+float orbitRing(vec2 p, vec2 center, float rx, float ry, float angle, float width) {
+    vec2 d = p - center;
+    float c = cos(angle);
+    float s = sin(angle);
+    d = mat2(c, -s, s, c) * d;
+    float e = length(vec2(d.x / rx, d.y / ry)) - 1.0;
+    return smoothstep(width, 0.0, abs(e));
+}
+
+vec3 planet(vec2 p, vec2 pos, float size, vec3 col) {
+    float d = length(p - pos);
+    float body = smoothstep(size, size * 0.3, d);
+    float glow = exp(-d * d / (size * size * 4.0)) * 0.3;
+    return col * (body + glow);
+}
+
+void main() {
     vec2 uv = gl_FragCoord.xy / resolution.xy;
-    vec2 aspect = vec2(resolution.x / resolution.y, 1.0);
-    vec2 p = (uv - 0.5) * aspect * 2.0;
-    float t = time * spin;
+    float aspect = resolution.x / resolution.y;
+    vec2 p = (uv - 0.5) * vec2(aspect, 1.0);
+    float t = time * orbitSpeed;
 
-    float r = length(p);
-    float a = atan(p.y, p.x);
+    vec3 col = vec3(0.01, 0.015, 0.04);
 
-    float spiral = 0.0;
-    for (float arm = 0.0; arm < 5.0; arm += 1.0) {
-        if (arm >= armCount) break;
-        float offset = arm * 6.28318 / armCount;
-        float twist = a + offset - r * 3.5 + t * 0.8;
-        spiral += pow(0.55 + 0.45 * sin(twist * 5.0), 3.0) * exp(-r * 1.2);
+    float tilt = galaxyTilt;
+    vec2 gp = p;
+    gp.x += gp.y * tilt;
+    float spiral = sin(atan(gp.y, gp.x) * 3.0 + length(gp) * 8.0 - t * 0.5);
+    col += vec3(0.08, 0.05, 0.15) * smoothstep(0.2, 0.9, spiral * 0.5 + 0.5) * exp(-length(gp) * 1.2) * 0.4;
+
+    int bodies = int(floor(bodyCount + 0.5));
+    for (int i = 0; i < 8; i++) {
+        if (i >= bodies) break;
+        float fi = float(i);
+        float seed = hash(fi * 13.7);
+        vec2 center = vec2(cos(seed * 6.28) * 0.1, sin(seed * 4.2) * 0.08);
+        float rx = 0.15 + fi * 0.08;
+        float ry = rx * (0.65 + seed * 0.3);
+        float ang = t * (0.8 + seed) + fi * 1.2;
+
+        float ring = orbitRing(p, center, rx, ry, ang * 0.15, 0.008 + trailLength * 0.012);
+        col += vec3(0.2, 0.35, 0.55) * ring * (0.4 + 0.6 * trailLength);
+
+        vec2 orbitPos = center + vec2(cos(ang), sin(ang)) * rx;
+        vec3 pcol = mix(vec3(0.5, 0.7, 1.0), vec3(1.0, 0.8, 0.5), hash(fi + 2.0));
+        col += planet(p, orbitPos, 0.012 + seed * 0.01, pcol);
     }
 
-    vec3 col = vec3(0.01, 0.02, 0.06);
-    col += vec3(0.15, 0.25, 0.55) * spiral * 0.25 * orbitGlow;
+    col += vec3(0.15, 0.2, 0.35) * exp(-length(p) * 0.8) * 0.15;
+    col = col / (1.0 + col * 0.4);
 
-    float rings = 0.0;
-    for (float i = 1.0; i <= 6.0; i += 1.0) {
-        float rad = i * 0.22;
-        float band = exp(-pow((r - rad) * 12.0, 2.0));
-        float wobble = sin(a * (3.0 + i) + t * (0.5 + i * 0.1)) * 0.5 + 0.5;
-        rings += band * wobble * 0.12;
-    }
-    col += vec3(0.4, 0.55, 0.95) * rings * orbitGlow;
-
-    float core = exp(-r * r * 8.0);
-    col += vec3(1.0, 0.9, 0.7) * core * 0.9;
-
-    float dots = 0.0;
-    vec2 g = floor(p * 35.0);
-    vec2 f = fract(p * 35.0) - 0.5;
-    float h = hash(g);
-    if (h > 0.82 && r > 0.15 && r < 1.3) {
-        float d = length(f);
-        dots = exp(-d * d * 80.0) * (0.6 + 0.4 * sin(t * 2.0 + h * 30.0));
-    }
-    col += vec3(0.7, 0.85, 1.0) * dots;
-
-    col = col / (col + vec3(0.35));
-    gl_FragColor = vec4(pow(col, vec3(0.92)), 1.0);
+    gl_FragColor = vec4(col, 1.0);
 }

@@ -1,65 +1,65 @@
 /*{
     "DESCRIPTION": "Blue Giants",
-    "CREDIT": "Macroverse — Microvirtuosity",
+    "CREDIT": "Aday / MacroVerse Origin",
     "ISFVSN": "2.0",
     "CATEGORIES": ["macroverse"],
-    "TAGS": ["macroverse-set", "stars", "blue", "fusion"],
+    "TAGS": ["macroverse", "macroverse-origin", "chapter-03", "cosmic", "stars"],
     "INPUTS": [
         { "NAME": "useFrameIndex", "TYPE": "bool", "DEFAULT": 0, "LABEL": "Use frame index" },
         { "NAME": "fps", "TYPE": "float", "DEFAULT": 60.0, "MIN": 24.0, "MAX": 120.0 },
-        { "NAME": "starCount", "TYPE": "float", "DEFAULT": 18.0, "MIN": 6.0, "MAX": 40.0, "LABEL": "Giant count" },
-        { "NAME": "ferocity", "TYPE": "float", "DEFAULT": 1.0, "MIN": 0.3, "MAX": 2.5, "LABEL": "Surface ferocity" },
-        { "NAME": "filament", "TYPE": "float", "DEFAULT": 0.6, "MIN": 0.0, "MAX": 1.5, "LABEL": "Gas filaments" }
+        { "NAME": "starMass", "TYPE": "float", "DEFAULT": 3.0, "MIN": 1.0, "MAX": 6.0, "LABEL": "Star mass" },
+        { "NAME": "coreIntensity", "TYPE": "float", "DEFAULT": 1.2, "MIN": 0.3, "MAX": 2.5, "LABEL": "Core intensity" },
+        { "NAME": "blueBias", "TYPE": "float", "DEFAULT": 0.85, "MIN": 0.0, "MAX": 1.0, "LABEL": "Blue bias" },
+        { "NAME": "collapse", "TYPE": "float", "DEFAULT": 0.4, "MIN": 0.0, "MAX": 1.0, "LABEL": "Collapse" }
     ]
 }*/
 
 #define time (useFrameIndex ? (float(FRAMEINDEX) / fps) : TIME)
 #define resolution RENDERSIZE
 
+#ifdef GL_ES
+precision highp float;
+#endif
+
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
 }
 
-vec2 starPos(vec2 id, float t) {
-    vec2 seed = vec2(hash(id), hash(id + 17.3));
-    float pulse = sin(t * 0.7 + seed.x * 12.0) * 0.03;
-    return (seed - 0.5) * 1.6 + vec2(pulse, -pulse * 0.5);
+vec3 blueGiant(vec2 uv, vec2 center, float radius, float phase) {
+    vec2 d = uv - center;
+    float dist = length(d);
+    float core = exp(-dist * dist / (radius * radius * 0.08));
+    float corona = exp(-dist / (radius * 0.35)) * 0.4;
+    float flare = exp(-abs(d.x) * 12.0 / radius) * exp(-abs(d.y) * 8.0 / radius) * 0.15;
+    float pulse = 0.85 + 0.15 * sin(time * 1.5 + phase);
+
+    vec3 hot = mix(vec3(0.6, 0.75, 1.0), vec3(0.35, 0.55, 1.0), blueBias);
+    vec3 white = vec3(0.85, 0.92, 1.0);
+    return mix(hot, white, core) * (core * 2.5 + corona + flare) * pulse * coreIntensity;
 }
 
-void main(void) {
+void main() {
     vec2 uv = gl_FragCoord.xy / resolution.xy;
-    vec2 aspect = vec2(resolution.x / resolution.y, 1.0);
-    vec2 p = (uv - 0.5) * aspect;
-    float t = time;
+    float aspect = resolution.x / resolution.y;
+    vec2 p = (uv - 0.5) * vec2(aspect, 1.0);
 
-    vec3 col = vec3(0.01, 0.02, 0.08);
+    vec3 col = vec3(0.005, 0.008, 0.025);
 
-    float fil = 0.0;
-    for (int i = 0; i < 3; i++) {
-        float fi = float(i);
-        vec2 q = p * (2.0 + fi) + vec2(t * 0.05, t * 0.03);
-        fil += abs(sin(q.x * 5.0 + sin(q.y * 4.0))) * 0.08;
-    }
-    col += vec3(0.1, 0.25, 0.9) * fil * filament;
+    float baseR = 0.12 * starMass;
+    col += blueGiant(p, vec2(-0.35, 0.15) + vec2(sin(time * 0.08), cos(time * 0.06)) * 0.02,
+        baseR * 0.7 * (1.0 - collapse * 0.15 * sin(time * 0.4)), 0.0);
+    col += blueGiant(p, vec2(0.28, -0.22) + vec2(sin(time * 0.08 + 1.0), cos(time * 0.06 + 2.0)) * 0.02,
+        baseR * 0.85 * (1.0 - collapse * 0.15 * sin(time * 0.4 + 1.7)), 2.1);
+    col += blueGiant(p, vec2(0.05, 0.32) + vec2(sin(time * 0.08 + 2.0), cos(time * 0.06 + 4.0)) * 0.02,
+        baseR * 1.0 * (1.0 - collapse * 0.15 * sin(time * 0.4 + 3.4)), 4.2);
+    col += blueGiant(p, vec2(-0.15, -0.35) + vec2(sin(time * 0.08 + 3.0), cos(time * 0.06 + 6.0)) * 0.02,
+        baseR * 1.15 * (1.0 - collapse * 0.15 * sin(time * 0.4 + 5.1)), 6.3);
+    col += blueGiant(p, vec2(0.42, 0.08) + vec2(sin(time * 0.08 + 4.0), cos(time * 0.06 + 8.0)) * 0.02,
+        baseR * 1.3 * (1.0 - collapse * 0.15 * sin(time * 0.4 + 6.8)), 8.4);
 
-    float n = floor(starCount);
-    for (float i = 0.0; i < 40.0; i += 1.0) {
-        if (i >= n) break;
-        vec2 id = vec2(i, floor(i * 0.37));
-        vec2 sp = starPos(id, t);
-        float mass = 0.5 + hash(id + 3.1);
-        vec2 d = p - sp;
-        float dist = length(d);
+    float vign = 1.0 - length(p) * collapse * 0.35;
+    col *= max(vign, 0.4);
+    col = col / (1.0 + col * 0.5);
 
-        float core = exp(-dist * dist / (0.002 + 0.004 * mass));
-        float corona = exp(-dist / (0.08 + 0.12 * mass)) * 0.35;
-        float flare = abs(sin(atan(d.y, d.x) * 8.0 + t * 3.0 * ferocity)) * corona;
-
-        vec3 blue = mix(vec3(0.55, 0.75, 1.0), vec3(0.15, 0.45, 1.0), mass);
-        vec3 hot = vec3(0.85, 0.95, 1.0);
-        col += mix(blue, hot, core) * (core * 2.5 + corona + flare) * ferocity;
-    }
-
-    col = col / (col + vec3(0.6));
-    gl_FragColor = vec4(pow(col, vec3(0.95)), 1.0);
+    gl_FragColor = vec4(col, 1.0);
 }

@@ -1,729 +1,507 @@
 [
   {
     "id": 1,
-    "path": "shaders/isf/TextureFX-ChromaWarp.fs",
-    "name": "TextureFX-ChromaWarp",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/misc/chroma-warp.fs",
+    "name": "chroma-warp",
+    "category": "misc",
+    "tags": [
+      "misc"
+    ]
   },
   {
     "id": 2,
-    "path": "shaders/glsl/Crystal-Sphere.frag",
-    "name": "Crystal-Sphere",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/abstract/brush-strokes.fs",
+    "name": "brush-strokes",
+    "category": "abstract",
+    "tags": [
+      "abstract"
+    ]
   },
   {
     "id": 3,
-    "path": "shaders/glsl/Cyber-Fractal.frag",
-    "name": "Cyber-Fractal",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/abstract/gold-waves.fs",
+    "name": "gold-waves",
+    "category": "abstract",
+    "tags": [
+      "abstract"
+    ]
   },
   {
     "id": 4,
-    "path": "shaders/glsl/Neon-Torus.frag",
-    "name": "Neon-Torus",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/abstract/sine-waves.fs",
+    "name": "sine-waves",
+    "category": "abstract",
+    "tags": [
+      "abstract"
+    ]
   },
   {
     "id": 5,
-    "path": "shaders/glsl/NeonWires.frag",
-    "name": "NeonWires",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/color/color-bleed.fs",
+    "name": "color-bleed",
+    "category": "color",
+    "tags": [
+      "color"
+    ]
   },
   {
     "id": 6,
-    "path": "shaders/glsl/TestRename-Demo.frag",
-    "name": "TestRename-Demo",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/color/gradient-pulse.fs",
+    "name": "gradient-pulse",
+    "category": "color",
+    "tags": [
+      "color"
+    ]
   },
   {
     "id": 7,
-    "path": "shaders/glsl/checker.frag",
-    "name": "checker",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/color/smpte-bars.fs",
+    "name": "smpte-bars",
+    "category": "color",
+    "tags": [
+      "color"
+    ]
   },
   {
     "id": 8,
-    "path": "shaders/glsl/circle.frag",
-    "name": "circle",
-    "category": "glsl",
+    "path": "shaders/starter-pack/debug-sampler-uv-visual.fs",
+    "name": "debug-sampler-uv-visual",
+    "category": "starter-pack",
     "tags": []
   },
   {
     "id": 9,
-    "path": "shaders/glsl/demoscene-unicorn.frag",
-    "name": "demoscene-unicorn",
-    "category": "glsl",
+    "path": "shaders/starter-pack/debug-samplers-checker.fs",
+    "name": "debug-samplers-checker",
+    "category": "starter-pack",
     "tags": []
   },
   {
     "id": 10,
-    "path": "shaders/glsl/gradient.frag",
-    "name": "gradient",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/fractal/cyber-fractal.frag",
+    "name": "cyber-fractal",
+    "category": "fractal",
+    "tags": [
+      "fractal"
+    ]
   },
   {
     "id": 11,
-    "path": "shaders/glsl/noise.frag",
-    "name": "noise",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/fractal/road-to-fractal.fs",
+    "name": "road-to-fractal",
+    "category": "fractal",
+    "tags": [
+      "fractal"
+    ]
   },
   {
     "id": 12,
-    "path": "shaders/glsl/plasma.frag",
-    "name": "plasma",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/fractal/star-nest.fs",
+    "name": "star-nest",
+    "category": "fractal",
+    "tags": [
+      "fractal"
+    ]
   },
   {
     "id": 13,
-    "path": "shaders/glsl/rainbow.frag",
-    "name": "rainbow",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/geometric/crystal-sphere.frag",
+    "name": "crystal-sphere",
+    "category": "geometric",
+    "tags": [
+      "geometric"
+    ]
   },
   {
     "id": 14,
-    "path": "shaders/glsl/solid-red.frag",
-    "name": "solid-red",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/geometric/disc-orbit.fs",
+    "name": "disc-orbit",
+    "category": "geometric",
+    "tags": [
+      "geometric"
+    ]
   },
   {
     "id": 15,
-    "path": "shaders/glsl/spiral.frag",
-    "name": "spiral",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/geometric/mystify-lines.fs",
+    "name": "mystify-lines",
+    "category": "geometric",
+    "tags": [
+      "geometric"
+    ]
   },
   {
     "id": 16,
-    "path": "shaders/glsl/test-basic.frag",
-    "name": "test-basic",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/geometric/neon-torus.frag",
+    "name": "neon-torus",
+    "category": "geometric",
+    "tags": [
+      "geometric"
+    ]
   },
   {
     "id": 17,
-    "path": "shaders/glsl/texture-blend.frag",
-    "name": "texture-blend",
-    "category": "glsl",
+    "path": "shaders/starter-pack/gradient.frag",
+    "name": "gradient",
+    "category": "starter-pack",
     "tags": []
   },
   {
     "id": 18,
-    "path": "shaders/glsl/tunnel.frag",
-    "name": "tunnel",
-    "category": "glsl",
-    "tags": []
+    "path": "shaders/starter-pack/grid/matrix-rain.fs",
+    "name": "matrix-rain",
+    "category": "grid",
+    "tags": [
+      "grid"
+    ]
   },
   {
     "id": 19,
-    "path": "shaders/isf/AllWaveForms.fs",
-    "name": "AllWaveForms",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/grid/neon-xy-grid.fs",
+    "name": "neon-xy-grid",
+    "category": "grid",
+    "tags": [
+      "grid"
+    ]
   },
   {
     "id": 20,
-    "path": "shaders/isf/Bubbles.fs",
-    "name": "Bubbles",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/grid/voronoi-cells.fs",
+    "name": "voronoi-cells",
+    "category": "grid",
+    "tags": [
+      "grid"
+    ]
   },
   {
     "id": 21,
-    "path": "shaders/isf/Colorbleed1.fs",
-    "name": "Colorbleed1",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/macroverse/blue-giants.fs",
+    "name": "blue-giants",
+    "category": "macroverse",
+    "tags": [
+      "macroverse",
+      "chapter-03"
+    ],
+    "sets": [
+      "macroverse-origin",
+      "vj-cosmic",
+      "vj-ambient",
+      "vj-wire-ready"
+    ]
   },
   {
     "id": 22,
-    "path": "shaders/isf/Gradient1.fs",
-    "name": "Gradient1",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/macroverse/energy-field.fs",
+    "name": "energy-field",
+    "category": "macroverse",
+    "tags": [
+      "macroverse",
+      "chapter-01"
+    ],
+    "sets": [
+      "macroverse-origin",
+      "vj-cosmic",
+      "vj-ambient",
+      "vj-wire-ready"
+    ]
   },
   {
     "id": 23,
-    "path": "shaders/isf/Nebula.fs",
-    "name": "Nebula",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/macroverse/life-as-we-know-it.fs",
+    "name": "life-as-we-know-it",
+    "category": "macroverse",
+    "tags": [
+      "macroverse",
+      "chapter-05"
+    ],
+    "sets": [
+      "macroverse-origin",
+      "vj-cosmic",
+      "vj-ambient",
+      "vj-wire-ready"
+    ]
   },
   {
     "id": 24,
-    "path": "shaders/isf/Remix-NoiseOverlay-TextureInput.fs",
-    "name": "Remix-NoiseOverlay-TextureInput",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/macroverse/living-our-best-life.fs",
+    "name": "living-our-best-life",
+    "category": "macroverse",
+    "tags": [
+      "macroverse",
+      "chapter-06"
+    ],
+    "sets": [
+      "macroverse-origin",
+      "vj-cosmic",
+      "vj-ambient",
+      "vj-wire-ready"
+    ]
   },
   {
     "id": 25,
-    "path": "shaders/isf/Remix-PlasmaSnowman.fs",
-    "name": "Remix-PlasmaSnowman",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/macroverse/orbits.fs",
+    "name": "orbits",
+    "category": "macroverse",
+    "tags": [
+      "macroverse",
+      "chapter-04"
+    ],
+    "sets": [
+      "macroverse-origin",
+      "vj-cosmic",
+      "vj-ambient",
+      "vj-wire-ready"
+    ]
   },
   {
     "id": 26,
-    "path": "shaders/isf/SMPTE-ColorBars.fs",
-    "name": "SMPTE-ColorBars",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/macroverse/particles.fs",
+    "name": "particles",
+    "category": "macroverse",
+    "tags": [
+      "macroverse",
+      "chapter-02"
+    ],
+    "sets": [
+      "macroverse-origin",
+      "vj-cosmic",
+      "vj-ambient",
+      "vj-wire-ready"
+    ]
   },
   {
     "id": 27,
-    "path": "shaders/isf/Sinewaves1.fs",
-    "name": "Sinewaves1",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/misc/feedback-blur.fs",
+    "name": "feedback-blur",
+    "category": "misc",
+    "tags": [
+      "misc"
+    ]
   },
   {
     "id": 28,
-    "path": "shaders/isf/Spinner.fs",
-    "name": "Spinner",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/misc/spinner-glow.fs",
+    "name": "spinner-glow",
+    "category": "misc",
+    "tags": [
+      "misc"
+    ]
   },
   {
     "id": 29,
-    "path": "shaders/isf/VersionDemo-EvolveRing.fs",
-    "name": "VersionDemo-EvolveRing",
-    "category": "isf",
+    "path": "shaders/starter-pack/noise.frag",
+    "name": "noise",
+    "category": "starter-pack",
     "tags": []
   },
   {
     "id": 30,
-    "path": "shaders/isf/VibeCode-CosmicJellyfish.fs",
-    "name": "VibeCode-CosmicJellyfish",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/noise/checker-mist.fs",
+    "name": "checker-mist",
+    "category": "noise",
+    "tags": [
+      "noise"
+    ]
   },
   {
     "id": 31,
-    "path": "shaders/isf/abstract-brushstrokes.fs",
-    "name": "abstract-brushstrokes",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/noise/cloud-fbm.fs",
+    "name": "cloud-fbm",
+    "category": "noise",
+    "tags": [
+      "noise"
+    ]
   },
   {
     "id": 32,
-    "path": "shaders/isf/aheart.fs",
-    "name": "aheart",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/noise/iq-noise-lab.fs",
+    "name": "iq-noise-lab",
+    "category": "noise",
+    "tags": [
+      "noise"
+    ]
   },
   {
     "id": 33,
-    "path": "shaders/isf/discs.fs",
-    "name": "discs",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/particles/bubble-field.fs",
+    "name": "bubble-field",
+    "category": "particles",
+    "tags": [
+      "particles"
+    ]
   },
   {
     "id": 34,
-    "path": "shaders/isf/feedback-blur.fs",
-    "name": "feedback-blur",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/particles/star-trip.fs",
+    "name": "star-trip",
+    "category": "particles",
+    "tags": [
+      "particles"
+    ]
   },
   {
     "id": 35,
-    "path": "shaders/isf/plasma-converted.fs",
-    "name": "plasma-converted",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/particles/starfield-fire.fs",
+    "name": "starfield-fire",
+    "category": "particles",
+    "tags": [
+      "particles"
+    ]
   },
   {
     "id": 36,
-    "path": "shaders/isf/plasma5.fs",
-    "name": "plasma5",
-    "category": "isf",
+    "path": "shaders/starter-pack/plasma.frag",
+    "name": "plasma",
+    "category": "starter-pack",
     "tags": []
   },
   {
     "id": 37,
-    "path": "shaders/isf/solid-color.fs",
-    "name": "solid-color",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/plasma/classic-plasma-five.fs",
+    "name": "classic-plasma-five",
+    "category": "plasma",
+    "tags": [
+      "plasma"
+    ]
   },
   {
     "id": 38,
-    "path": "shaders/isf/test-isf.fs",
-    "name": "test-isf",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/plasma/orbital-plasma-colors.fs",
+    "name": "orbital-plasma-colors",
+    "category": "plasma",
+    "tags": [
+      "plasma"
+    ]
   },
   {
     "id": 39,
-    "path": "shaders/isf/wave-pattern.fs",
-    "name": "wave-pattern",
-    "category": "isf",
-    "tags": []
+    "path": "shaders/starter-pack/plasma/soft-glow-plasma.fs",
+    "name": "soft-glow-plasma",
+    "category": "plasma",
+    "tags": [
+      "plasma"
+    ]
   },
   {
     "id": 40,
-    "path": "shaders/core/borders/core-borders-screens.fs",
-    "name": "core-borders-screens",
-    "category": "borders",
+    "path": "shaders/starter-pack/psychedelic/color-vortex.fs",
+    "name": "color-vortex",
+    "category": "psychedelic",
     "tags": [
-      "borders"
+      "psychedelic"
     ]
   },
   {
     "id": 41,
-    "path": "shaders/core/checkerboards/core-checker-mist.fs",
-    "name": "core-checker-mist",
-    "category": "checkerboards",
+    "path": "shaders/starter-pack/psychedelic/demoscene-beast.frag",
+    "name": "demoscene-beast",
+    "category": "psychedelic",
     "tags": [
-      "checkerboards"
+      "psychedelic"
     ]
   },
   {
     "id": 42,
-    "path": "shaders/core/checkerboards/core-checker-mode7.fs",
-    "name": "core-checker-mode7",
-    "category": "checkerboards",
+    "path": "shaders/starter-pack/psychedelic/neon-flower.fs",
+    "name": "neon-flower",
+    "category": "psychedelic",
     "tags": [
-      "checkerboards"
+      "psychedelic"
     ]
   },
   {
     "id": 43,
-    "path": "shaders/core/checkerboards/core-checker-scenes.fs",
-    "name": "core-checker-scenes",
-    "category": "checkerboards",
+    "path": "shaders/starter-pack/space/nebula-drift.fs",
+    "name": "nebula-drift",
+    "category": "space",
     "tags": [
-      "checkerboards"
+      "space"
     ]
   },
   {
     "id": 44,
-    "path": "shaders/core/checkerboards/core-checker-scroller.fs",
-    "name": "core-checker-scroller",
-    "category": "checkerboards",
+    "path": "shaders/starter-pack/space/planetary-glow.fs",
+    "name": "planetary-glow",
+    "category": "space",
     "tags": [
-      "checkerboards"
+      "space"
     ]
   },
   {
     "id": 45,
-    "path": "shaders/core/checkerboards/core-checker-tunnel.fs",
-    "name": "core-checker-tunnel",
-    "category": "checkerboards",
+    "path": "shaders/starter-pack/space/starfield-warp.fs",
+    "name": "starfield-warp",
+    "category": "space",
     "tags": [
-      "checkerboards"
+      "space"
     ]
   },
   {
     "id": 46,
-    "path": "shaders/core/debug/core-debug-unsorted358.fs",
-    "name": "core-debug-unsorted358",
-    "category": "debug",
+    "path": "shaders/starter-pack/spiral.frag",
+    "name": "spiral",
+    "category": "starter-pack",
     "tags": []
   },
   {
     "id": 47,
-    "path": "shaders/core/demoscene/core-demoscene.fs",
-    "name": "core-demoscene",
-    "category": "demoscene",
-    "tags": [
-      "demoscene"
-    ]
+    "path": "shaders/starter-pack/tunnel.frag",
+    "name": "tunnel",
+    "category": "starter-pack",
+    "tags": []
   },
   {
     "id": 48,
-    "path": "shaders/core/geometry/core-geometry-box-plane.fs",
-    "name": "core-geometry-box-plane",
-    "category": "geometry",
+    "path": "shaders/starter-pack/tunnel/lightspeed-zoom.fs",
+    "name": "lightspeed-zoom",
+    "category": "tunnel",
     "tags": [
-      "geometry"
+      "tunnel"
     ]
   },
   {
     "id": 49,
-    "path": "shaders/core/geometry/core-geometry-circle-cube.fs",
-    "name": "core-geometry-circle-cube",
-    "category": "geometry",
+    "path": "shaders/starter-pack/tunnel/retro-pipes.fs",
+    "name": "retro-pipes",
+    "category": "tunnel",
     "tags": [
-      "geometry"
+      "tunnel"
     ]
   },
   {
     "id": 50,
-    "path": "shaders/core/geometry/core-geometry-cube-light.fs",
-    "name": "core-geometry-cube-light",
-    "category": "geometry",
+    "path": "shaders/starter-pack/tunnel/wire-tunnel.fs",
+    "name": "wire-tunnel",
+    "category": "tunnel",
     "tags": [
-      "geometry"
+      "tunnel"
     ]
   },
   {
     "id": 51,
-    "path": "shaders/core/geometry/core-geometry-unsorted381.fs",
-    "name": "core-geometry-unsorted381",
-    "category": "geometry",
+    "path": "shaders/starter-pack/water/aquatic-field.fs",
+    "name": "aquatic-field",
+    "category": "water",
     "tags": [
-      "geometry"
+      "water"
     ]
   },
   {
     "id": 52,
-    "path": "shaders/core/grids/core-grid-liners.fs",
-    "name": "core-grid-liners",
-    "category": "grids",
+    "path": "shaders/starter-pack/water/retro-ripples.fs",
+    "name": "retro-ripples",
+    "category": "water",
     "tags": [
-      "grids"
+      "water"
     ]
   },
   {
     "id": 53,
-    "path": "shaders/core/grids/core-grid-neon-xy.fs",
-    "name": "core-grid-neon-xy",
-    "category": "grids",
+    "path": "shaders/starter-pack/water/seascape.fs",
+    "name": "seascape",
+    "category": "water",
     "tags": [
-      "grids"
+      "water"
     ]
-  },
-  {
-    "id": 54,
-    "path": "shaders/core/grids/core-grid-simple.fs",
-    "name": "core-grid-simple",
-    "category": "grids",
-    "tags": [
-      "grids"
-    ]
-  },
-  {
-    "id": 55,
-    "path": "shaders/core/grids/core-grid-unsorted9.fs",
-    "name": "core-grid-unsorted9",
-    "category": "grids",
-    "tags": [
-      "grids"
-    ]
-  },
-  {
-    "id": 56,
-    "path": "shaders/core/icons/core-icons-custom-logos.fs",
-    "name": "core-icons-custom-logos",
-    "category": "icons",
-    "tags": [
-      "icons"
-    ]
-  },
-  {
-    "id": 57,
-    "path": "shaders/core/icons/core-icons-progress-bar.fs",
-    "name": "core-icons-progress-bar",
-    "category": "icons",
-    "tags": [
-      "icons"
-    ]
-  },
-  {
-    "id": 58,
-    "path": "shaders/core/icons/core-icons-symbols.fs",
-    "name": "core-icons-symbols",
-    "category": "icons",
-    "tags": [
-      "icons"
-    ]
-  },
-  {
-    "id": 59,
-    "path": "shaders/core/loading/core-loading-spinner.fs",
-    "name": "core-loading-spinner",
-    "category": "loading",
-    "tags": [
-      "loading"
-    ]
-  },
-  {
-    "id": 60,
-    "path": "shaders/core/math/core-math-lyf.fs",
-    "name": "core-math-lyf",
-    "category": "math",
-    "tags": [
-      "math"
-    ]
-  },
-  {
-    "id": 61,
-    "path": "shaders/core/misc/core-8bit-unsorted70.fs",
-    "name": "core-8bit-unsorted70",
-    "category": "misc",
-    "tags": [
-      "misc"
-    ]
-  },
-  {
-    "id": 62,
-    "path": "shaders/core/misc/core-variable-logo.fs",
-    "name": "core-variable-logo",
-    "category": "misc",
-    "tags": [
-      "misc"
-    ]
-  },
-  {
-    "id": 63,
-    "path": "shaders/core/numbers/core-numbers-binary-gray.fs",
-    "name": "core-numbers-binary-gray",
-    "category": "numbers",
-    "tags": [
-      "numbers"
-    ]
-  },
-  {
-    "id": 64,
-    "path": "shaders/core/palette/core-palette-color.fs",
-    "name": "core-palette-color",
-    "category": "palette",
-    "tags": [
-      "palette"
-    ]
-  },
-  {
-    "id": 65,
-    "path": "shaders/core/palette/core-palette-scroller.fs",
-    "name": "core-palette-scroller",
-    "category": "palette",
-    "tags": [
-      "palette"
-    ]
-  },
-  {
-    "id": 66,
-    "path": "shaders/core/screensaver/core-screensaver-tv-noise.fs",
-    "name": "core-screensaver-tv-noise",
-    "category": "screensaver",
-    "tags": [
-      "screensaver"
-    ]
-  },
-  {
-    "id": 67,
-    "path": "shaders/core/screensaver/core-screensaver-universe.fs",
-    "name": "core-screensaver-universe",
-    "category": "screensaver",
-    "tags": [
-      "screensaver"
-    ]
-  },
-  {
-    "id": 68,
-    "path": "shaders/core/screensaver/core-screensaver-unsorted144.fs",
-    "name": "core-screensaver-unsorted144",
-    "category": "screensaver",
-    "tags": [
-      "screensaver"
-    ]
-  },
-  {
-    "id": 69,
-    "path": "shaders/core/shapes/core-shape-spin-triangle.fs",
-    "name": "core-shape-spin-triangle",
-    "category": "shapes",
-    "tags": [
-      "shapes"
-    ]
-  },
-  {
-    "id": 70,
-    "path": "shaders/core/test/core-test-unsorted155.fs",
-    "name": "core-test-unsorted155",
-    "category": "test",
-    "tags": [
-      "test"
-    ]
-  },
-  {
-    "id": 71,
-    "path": "shaders/core/text/core-text-16segment.fs",
-    "name": "core-text-16segment",
-    "category": "text",
-    "tags": [
-      "text"
-    ]
-  },
-  {
-    "id": 72,
-    "path": "shaders/core/text/core-text-dotmatrix.fs",
-    "name": "core-text-dotmatrix",
-    "category": "text",
-    "tags": [
-      "text"
-    ]
-  },
-  {
-    "id": 73,
-    "path": "shaders/core/text/core-text-encoding.fs",
-    "name": "core-text-encoding",
-    "category": "text",
-    "tags": [
-      "text"
-    ]
-  },
-  {
-    "id": 74,
-    "path": "shaders/core/text/core-text-grid-neon.fs",
-    "name": "core-text-grid-neon",
-    "category": "text",
-    "tags": [
-      "text"
-    ]
-  },
-  {
-    "id": 75,
-    "path": "shaders/core/text/core-text-lcd.fs",
-    "name": "core-text-lcd",
-    "category": "text",
-    "tags": [
-      "text"
-    ]
-  },
-  {
-    "id": 76,
-    "path": "shaders/core/text/core-text-neon.fs",
-    "name": "core-text-neon",
-    "category": "text",
-    "tags": [
-      "text"
-    ]
-  },
-  {
-    "id": 78,
-    "path": "shaders/core/text/core-text-unsorted385.fs",
-    "name": "core-text-unsorted385",
-    "category": "text",
-    "tags": [
-      "text"
-    ]
-  },
-  {
-    "id": 79,
-    "path": "shaders/core/text/core-text-viklund.fs",
-    "name": "core-text-viklund",
-    "category": "text",
-    "tags": [
-      "text"
-    ]
-  },
-  {
-    "id": 80,
-    "path": "shaders/core/tunnels/core-tunnel-unsorted128.fs",
-    "name": "core-tunnel-unsorted128",
-    "category": "tunnels",
-    "tags": [
-      "tunnels"
-    ]
-  },
-  {
-    "id": 81,
-    "path": "shaders/core/tunnels/core-tunnel-unsorted193.fs",
-    "name": "core-tunnel-unsorted193",
-    "category": "tunnels",
-    "tags": [
-      "tunnels"
-    ]
-  },
-  {
-    "id": 82,
-    "path": "shaders/core/waveforms/core-waveform-all.fs",
-    "name": "core-waveform-all",
-    "category": "waveforms",
-    "tags": [
-      "waveforms"
-    ]
-  },
-  {
-    "id": 83,
-    "path": "shaders/core/waveforms/core-waveform-droplet.fs",
-    "name": "core-waveform-droplet",
-    "category": "waveforms",
-    "tags": [
-      "waveforms"
-    ]
-  },
-  {
-    "id": 84,
-    "path": "shaders/core/waveforms/core-waveform-sines.fs",
-    "name": "core-waveform-sines",
-    "category": "waveforms",
-    "tags": [
-      "waveforms"
-    ]
-  },
-  {
-    "id": 85,
-    "path": "shaders/core/waveforms/core-waveform-slices.fs",
-    "name": "core-waveform-slices",
-    "category": "waveforms",
-    "tags": [
-      "waveforms"
-    ]
-  },
-  {
-    "id": 86,
-    "path": "shaders/core/waveforms/core-waveform-unsorted439.fs",
-    "name": "core-waveform-unsorted439",
-    "category": "waveforms",
-    "tags": [
-      "waveforms"
-    ]
-  },
-  {
-    "id": 87,
-    "path": "shaders/debug/debug-sampler-uv-visual.fs",
-    "name": "debug-sampler-uv-visual",
-    "category": "debug",
-    "tags": []
-  },
-  {
-    "id": 88,
-    "path": "shaders/debug/debug-sampler1-webcam.fs",
-    "name": "debug-sampler1-webcam",
-    "category": "debug",
-    "tags": []
-  },
-  {
-    "id": 89,
-    "path": "shaders/debug/debug-samplers-2-split.fs",
-    "name": "debug-samplers-2-split",
-    "category": "debug",
-    "tags": []
-  },
-  {
-    "id": 90,
-    "path": "shaders/debug/debug-samplers-3-grid.fs",
-    "name": "debug-samplers-3-grid",
-    "category": "debug",
-    "tags": []
-  },
-  {
-    "id": 91,
-    "path": "shaders/debug/debug-samplers-checker.fs",
-    "name": "debug-samplers-checker",
-    "category": "debug",
-    "tags": []
-  },
-  {
-    "id": 92,
-    "path": "shaders/debug/debug-samplers-video-image.fs",
-    "name": "debug-samplers-video-image",
-    "category": "debug",
-    "tags": []
   }
 ]
