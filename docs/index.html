@@ -62,7 +62,7 @@
     /* ─── Layout ───────────────────────────────────────────────────────────── */
     .wrap {
       position: relative; z-index: 1;
-      max-width: 1280px; margin: 0 auto;
+      max-width: min(1680px, 98vw); margin: 0 auto;
       padding: 1rem 2rem 5rem;
     }
 
@@ -94,27 +94,34 @@
     }
     .hero-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-rows: auto auto;
-      gap: 0.85rem 1.25rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem 1rem;
       margin-top: 1rem;
       text-align: left;
       align-items: start;
     }
-    @media (max-width: 920px) {
+    @media (max-width: 1180px) {
       .hero-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 920px) {
       .wrap { padding: 0.85rem 1.1rem 4rem; }
     }
     .hero-panel {
       background: rgba(13, 8, 32, 0.62);
       border: 1px solid rgba(68, 136, 204, 0.22);
       border-radius: 10px;
-      padding: 1rem 1.15rem;
+      padding: 0.75rem 0.85rem;
       backdrop-filter: blur(8px);
       min-height: 0;
     }
     .hero-panel-demo { border-color: rgba(0, 221, 170, 0.28); }
     .hero-panel-origin { border-color: rgba(238, 136, 51, 0.38); }
+    .hero-panel-ways { border-color: rgba(136, 51, 204, 0.28); }
+    .hero-panel-ways h2 {
+      margin: 0 0 0.55rem;
+      text-align: center;
+      font-size: 0.78rem;
+    }
     .panel-label {
       font-family: 'Orbitron', sans-serif;
       font-size: 0.62rem;
@@ -138,15 +145,20 @@
       text-align: center;
       font-size: 0.82rem;
     }
-    .hero-use-cases { margin-top: 0; }
-    .hero-use-cases .use-case { padding: 0.95rem 1rem; }
-    .hero-use-cases .use-case h3 { font-size: 0.8rem; margin-bottom: 0.55rem; }
-    .hero-use-cases .use-case p { font-size: 0.8rem; line-height: 1.55; }
-    .hero-use-cases .use-case ul { font-size: 0.76rem; line-height: 1.5; }
+    .hero-use-cases {
+      margin-top: 0;
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+    }
+    .hero-use-cases .use-case { padding: 0.55rem 0.65rem; }
+    .hero-use-cases .use-case h3 { font-size: 0.72rem; margin-bottom: 0.35rem; }
+    .hero-use-cases .use-case p { font-size: 0.68rem; line-height: 1.45; }
+    .hero-use-cases .use-case ul { font-size: 0.64rem; line-height: 1.4; margin-top: 0.35rem !important; }
     .hero-ways-foot {
-      margin: 0.75rem 0 0;
-      font-size: 0.74rem;
+      margin: 0.45rem 0 0;
+      font-size: 0.62rem;
       text-align: center;
+      line-height: 1.4;
     }
     .hero-footer {
       margin-top: 1rem;
@@ -640,21 +652,28 @@
     }
     .deployments .dep-row {
       display: grid;
-      grid-template-columns: 7.5rem 1fr 7.5rem 1fr;
-      gap: 0.55rem 1.25rem; align-items: baseline;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.65rem 1.25rem;
+      align-items: start;
     }
+    .deployments .dep-item { min-width: 0; }
     @media (max-width: 980px) {
-      .deployments .dep-row { grid-template-columns: 7.5rem 1fr; }
+      .deployments .dep-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 560px) {
       .deployments .dep-row { grid-template-columns: 1fr; }
-      .deployments .dep-row > .dep-label { margin-top: 0.35rem; }
     }
-    .deployments .dep-row > .dep-label { color: #ffb86c; letter-spacing: .12em; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
-    .deployments .dep-row > .dep-val { color: #f4f0ff; line-height: 1.55; }
-    .deployments .dep-row > .dep-val a { color: #5dffe0; text-decoration: none; font-weight: 600; }
-    .deployments .dep-row > .dep-val a:hover { color: #a8fff0; text-shadow: 0 0 8px var(--glow-t); }
-    .deployments .dep-row > .dep-val code { color: #ffeccc; background: rgba(0,0,0,0.4); padding: 0.1em 0.35em; border-radius: 3px; }
+    .deployments .dep-item .dep-label {
+      display: block;
+      margin-bottom: 0.15rem;
+      color: #ffb86c; letter-spacing: .12em; text-transform: uppercase;
+      font-size: 0.7rem; font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+    .deployments .dep-item .dep-val { color: #f4f0ff; line-height: 1.5; font-size: 0.78rem; }
+    .deployments .dep-item .dep-val a { color: #5dffe0; text-decoration: none; font-weight: 600; }
+    .deployments .dep-item .dep-val a:hover { color: #a8fff0; text-shadow: 0 0 8px var(--glow-t); }
+    .deployments .dep-item .dep-val code { color: #ffeccc; background: rgba(0,0,0,0.4); padding: 0.1em 0.35em; border-radius: 3px; }
     .deployments .dep-note { color: #c9b8e8; font-size: 0.7rem; margin-top: 0.5rem; letter-spacing: .04em; }
 
     /* ─── Origin story (hero placement) ───────────────────────────────────── */
@@ -916,6 +935,25 @@
           </section>
         </div>
 
+        <div id="participatory-vj" class="hero-panel hero-panel-ways" aria-label="Three ways in">
+          <h2>Three ways in</h2>
+          <div class="use-cases hero-use-cases">
+            <div class="use-case uc-vj">
+              <h3>Standalone VJ Tool</h3>
+              <p>Browse and perform your full GLSL/ISF library. A/B crossfader, mix modes, shader carousel, MIDI/OSC, Roli Lightpad LED blocks. Cloud or desktop. MJPEG / Spout / NDI on desktop.</p>
+            </div>
+            <div class="use-case uc-gig">
+              <h3>Participatory &amp; multiplayer VJ</h3>
+              <p><strong>Optional.</strong> Audience stream QR drives <code>mouseX</code>/<code>mouseY</code>; co-VJ join link syncs the full desk; WebXR VR on Quest.</p>
+            </div>
+            <div class="use-case uc-wire">
+              <h3>Resolume Wire Pipeline</h3>
+              <p><b>Desktop / self-host.</b> Wire compatibility, expose literals as ISF sliders, fix chain, push to Resolume Wire. Cloud: <b>Clipboard to Wire</b>.</p>
+            </div>
+          </div>
+          <p class="dim hero-ways-foot">Settings &rarr; <b>VJ Show Session ID</b> &rarr; Apply. Splash shows VJ + audience QRs on load.</p>
+        </div>
+
         <div class="hero-demo-clips" aria-label="Macroverse pipeline demos">
           <p class="hero-demo-strip-label">Pipeline demos</p>
           <figure class="hero-demo-inline" aria-label="GLSL to Resolume Wire pipeline">
@@ -938,30 +976,6 @@
           </figure>
         </div>
       </div>
-
-      <section id="participatory-vj" class="hero-ways" aria-label="Three ways in">
-        <h2>Three ways in</h2>
-        <div class="use-cases hero-use-cases">
-          <div class="use-case uc-vj">
-            <h3>Standalone VJ Tool</h3>
-            <p>Browse and perform your full GLSL/ISF library. A/B crossfader, mix modes, shader carousel, MIDI/OSC, Roli Lightpad LED blocks. Cloud or desktop. MJPEG / Spout / NDI on desktop. Tag, search, revert. One operator, one window.</p>
-          </div>
-          <div class="use-case uc-gig">
-            <h3>Participatory &amp; multiplayer VJ</h3>
-            <p><strong>Optional.</strong> Two access tiers on the same gig session (salted tokens — no raw session names in QR):</p>
-            <ul style="margin:0.5rem 0 0 1rem;line-height:1.5;color:var(--text);">
-              <li><strong>Audience participation</strong> (stream QR / <code>viewToken</code>): phones watch the SSE preview. When you enable <em>Audience participation</em> on the host, they can drag or touch the stream to drive <code>mouseX</code> / <code>mouseY</code> only.</li>
-              <li><strong>VJ collaboration</strong> (join link / <code>controlToken</code> from the top-bar <b>VJ</b> chip): hands-on co-VJ — full backend desk sync over WebSocket.</li>
-              <li><strong>WebXR VR</strong> (VJ deck QR panel): audience dome or VJ controller on Quest / WebXR headsets.</li>
-            </ul>
-          </div>
-          <div class="use-case uc-wire">
-            <h3>Resolume Wire Pipeline</h3>
-            <p><b>Desktop / self-host.</b> Load any GLSL file, check Wire compatibility, expose magic-number literals as ISF sliders, run the shader fix chain (regex &rarr; Ollama &rarr; AI), and push the finished macro straight into Resolume Wire. Cloud hosts can still use <b>Clipboard to Wire</b>.</p>
-          </div>
-        </div>
-        <p class="dim hero-ways-foot">Live app: Settings &rarr; <b>VJ Show Session ID</b> &rarr; Apply. Startup splash shows VJ + audience QRs before the index finishes loading.</p>
-      </section>
 
       <div class="hero-footer">
         <div class="cta-primary">
@@ -996,18 +1010,30 @@
 
       <div class="deployments" aria-label="Live deployments">
         <div class="dep-row">
-          <span class="dep-label">Live</span>
-          <span class="dep-val"><a href="https://macroverse.aday.net.au">macroverse.aday.net.au</a> &mdash; cloud edition (public library)</span>
-          <span class="dep-label">Test</span>
-          <span class="dep-val"><a href="https://macroverse-test.aday.net.au">macroverse-test.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://macroverse-dev.aday.net.au">macroverse-dev.aday.net.au</a></span>
-          <span class="dep-label">Private</span>
-          <span class="dep-val"><a href="https://macroverse-private.aday.net.au">macroverse-private.aday.net.au</a> &mdash; full library; basic auth on all paths (invite-only credentials)</span>
-          <span class="dep-label">Showcase</span>
-          <span class="dep-val"><a href="https://showcase.macroverse.aday.net.au/">showcase.macroverse.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://aday1.github.io/macroverse.aday.net.au/">GitHub Pages mirror</a></span>
-          <span class="dep-label">Source</span>
-          <span class="dep-val"><a href="https://github.com/aday1/macroverse.aday.net.au">github.com/aday1/macroverse.aday.net.au</a> &mdash; Docker Compose, bridge agent, CI images</span>
-          <span class="dep-label">ArtBastard</span>
-          <span class="dep-val"><a href="https://artbastard.aday.net.au">artbastard.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://artbastard-test.aday.net.au">artbastard-test.aday.net.au</a></span>
+          <div class="dep-item">
+            <span class="dep-label">Live</span>
+            <span class="dep-val"><a href="https://macroverse.aday.net.au">macroverse.aday.net.au</a> &mdash; cloud edition (public library)</span>
+          </div>
+          <div class="dep-item">
+            <span class="dep-label">Test / Dev</span>
+            <span class="dep-val"><a href="https://macroverse-test.aday.net.au">macroverse-test.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://macroverse-dev.aday.net.au">macroverse-dev.aday.net.au</a></span>
+          </div>
+          <div class="dep-item">
+            <span class="dep-label">Private</span>
+            <span class="dep-val"><a href="https://macroverse-private.aday.net.au">macroverse-private.aday.net.au</a> &mdash; full library; basic auth on all paths</span>
+          </div>
+          <div class="dep-item">
+            <span class="dep-label">Showcase</span>
+            <span class="dep-val"><a href="https://showcase.macroverse.aday.net.au/">showcase.macroverse.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://aday1.github.io/macroverse.aday.net.au/">GitHub Pages mirror</a></span>
+          </div>
+          <div class="dep-item">
+            <span class="dep-label">Source</span>
+            <span class="dep-val"><a href="https://github.com/aday1/macroverse.aday.net.au">github.com/aday1/macroverse.aday.net.au</a> &mdash; Docker Compose, bridge agent, CI images</span>
+          </div>
+          <div class="dep-item">
+            <span class="dep-label">ArtBastard</span>
+            <span class="dep-val"><a href="https://artbastard.aday.net.au">artbastard.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://artbastard-test.aday.net.au">artbastard-test.aday.net.au</a></span>
+          </div>
         </div>
         <p class="dep-note">// this is the GitHub showcase page &mdash; the live runtimes above serve the actual app</p>
       </div>
@@ -1488,18 +1514,30 @@ ffmpeg -i http://localhost:8765/api/output/macrocam/stream -f v4l2 /dev/video0
 
       <div class="deployments deployments-foot" aria-label="Live deployments (footer)">
         <div class="dep-row">
-          <span class="dep-label">Live</span>
-          <span class="dep-val"><a href="https://macroverse.aday.net.au">macroverse.aday.net.au</a> &mdash; cloud edition (public library)</span>
-          <span class="dep-label">Test</span>
-          <span class="dep-val"><a href="https://macroverse-test.aday.net.au">macroverse-test.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://macroverse-dev.aday.net.au">macroverse-dev.aday.net.au</a></span>
-          <span class="dep-label">Private</span>
-          <span class="dep-val"><a href="https://macroverse-private.aday.net.au">macroverse-private.aday.net.au</a> &mdash; full library; basic auth on all paths (invite-only credentials)</span>
-          <span class="dep-label">Showcase</span>
-          <span class="dep-val"><a href="https://showcase.macroverse.aday.net.au/">showcase.macroverse.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://aday1.github.io/macroverse.aday.net.au/">GitHub Pages mirror</a></span>
-          <span class="dep-label">Source</span>
-          <span class="dep-val"><a href="https://github.com/aday1/macroverse.aday.net.au">github.com/aday1/macroverse.aday.net.au</a> &mdash; Docker Compose, bridge agent, CI images</span>
-          <span class="dep-label">ArtBastard</span>
-          <span class="dep-val"><a href="https://artbastard.aday.net.au">artbastard.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://artbastard-test.aday.net.au">artbastard-test.aday.net.au</a></span>
+          <div class="dep-item">
+            <span class="dep-label">Live</span>
+            <span class="dep-val"><a href="https://macroverse.aday.net.au">macroverse.aday.net.au</a> &mdash; cloud edition (public library)</span>
+          </div>
+          <div class="dep-item">
+            <span class="dep-label">Test / Dev</span>
+            <span class="dep-val"><a href="https://macroverse-test.aday.net.au">macroverse-test.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://macroverse-dev.aday.net.au">macroverse-dev.aday.net.au</a></span>
+          </div>
+          <div class="dep-item">
+            <span class="dep-label">Private</span>
+            <span class="dep-val"><a href="https://macroverse-private.aday.net.au">macroverse-private.aday.net.au</a> &mdash; full library; basic auth on all paths</span>
+          </div>
+          <div class="dep-item">
+            <span class="dep-label">Showcase</span>
+            <span class="dep-val"><a href="https://showcase.macroverse.aday.net.au/">showcase.macroverse.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://aday1.github.io/macroverse.aday.net.au/">GitHub Pages mirror</a></span>
+          </div>
+          <div class="dep-item">
+            <span class="dep-label">Source</span>
+            <span class="dep-val"><a href="https://github.com/aday1/macroverse.aday.net.au">github.com/aday1/macroverse.aday.net.au</a> &mdash; Docker Compose, bridge agent, CI images</span>
+          </div>
+          <div class="dep-item">
+            <span class="dep-label">ArtBastard</span>
+            <span class="dep-val"><a href="https://artbastard.aday.net.au">artbastard.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://artbastard-test.aday.net.au">artbastard-test.aday.net.au</a></span>
+          </div>
         </div>
         <p class="dep-note">// live runtimes above &mdash; <a href="#origin" style="color:#5dffe0;">back to top</a></p>
       </div>
