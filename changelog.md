@@ -34,8 +34,7 @@ WebXR audience and VJ controller modes on hosted lanes. VR links from the VJ dec
 ### Showcase & origin (Jun 2026)
 
 - **Origin story** moved under the showcase banner with Fringe + Nick Wilson bio links.
-- **Nick Wilson audio set** on showcase and about page: [YouTube](https://www.youtube.com/watch?v=4tfKNUwVZw0).
-- **Fringe VR captures** placeholder — edited Melbourne Fringe videos will ship when ready.
+- **Nick Wilson audio link** on showcase and about — older recording (not the Fringe gig); show AV recording and EP news noted as coming soon.
 - Showcase UX: compact section nav, origin media chips, deploy lanes moved out of hero header.
 - **Showcase alias** `showcase.macroverse.aday.net.au` → GitHub Pages (`docs/CNAME` + Cloudflare CNAME to `aday1.github.io`).
 - **Showcase first viewport** — shader demo sliders + origin story + live lane links above the fold; deep sections (lanes, three ways in, demos, screenshots, help) on scroll.
