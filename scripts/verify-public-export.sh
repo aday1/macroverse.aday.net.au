@@ -16,6 +16,11 @@ if [ ! -d shaders/VJ-Sorted-Production/ISF ]; then
   exit 1
 fi
 
+if [ ! -d shaders/VJ-Generated/ISF ]; then
+  echo "Missing shaders/VJ-Generated/ISF (agent-generated VJ library)."
+  exit 1
+fi
+
 count=$(find shaders -type f \( -name '*.fs' -o -name '*.frag' -o -name '*.glsl' -o -name '*.isf' \) | wc -l | tr -d ' ')
 min_public=500
 if [ "$count" -lt "$min_public" ]; then

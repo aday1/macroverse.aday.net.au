@@ -17,6 +17,13 @@ Each lane serves `/deploy-meta.json` (CI build + deploy timestamps, git SHA, lan
 
 Showcase: https://showcase.macroverse.aday.net.au/ (GitHub Pages CNAME; mirror https://aday1.github.io/macroverse.aday.net.au/)
 
+### VJ-Generated shader factory (Jun 2026)
+
+- **300 new ISF VJ shaders** in `shaders/VJ-Generated/ISF/` — parametric Wired Atelier templates (macroverse, techno, cosmic, psychedelic, geometric, ambient, plasma, tunnel).
+- **QA pipeline** — `scripts/validate-shader-batch.mjs` compile + blank-pixel gate; failures quarantined under `shaders/_quarantine/`.
+- **Baked thumbnails** — `thumbnails-baked.json` (300 entries) copied into Docker image as `thumbnails.json` for live/dev gallery grids.
+- **Factory orchestrator** — `scripts/run-shader-factory.ps1` for repeatable generation waves.
+
 ### Public library expansion (Jun 2026)
 
 - **Live + test lanes** now ship the full public ISF library (`shaders/VJ-Sorted-Production/ISF/`, ~2400 shaders) plus starter-pack, including the **MacroVerse Origin** set under `macroverse/`.

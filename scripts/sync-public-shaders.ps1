@@ -20,5 +20,16 @@ New-Item -ItemType Directory -Force -Path $DestRoot | Out-Null
 if ($LASTEXITCODE -ge 8) { throw "robocopy failed with exit $LASTEXITCODE" }
 
 $count = (Get-ChildItem -Recurse -File $DestRoot -Include *.fs,*.frag,*.glsl,*.isf | Measure-Object).Count
+
+$fortyTwoRoot = "C:\aday.repo\Macroversed-FortyTwoEdition"
+$genSrc = Join-Path $repoRoot "shaders\VJ-Generated"
+if (Test-Path $genSrc) {
+  $genDest = Join-Path $fortyTwoRoot "shaders\VJ-Generated"
+  New-Item -ItemType Directory -Force -Path $genDest | Out-Null
+  & robocopy $genSrc $genDest /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
+  if ($LASTEXITCODE -ge 8) { throw "robocopy VJ-Generated failed with exit $LASTEXITCODE" }
+  Write-Host "Synced VJ-Generated -> $genDest" -ForegroundColor Green
+}
+
 Write-Host "Synced $count shader files -> $DestRoot" -ForegroundColor Green
 Write-Host "Next: bash scripts/verify-public-export.sh" -ForegroundColor Cyan

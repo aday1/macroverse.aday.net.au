@@ -1,6 +1,7 @@
 resolume/
 resolume-example/
 private-data/
+shaders/_quarantine/
 *.7z
 *.zip
 *.db
