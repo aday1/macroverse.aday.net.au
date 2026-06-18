@@ -1214,7 +1214,7 @@ func triggerIncrementalIndex() {
 
 			sets := []string{}
 			if category == "macroverse" || strings.Contains(filepath.ToSlash(path), "/macroverse/") {
-				sets = []string{"macroverse-set", "vj-cosmic", "vj-wire-ready"}
+				sets = []string{"macroverse-origin", "macroverse-set", "vj-cosmic", "vj-wire-ready"}
 			}
 
 			existing = append(existing, ShaderEntry{
@@ -2318,7 +2318,7 @@ func consoleKeyListener(port string) {
 
 					sets := []string{}
 					if category == "macroverse" || strings.Contains(filepath.ToSlash(path), "/macroverse/") {
-						sets = []string{"macroverse-set", "vj-cosmic", "vj-wire-ready"}
+						sets = []string{"macroverse-origin", "macroverse-set", "vj-cosmic", "vj-wire-ready"}
 					}
 
 					existing = append(existing, ShaderEntry{
@@ -2510,8 +2510,12 @@ func main() {
 				logSection("BOOT", fmt.Sprintf("purged %d stale index entry(entries) (files no longer on disk)", stale))
 			}
 		}
+		diskFiles := scanAllFiles()
 		if len(alive) == 0 {
 			logSection("BOOT", "index is empty — triggering auto-scan of source paths")
+			triggerIncrementalIndex()
+		} else if len(diskFiles) > len(alive) {
+			logSection("BOOT", fmt.Sprintf("index has %d entries but %d shader files on disk — triggering merge scan", len(alive), len(diskFiles)))
 			triggerIncrementalIndex()
 		}
 	}
@@ -6505,7 +6509,7 @@ func main() {
 
 			sets := []string{}
 			if category == "macroverse" || strings.Contains(filepath.ToSlash(path), "/macroverse/") {
-				sets = []string{"macroverse-set", "vj-cosmic", "vj-wire-ready"}
+				sets = []string{"macroverse-origin", "macroverse-set", "vj-cosmic", "vj-wire-ready"}
 			}
 
 			existing = append(existing, ShaderEntry{

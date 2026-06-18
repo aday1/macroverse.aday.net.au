@@ -11,10 +11,16 @@ if [ ! -d shaders/starter-pack ]; then
   exit 1
 fi
 
-count=$(find shaders/starter-pack -type f | wc -l | tr -d ' ')
-if [ "$count" -gt 60 ]; then
-  echo "starter-pack contains $count files, max is 60."
+if [ ! -d shaders/VJ-Sorted-Production/ISF ]; then
+  echo "Missing shaders/VJ-Sorted-Production/ISF (public cloud library)."
   exit 1
 fi
 
-echo "Public export gate passed."
+count=$(find shaders -type f \( -name '*.fs' -o -name '*.frag' -o -name '*.glsl' -o -name '*.isf' \) | wc -l | tr -d ' ')
+min_public=500
+if [ "$count" -lt "$min_public" ]; then
+  echo "Public shader library has $count files; expected at least $min_public."
+  exit 1
+fi
+
+echo "Public export gate passed ($count shader files)."

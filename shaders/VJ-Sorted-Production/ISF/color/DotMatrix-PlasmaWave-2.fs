@@ -1,0 +1,204 @@
+/*{
+    "DESCRIPTION": "DotMatrix-PlasmaWave-2",
+    "CREDIT": "GLSL Sandbox / various",
+    "ISFVSN": "2.0",
+    "CATEGORIES": [
+        "color"
+    ],
+    "INPUTS": [
+        {
+            "NAME": "useFrameIndex",
+            "TYPE": "bool",
+            "DEFAULT": 0,
+            "LABEL": "Use frame index (timeline sync)"
+        },
+        {
+            "NAME": "fps",
+            "TYPE": "float",
+            "DEFAULT": 60.0,
+            "MIN": 24.0,
+            "MAX": 120.0
+        },
+        {
+            "NAME": "speed",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 5.0,
+            "LABEL": "Speed"
+        },
+        {
+            "NAME": "mouseX",
+            "TYPE": "float",
+            "DEFAULT": 0.0,
+            "MIN": -1.0,
+            "MAX": 1.0,
+            "LABEL": "Mouse X"
+        },
+        {
+            "NAME": "mouseY",
+            "TYPE": "float",
+            "DEFAULT": 0.0,
+            "MIN": -1.0,
+            "MAX": 1.0,
+            "LABEL": "Mouse Y"
+        },
+        {
+            "NAME": "zoom",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.1,
+            "MAX": 4.0,
+            "LABEL": "Zoom"
+        },
+        {
+            "NAME": "colorR",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 2.0,
+            "LABEL": "Color Red"
+        },
+        {
+            "NAME": "colorG",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 2.0,
+            "LABEL": "Color Green"
+        },
+        {
+            "NAME": "colorB",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 2.0,
+            "LABEL": "Color Blue"
+        },
+        {
+            "NAME": "brightness",
+            "TYPE": "float",
+            "DEFAULT": 0.0,
+            "MIN": -1.0,
+            "MAX": 1.0,
+            "LABEL": "Brightness"
+        },
+        {
+            "NAME": "saturation",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 3.0,
+            "LABEL": "Saturation"
+        },
+        {
+            "NAME": "contrast",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 3.0,
+            "LABEL": "Contrast"
+        },
+        {
+            "NAME": "hueShift",
+            "TYPE": "float",
+            "DEFAULT": 0.0,
+            "MIN": 0.0,
+            "MAX": 1.0,
+            "LABEL": "Hue Shift"
+        },
+        {
+            "NAME": "invert",
+            "TYPE": "bool",
+            "DEFAULT": 0,
+            "LABEL": "Invert Colors"
+        }
+    ],
+    "TAGS": [
+        "color"
+    ]
+}*/
+
+
+
+
+#define time ((useFrameIndex ? (float(FRAMEINDEX) / fps) : TIME) * speed)
+#define mouse vec2(mouseX, mouseY)
+#define resolution (RENDERSIZE / zoom)
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+// This prints "rules" or "sucks" based on whether the shader is compiled and executed correctly
+
+// Can anyone explain how this works?
+// The thumbnail image is what it shows on my nexus 4
+
+float showText(vec2 p, float r0, float r1, float r2, float r3, float r4, float r5, float r6) {
+	if(p.y < 0. || p.y > 7.) return 0.; // Bit count Y
+	if(p.x < 0. || p.x > 20.) return 0.; // Bit count X
+		
+	float v = r0;
+	v = mix(v, r1, step(p.y, 6.));
+	v = mix(v, r2, step(p.y, 5.));
+	v = mix(v, r3, step(p.y, 4.));
+	v = mix(v, r4, step(p.y, 3.));
+	v = mix(v, r5, step(p.y, 2.));
+	v = mix(v, r6, step(p.y, 1.));
+
+	return floor(mod(v/pow(2.,floor(p.x)), 2.0+sin(time)));
+}
+
+void _userMain( void ) {
+
+	vec2 position = gl_FragCoord.xy / resolution.xy;
+
+	float color = 0.0;
+	color += sin( position.x * cos( time / 15.0 ) * 80.0 ) + cos( position.y * cos( time / 15.0 ) * 10.0 );
+	color += sin( position.y * sin( time / 10.0 ) * 40.0 ) + cos( position.x * sin( time / 25.0 ) * 40.0 );
+	color += sin( position.x * sin( time / 5.0 ) * 10.0 ) + sin( position.y * sin( time / 35.0 ) * 80.0 );
+	color *= sin( time / 10.0 ) * 0.5;
+
+	gl_FragColor = vec4( vec3( color, color * 0.5, sin( color + time / 3.0 ) * 0.75 ), 1.0 );
+	
+	if (showText(vec2(16.-position.x*35.,position.y*25.-17.),22359., 21845., 21845., 30039., 9558., 9557., 10101.)>.5) gl_FragColor = vec4(1.);
+	
+	if (showText(vec2(34.-position.x*35.,position.y*25.-17.),29812., 17476., 17476., 21620., 21524., 21524., 30583.)>.5) gl_FragColor = vec4(1.);
+	
+	if (showText(vec2(15.-position.x*35.,position.y*25.-9.),7647., 4437., 4437., 4437., 4437., 4437., 7637.)>.5) gl_FragColor = vec4(1.);
+
+	if (showText(vec2(33.-position.x*35.,position.y*25.-9.),119927., 87109., 87109., 119927., 70726., 70725., 71541.)>.5) gl_FragColor = vec4(1.);
+	
+	float show = 0.;
+	for (int i = 0; i < 2; i++) {
+		show = showText(vec2(22.-position.x*25.,position.y*25.-1.),480375., 349252., 349252., 480375., 414785., 349249., 358263.)-.5;
+	}
+	if (abs(show)<.1) {
+		show += showText(vec2(22.-position.x*25.,position.y*25.-1.),481111., 283732., 283732., 480359., 87121., 87121., 489303.)-.5;
+	}
+	
+	if (show> .2) gl_FragColor = vec4(1);
+
+}
+
+void main() {
+    _userMain();
+    vec3 c = gl_FragColor.rgb;
+    float a = gl_FragColor.a;
+    float luma = dot(c, vec3(0.299, 0.587, 0.114));
+    c = mix(vec3(luma), c, saturation);
+    c = (c - 0.5) * contrast + 0.5;
+    c *= vec3(colorR, colorG, colorB);
+    c += brightness;
+    if (hueShift > 0.001) {
+        float cosH = cos(hueShift * 6.28318);
+        float sinH = sin(hueShift * 6.28318);
+        c = vec3(
+            c.r * (0.299 + 0.701*cosH + 0.168*sinH) + c.g * (0.587 - 0.587*cosH + 0.330*sinH) + c.b * (0.114 - 0.114*cosH - 0.497*sinH),
+            c.r * (0.299 - 0.299*cosH - 0.328*sinH) + c.g * (0.587 + 0.413*cosH + 0.035*sinH) + c.b * (0.114 - 0.114*cosH + 0.292*sinH),
+            c.r * (0.299 - 0.300*cosH + 1.250*sinH) + c.g * (0.587 - 0.588*cosH - 1.050*sinH) + c.b * (0.114 + 0.886*cosH - 0.203*sinH)
+        );
+    }
+    if (invert) c = 1.0 - c;
+    gl_FragColor = vec4(clamp(c, 0.0, 1.0), a);
+}

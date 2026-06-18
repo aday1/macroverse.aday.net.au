@@ -8,7 +8,7 @@ Hosted stacks on Linode (GHCR images). Work on `dev`, promote to `main` for live
 
 | Lane | URL | Branch | Image tag | Role |
 |------|-----|--------|-----------|------|
-| Live | macroverse.aday.net.au | main | :live | Public cloud library; stable tip |
+| Live | macroverse.aday.net.au | main | :live | Public cloud library (~2400 ISF shaders + starter-pack); stable tip |
 | Test | macroverse-test.aday.net.au | dev | :dev | Pre-promotion integration |
 | Dev | macroverse-dev.aday.net.au | dev | :dev | Same :dev image as test |
 | Private | macroverse-private.aday.net.au | main | :aday | Full library; basic auth on all paths (including audience streams) |
@@ -16,6 +16,12 @@ Hosted stacks on Linode (GHCR images). Work on `dev`, promote to `main` for live
 Each lane serves `/deploy-meta.json` (CI build + deploy timestamps, git SHA, lane_sync) and `/api/version` (semver + release tag). The GitHub showcase refreshes `docs/lane-status.json` on every Pages deploy by probing all lanes.
 
 Showcase: https://showcase.macroverse.aday.net.au/ (GitHub Pages CNAME; mirror https://aday1.github.io/macroverse.aday.net.au/)
+
+### Public library expansion (Jun 2026)
+
+- **Live + test lanes** now ship the full public ISF library (`shaders/VJ-Sorted-Production/ISF/`, ~2400 shaders) plus starter-pack, including the **MacroVerse Origin** set under `macroverse/`.
+- Docker image no longer caps at 60 starter-pack files; CI gate requires ≥500 public shaders and still blocks `resolume/`.
+- Boot auto-scan merges any on-disk shaders missing from the SQLite index (fixes stale 53-entry factory index after deploy).
 
 Version 42.2 — WebXR VR VJ + live remote extensions
 ---------------------------------------------------

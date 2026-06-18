@@ -1,0 +1,229 @@
+/*{
+    "DESCRIPTION": "DotMatrix-Solar-CircuitMatrix",
+    "CREDIT": "GLSL Sandbox / various",
+    "ISFVSN": "2.0",
+    "CATEGORIES": [
+        "tunnel"
+    ],
+    "INPUTS": [
+        {
+            "NAME": "useFrameIndex",
+            "TYPE": "bool",
+            "DEFAULT": 0,
+            "LABEL": "Use frame index (timeline sync)"
+        },
+        {
+            "NAME": "fps",
+            "TYPE": "float",
+            "DEFAULT": 60.0,
+            "MIN": 24.0,
+            "MAX": 120.0
+        },
+        {
+            "NAME": "speed",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 5.0,
+            "LABEL": "Speed"
+        },
+        {
+            "NAME": "mouseX",
+            "TYPE": "float",
+            "DEFAULT": 0.0,
+            "MIN": -1.0,
+            "MAX": 1.0,
+            "LABEL": "Mouse X"
+        },
+        {
+            "NAME": "mouseY",
+            "TYPE": "float",
+            "DEFAULT": 0.0,
+            "MIN": -1.0,
+            "MAX": 1.0,
+            "LABEL": "Mouse Y"
+        },
+        {
+            "NAME": "zoom",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.1,
+            "MAX": 4.0,
+            "LABEL": "Zoom"
+        },
+        {
+            "NAME": "colorR",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 2.0,
+            "LABEL": "Color Red"
+        },
+        {
+            "NAME": "colorG",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 2.0,
+            "LABEL": "Color Green"
+        },
+        {
+            "NAME": "colorB",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 2.0,
+            "LABEL": "Color Blue"
+        },
+        {
+            "NAME": "brightness",
+            "TYPE": "float",
+            "DEFAULT": 0.0,
+            "MIN": -1.0,
+            "MAX": 1.0,
+            "LABEL": "Brightness"
+        },
+        {
+            "NAME": "saturation",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 3.0,
+            "LABEL": "Saturation"
+        },
+        {
+            "NAME": "contrast",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.0,
+            "MAX": 3.0,
+            "LABEL": "Contrast"
+        },
+        {
+            "NAME": "hueShift",
+            "TYPE": "float",
+            "DEFAULT": 0.0,
+            "MIN": 0.0,
+            "MAX": 1.0,
+            "LABEL": "Hue Shift"
+        },
+        {
+            "NAME": "invert",
+            "TYPE": "bool",
+            "DEFAULT": 0,
+            "LABEL": "Invert Colors"
+        }
+    ],
+    "TAGS": [
+        "tunnel"
+    ]
+}*/
+
+
+
+
+#define time ((useFrameIndex ? (float(FRAMEINDEX) / fps) : TIME) * speed)
+#define mouse vec2(mouseX, mouseY)
+#define resolution (RENDERSIZE / zoom)
+// Do the Mario!
+
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+int getPixel(int x, int y)
+{
+	int a = x + (16-y) * 16;
+
+	// https://glsl.heroku.com/e#14516.0
+	if(a >   0 && a <=  14 || a >  17 && a <= 23  || a >  28 && a <=  30 || a >  33 && a <=  38 
+	|| a >  49 && a <=  54 || a >  61 && a <= 62  || a >  65 && a <=  69 || a >  81 && a <=  85 
+	|| a >  97 && a <= 101 || a > 112 && a <= 119 || a > 127 && a <= 131 || a > 142 && a <= 146 
+	|| a > 158 && a <= 160 || a > 174 && a <= 176 || a > 180 && a <= 181 || a > 193 && a <= 194 
+	|| a > 195 && a <= 196 || a > 209 && a <= 211 || a > 225 && a <= 226 || a > 236 && a <= 242 
+	|| a > 243 && a <= 245 || a > 249) return 0;
+	
+	if(a >  14 && a <=  17 || a >  30 && a <=  33 || a >  47 && a <=  49 || a >  57 && a <=  59
+	|| a >  60 && a <=  61 || a >  70 && a <=  71 || a >  72 && a <=  75 || a >  76 && a <=  78
+	|| a >  86 && a <=  87 || a >  89 && a <=  92 || a >  93 && a <=  96 || a > 103 && a <= 107 
+	|| a > 119 && a <= 126 || a > 161 && a <= 163 || a > 177 && a <= 180 || a > 194 && a <= 195 ) return 1;
+	
+	if(a >  23 && a <=  28 || a >  38 && a <=  47 || a >  62 && a <=  65 || a >  78 && a <=  81
+	|| a >  96 && a <=  97 || a > 111 && a <= 112 || a > 126 && a <= 127 || a > 131 && a <= 136 
+	|| a > 137 && a <= 140 || a > 141 && a <= 142 || a > 146 && a <= 153 || a > 154 && a <= 157 
+	|| a > 163 && a <= 169 || a > 183 && a <= 184 ) return 2;
+	
+	if(a >  54 && a <=  57 || a >  59 && a <=  60 || a >  69 && a <=  70 || a >  71 && a <=  72
+	|| a >  75 && a <=  76 || a >  85 && a <=  86 || a >  87 && a <=  89 || a >  92 && a <=  93
+	|| a > 101 && a <= 103 || a > 107 && a <= 111 || a > 160 && a <= 161 || a > 176 && a <= 177 
+	|| a > 191 && a <= 193 || a > 196 && a <= 197 || a > 207 && a <= 209 || a > 211 && a <= 214 
+	|| a > 223 && a <= 225 || a > 226 && a <= 229 || a > 242 && a <= 243 ) return 3;
+	
+	if(a > 136 && a <= 137 || a > 140 && a <= 141 || a > 153 && a <= 154 || a > 157 && a <= 158 
+	|| a > 169 && a <= 174 || a > 181 && a <= 183 || a > 184 && a <= 186 || a > 187 && a <= 189 
+	|| a > 190 && a <= 191 || a > 197 && a <= 207 || a > 214 && a <= 223 || a > 229 && a <= 236 
+	|| a > 245 && a <= 249 ) return 4;
+	 
+	if(a > 186 && a <= 187 || a > 189 && a <= 190) return 5;
+	
+	return 0;
+}
+
+vec3 getColor(int palette, int pixel)
+{
+	if(palette == 0)return pixel == 0 ? vec3(0.0, 0.0, 0.0):
+	                       pixel == 1 ? vec3(1.0, 0.8, 0.8):
+	                       pixel == 2 ? vec3(1.0, 0.0, 0.0):
+	                       pixel == 3 ? vec3(0.5, 0.0, 0.0):
+	                       pixel == 4 ? vec3(0.0, 0.0, 1.0):
+	                       pixel == 5 ? vec3(1.0, 1.0, 0.0):
+	                                    vec3(0.0, 0.0, 0.0);
+	
+	                return pixel == 0 ? vec3(0.0, 0.0, 0.0):
+	                       pixel == 1 ? vec3(1.0, 0.8, 0.8):
+	                       pixel == 2 ? vec3(0.0, 1.0, 0.0):
+	                       pixel == 3 ? vec3(0.5, 0.0, 0.0):
+	                       pixel == 4 ? vec3(1.0, 1.0, 1.0):
+	                       pixel == 5 ? vec3(1.0, 1.0, 0.0):
+		                            vec3(0.0, 0.0, 0.0);
+
+	return vec3(0.0, 0.0, 0.0);
+}
+
+void _userMain()
+{
+	float angle = 0.0; // sin(time * 0.3) / 2.0;
+	float zoom = 16.0; // (cos(time) + 2.0) * 8.0;
+	float palette = fract(time / 4.0) * 2.0;
+	
+	mat2 matrix = mat2(cos(angle), sin(angle), -sin(angle), cos(angle));
+	vec2 coord = matrix * gl_FragCoord.xy;
+	vec2 uv = coord / resolution * vec2(8.0 * zoom, 6.0 * zoom);
+	uv.x = uv.x + sin(time);
+	uv.y = uv.y * abs(cos(time));
+	uv = mod( uv, vec2(16.0, 16.0 ));
+	palette = cos(time)>0.0 ? 0.0 : 1.0;
+	gl_FragColor = vec4(getColor(int(palette), getPixel(int(uv.x), int(uv.y))), 1.0);
+}
+
+void main() {
+    _userMain();
+    vec3 c = gl_FragColor.rgb;
+    float a = gl_FragColor.a;
+    float luma = dot(c, vec3(0.299, 0.587, 0.114));
+    c = mix(vec3(luma), c, saturation);
+    c = (c - 0.5) * contrast + 0.5;
+    c *= vec3(colorR, colorG, colorB);
+    c += brightness;
+    if (hueShift > 0.001) {
+        float cosH = cos(hueShift * 6.28318);
+        float sinH = sin(hueShift * 6.28318);
+        c = vec3(
+            c.r * (0.299 + 0.701*cosH + 0.168*sinH) + c.g * (0.587 - 0.587*cosH + 0.330*sinH) + c.b * (0.114 - 0.114*cosH - 0.497*sinH),
+            c.r * (0.299 - 0.299*cosH - 0.328*sinH) + c.g * (0.587 + 0.413*cosH + 0.035*sinH) + c.b * (0.114 - 0.114*cosH + 0.292*sinH),
+            c.r * (0.299 - 0.300*cosH + 1.250*sinH) + c.g * (0.587 - 0.588*cosH - 1.050*sinH) + c.b * (0.114 + 0.886*cosH - 0.203*sinH)
+        );
+    }
+    if (invert) c = 1.0 - c;
+    gl_FragColor = vec4(clamp(c, 0.0, 1.0), a);
+}

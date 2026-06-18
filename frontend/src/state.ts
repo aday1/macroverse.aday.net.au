@@ -204,7 +204,7 @@ export const GALLERY_PRESET_SETS: string[] = [
   'vj-wire-ready', // 7: ISF format, Resolume Wire ready
   'vj-dark',       // 8: dark/moody, low-energy sets
   'vj-colour',     // 9: colour-forward, palette-heavy
-  'macroverse-set', // 0 / 10: Microvirtuosity universe narrative set
+  'macroverse-origin', // 0 / 10: MacroVerse Origin narrative set (alias: macroverse-set)
 ];
 
 function loadGalleryState(): void {

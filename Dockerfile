@@ -28,9 +28,10 @@ COPY --from=frontend  /build/dist/         ./frontend-build/
 COPY shader-preview-settings.default.json  ./shader-preview-settings.json
 COPY ascii.art                             ./ascii.art
 
-# Starter shader library only (full personal libraries stay private/local)
-COPY shader-index.factory.json             ./shader-index.json
-COPY shaders/starter-pack/                 ./shaders/starter-pack/
+# Public cloud library: starter-pack + VJ-Sorted-Production ISF tree (no resolume/)
+COPY shaders/                              ./shaders/
+# Empty index — boot auto-scan populates SQLite from files on disk
+RUN printf '[]' > shader-index.json
 
 EXPOSE 8765
 

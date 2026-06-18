@@ -1,0 +1,199 @@
+/*{
+    "DESCRIPTION": "CheckerboardBallTime",
+    "CREDIT": "GLSL Sandbox / various",
+    "ISFVSN": "2.0",
+    "CATEGORIES": [
+        "grid"
+    ],
+    "INPUTS": [
+        {
+            "NAME": "useFrameIndex",
+            "TYPE": "bool",
+            "DEFAULT": 0,
+            "LABEL": "Use frame index (timeline sync)"
+        },
+        {
+            "NAME": "fps",
+            "TYPE": "float",
+            "DEFAULT": 60.0,
+            "MIN": 24.0,
+            "MAX": 120.0
+        },
+        {
+            "NAME": "timeScale",
+            "TYPE": "float",
+            "DEFAULT": 1.0,
+            "MIN": 0.1,
+            "MAX": 4.0,
+            "LABEL": "Time speed"
+        },
+        {
+            "NAME": "mouseX",
+            "TYPE": "float",
+            "DEFAULT": 0.5,
+            "MIN": 0.0,
+            "MAX": 1.0,
+            "LABEL": "Mouse X"
+        },
+        {
+            "NAME": "mouseY",
+            "TYPE": "float",
+            "DEFAULT": 0.5,
+            "MIN": 0.0,
+            "MAX": 1.0,
+            "LABEL": "Mouse Y"
+        }
+    ],
+    "TAGS": [
+        "grid"
+    ]
+}*/
+
+
+
+#define time ((useFrameIndex ? (float(FRAMEINDEX) / fps) : TIME) * timeScale)
+#define mouse vec2(mouseX, mouseY)
+#define resolution RENDERSIZE
+
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+precision highp float;
+    
+const float EPS = 0.001;
+const float OFFSET = EPS * 100.0;
+// normalize(vec3(-3, 5, -2))
+const vec3 lightDir = vec3(-0.48666426339228763, 0.8111071056538127, -0.3244428422615251);
+    
+// distance functions
+vec3 onRep(vec3 p, float interval) {
+    vec2 q = mod(p.xz, interval) - interval * 0.5;
+    return vec3(q.x, p.y, q.y);
+}
+    
+float sphereDist(vec3 p, float r) {
+    return length(onRep(p, 3.0)) - r;
+}
+
+float floorDist(vec3 p){
+    return dot(p, vec3(0.0, 1.0, 0.0)) + 1.0;
+}
+
+vec4 minVec4(vec4 a, vec4 b) {
+    return (a.a < b.a) ? a : b;
+}
+
+float checkeredPattern(vec3 p) {
+    float u = 1.0 - floor(mod(p.x, 2.0));
+    float v = 1.0 - floor(mod(p.z, 2.0));
+    if ((u == 1.0 && v < 1.0) || (u < 1.0 && v == 1.0)){
+    return 0.2;
+    } else {
+    return 1.0;
+    }
+}
+
+// http://lolengine.net/blog/2013/07/27/rgb-to-hsv-in-glsl
+vec3 hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+    
+float sceneDist(vec3 p) {
+    return min(
+    sphereDist(p, 1.0), 
+    floorDist(p)
+    );
+}
+
+vec4 sceneColor(vec3 p) {
+    return minVec4(
+    // 3 * 6 / 2 = 9
+    vec4(hsv2rgb(vec3((p.z + p.x + (sin(p.y*20.)*.05)) / 2.0, 1.0, 1.5)), sphereDist(p, 1.0)), 
+    vec4(vec3(0.5) * checkeredPattern(p), floorDist(p))
+    );
+}
+    
+vec3 getNormal(vec3 p) {
+    return normalize(vec3(
+    sceneDist(p + vec3(  EPS, 0.0, 0.0)) - sceneDist(p + vec3( -EPS, 0.0, 0.0)),
+    sceneDist(p + vec3(0.0,   EPS, 0.0)) - sceneDist(p + vec3(0.0,  -EPS, 0.0)),
+    sceneDist(p + vec3(0.0, 0.0,   EPS)) - sceneDist(p + vec3(0.0, 0.0,  -EPS))
+    ));
+}
+
+// http://wgld.org/d/glsl/g020.html
+float getShadow(vec3 ro, vec3 rd){
+    float h = 0.0;
+    float c = 0.0;
+    float r = 1.0;
+    float shadowCoef = 0.5;
+    for (float t = 0.0; t < 50.0; t++){
+    h = sceneDist(ro + rd * c);
+    if(h < EPS){
+        return shadowCoef;
+    }
+    r = min(r, h * 16.0 / c);
+    c += h;
+    }
+    return 1.0 - shadowCoef + r * shadowCoef;
+}
+
+vec3 getRayColor(vec3 origin, vec3 ray, out vec3 p, out vec3 normal, out bool hit) {
+    // marching loop
+    float dist;
+    float depth = 0.0;
+    p = origin;
+    for (int i = 0; i < 90; i++){
+    dist = sceneDist(p);
+    depth += dist;
+    p = origin + depth * ray;
+    if (abs(dist) < EPS) break;
+    }
+    
+    // hit check and calc color
+    vec3 color;
+    if (abs(dist) < EPS) {
+    normal = getNormal(p);
+    float diffuse = clamp(dot(lightDir, normal), 0.1, 1.0);
+    float specular = pow(clamp(dot(reflect(lightDir, normal), ray), 0.0, 1.0), 10.0);
+    float shadow = getShadow(p + normal * OFFSET, lightDir);
+    color = (sceneColor(p).rgb * diffuse + vec3(0.8) * specular) * max(0.5, shadow);
+    hit = true;
+    } else {
+    color = vec3(0.0);
+    }
+    return color - pow(clamp(0.05 * depth, 0.0, 0.6), 2.0);
+}
+    
+void main(void) {
+    // fragment position
+    vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
+    
+    // camera and ray
+    vec3 cPos  = vec3(0.5 - cos(time/2.), 1.2, time/2.);
+    //vec3 cPos  = vec3(mouse.x - 0.5, mouse.y * 4.0 - 0.2, time);
+    vec3 cDir  = normalize(vec3(0.0 + sin(time/2.), -0.3, 1.0));
+    vec3 cUp   = cross(cDir, vec3(1.0, 0.0 ,0.0));
+    vec3 cSide = cross(cDir, cUp);
+    float targetDepth = 1.3;
+    vec3 ray = normalize(cSide * p.x + cUp * p.y + cDir * targetDepth);
+
+    vec3 color = vec3(0.0);
+    vec3 q, normal;
+    bool hit;
+    float alpha = 1.0;
+    for (int i = 0; i < 3; i++) {
+    color += alpha * getRayColor(cPos, ray, q, normal, hit);
+    alpha *= 0.3;
+    ray = normalize(reflect(ray, normal));
+    cPos = q + normal * OFFSET;
+
+    if (!hit) {
+        break;
+    }
+    }
+    gl_FragColor = vec4(color, 1.0);
+}	

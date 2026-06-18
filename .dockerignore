@@ -1,7 +1,6 @@
 resolume/
 resolume-example/
-shaders/**
-!shaders/starter-pack/**
+private-data/
 *.7z
 *.zip
 *.db

@@ -3,14 +3,14 @@
 ## test
 
 - Purpose: development validation.
-- Asset scope: starter-pack only.
-- Forbidden: full `shaders/` bulk, `resolume/`, `resolume-example/`.
+- Asset scope: `shaders/starter-pack/` + `shaders/VJ-Sorted-Production/ISF/`.
+- Forbidden: `resolume/`, `resolume-example/`, `private-data/`.
 
 ## live
 
 - Purpose: public hosted release.
-- Asset scope: starter-pack only.
-- Forbidden: full private creative libraries.
+- Asset scope: same as test — full public ISF library in the image.
+- Forbidden: Resolume Wire trees and aday-only private volume payloads.
 
 ## aday-private
 

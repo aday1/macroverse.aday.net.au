@@ -1,0 +1,137 @@
+/*{
+    "DESCRIPTION": "STARS",
+    "CREDIT": "GLSL Sandbox / various",
+    "ISFVSN": "2.0",
+    "CATEGORIES": [
+        "space"
+    ],
+    "INPUTS": [
+        {
+            "NAME": "useFrameIndex",
+            "TYPE": "bool",
+            "DEFAULT": 0,
+            "LABEL": "Use frame index (timeline sync)"
+        },
+        {
+            "NAME": "fps",
+            "TYPE": "float",
+            "DEFAULT": 60.0,
+            "MIN": 24.0,
+            "MAX": 120.0
+        }
+    ],
+    "TAGS": [
+        "space",
+        "particles"
+    ]
+}*/
+
+
+
+#define time ((useFrameIndex ? (float(FRAMEINDEX) / fps) : TIME))
+#define mouse vec2(0.0)
+#define resolution RENDERSIZE
+// http://jp.wgld.org/js4kintro/
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+varying vec2 surfacePosition;
+//#define t time
+//#define r resolution
+vec3 hsv(float h,float s,float v){
+	vec4 t=vec4(1.,2./3.,1./3.,3.);
+	vec3 p=abs(fract(vec3(h)+t.xyz)*6.-vec3(t.w));
+	return v*mix(vec3(t.x),clamp(p-vec3(t.x),0.,1.),s);
+}
+float psin(float x){
+	return sin(x)*.5+.5;
+}
+float rnd(vec2 p){
+    return fract((sin(p.x)*sin(p.y))*1234.);
+}
+vec2 orbit(float s,float p,float w,float y) {
+	return vec2(w*cos(time*s+p),w*.3*sin(time*s)+y);
+}
+vec3 planet(vec2 px,vec2 p,float r,float f,vec3 c){
+	vec2 lp=(px-p)/r;
+	float l=1.-length(lp);
+	vec3 p3=vec3(lp,sqrt(1.-lp.x*lp.x-lp.y*lp.y));
+	float z=dot(vec3(-.577,.577,.577),p3);
+	float zz=max(pow(dot(normalize(vec3(-.5,.5,1.)),p3),26.),.0001);
+	if(l>0.){
+		float a=psin(time*.1)*.4;
+		float b=a+(1.-a)*z;
+		c+=vec3(cos(2.3*cos(time/r*.015+p3.z*11.)+1.2*sin(p3.y*3.-p3.x*5.1))*.1
+			,cos(.5*cos(time/r*.08+p3.z*2.1)+1.5*sin(time+p3.z*4.+p3.y*f*sin(p3.z*4.)-p3.x*5.1))*.2
+			,cos(cos(time/r*.31+p3.z*2.1)+sin(lp.y*3.-p3.x*5.1))*.4);
+		c*=b;
+		return c+(1.-c)*zz;
+	}
+	return vec3(0);
+}
+vec3 planet2(vec2 px,vec2 p,float r1,float r2,float f,vec3 c,float th){
+	vec2 p0=px-p, lp1=p0/r1;
+	lp1*=mat2(cos(th),sin(th),-sin(th),cos(th));
+	vec2 lp2=(p0)/r2;
+	float l1=1.-(lp1.x*lp1.x+lp1.y*lp1.y*20.);
+	float l2=1.-length(lp2);
+	if(p0.y>0.&&l2>0.)
+		return planet(px,p,r2,f,c);
+	if(l1>0.&&l1<.6)
+		return c*vec3(psin(l1*22.)*.2+.5,psin(l1*31.)*.4+.5,psin(l1*18.)*.2+.5);
+	if(l2>0.)
+		return planet(px,p,r2,f,c);
+	return vec3(0);
+}
+vec3 pt(int i,vec2 p1,float sr,float f){
+	float r=rnd(p1), vn=r/sr;
+	return hsv(fract(vn*30.)*.7-.1,.2,f*pow((3.-abs(float(i)))*.25,2.)*vn);
+}
+vec3 star(vec2 p,float s,float f){
+	vec2 p0=gl_FragCoord.xy+vec2(floor((time+100.)*s),0);
+	float sr=(psin(time*.1))*.003;
+	for(int i=-2;i<3;++i){
+		vec2 p1=p0+vec2(i,0.);
+		if(rnd(p1)<sr)
+			return pt(i,p1,sr,f);
+	}
+	for(int i=-2;i<3;++i){
+		vec2 p1=p0+vec2(0.,i);
+		if(rnd(p1)<sr)
+			return pt(i,p1,sr,f);
+	}
+	return vec3(0);
+}
+vec3 stars(vec2 p){
+	float s=100.,f=2.;
+	for(int i=0;i<6;++i){
+		vec3 r=star(p,s,f);
+		s*=.9; f*=.95;
+		if(r.x!=0.)
+			return r;
+	}
+	return vec3(0);
+}
+void main(void){
+	vec2 p=surfacePosition;//(gl_FragCoord.xy*2.-r)/r;
+	vec3 c=planet(p,orbit(.08,0.,1.1,-2.6),2.1,11.,vec3(.8,.4,0.));
+	if(c.x==0.){
+		c=planet(p,orbit(.05,3.3,.6,0.),.23,1.,vec3(.3,.3,1.));
+		if(c.x==0.){
+			c=planet2(p,orbit(.082,.5,.9,.35),.2,.08,12.1,vec3(.6,.7,.8),-.2);
+			if(c.x==0.){
+				c=planet(p,orbit(.18,1.3,.7,.6),.06,1.,vec3(1.,.3,.3));
+				if(c.x==0.){
+					c=planet2(p,orbit(.056,0.07,1.5,.5),.09,.04,1.,vec3(.6,.8,.3),.1);
+					if(c.x==0.){
+						c=stars(p);
+						float d=pow(psin(time*.24),13.)*pow(fract((cos(time*.1+p.x*sin(time)*4.)*sin(time)+tan(time*.21+p.y*cos(time)*3.5)*sin(time*.7))*(sin(time*.1)*10.)),(sin(time)+2.)*20.);
+						c+=vec3(0.,d*pow(psin(time*.05),4.0),d);
+					}
+				}
+			}
+		}
+	}
+	gl_FragColor=vec4(c,1.);
+}

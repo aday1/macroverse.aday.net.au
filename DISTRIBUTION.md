@@ -12,27 +12,29 @@ This repository publishes the Macroverse toolchain for hosted use.
 Allowed in public artifacts:
 
 - Macroverse application code (`api/`, `frontend/`, runtime files).
-- `shaders/starter-pack/` only.
+- `shaders/starter-pack/` — curated demos and MacroVerse Origin set.
+- `shaders/VJ-Sorted-Production/ISF/` — full public ISF library (~2400 shaders).
 - Deployment/runtime configs (`docker-compose.yml`, `nginx/`, `ops/`, workflows).
 
 Blocked in public artifacts:
 
 - `resolume/`
 - `resolume-example/`
-- `shaders/` except `shaders/starter-pack/`
+- `private-data/` (aday lane volume sync only)
 
 ## Release Gates
 
 Public image/release jobs must fail when:
 
 - blocked directories are present in build context or resulting image;
-- shader file count exceeds starter-pack cap;
+- public shader library is below minimum (see `scripts/verify-public-export.sh`);
 - absolute personal paths are detected in public artifacts.
 
-## Starter Pack Cap
+## Public Library Baseline
 
-- Target cap: 60 shader files maximum.
-- Current baseline: 57 files in `shaders/starter-pack/` (10 legacy root + 41 curated by type + 6 macroverse-set).
+- Minimum: 500 indexed shader files under `shaders/` (CI gate).
+- Current baseline: starter-pack (~53) + VJ-Sorted-Production ISF tree (~2400), including `macroverse/` chapter shaders.
+- Sync source: `Macroversed-FortyTwoEdition` via `scripts/sync-public-shaders.ps1`.
 
 ## Ownership Boundary
 
