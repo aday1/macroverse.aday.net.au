@@ -1148,7 +1148,7 @@ func scanAllFiles() map[string]time.Time {
 			}
 			if info.IsDir() {
 				base := filepath.Base(path)
-				if base == ".git" || base == "node_modules" || base == ".svn" {
+				if base == ".git" || base == "node_modules" || base == ".svn" || base == "_quarantine" {
 					return filepath.SkipDir
 				}
 				return nil
@@ -1193,40 +1193,7 @@ func triggerIncrementalIndex() {
 				continue
 			}
 			maxID++
-			ext := strings.ToLower(filepath.Ext(path))
-			format := "glsl"
-			if ext == ".fs" || ext == ".isf" {
-				format = "isf"
-			}
-			base := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
-			name := strings.ReplaceAll(base, "-", " ")
-			name = strings.ReplaceAll(name, "_", " ")
-
-			data, _ := os.ReadFile(path)
-			h := sha256.Sum256(data)
-			fileHash := hex.EncodeToString(h[:8])
-
-			category := "uncategorized"
-			dir := filepath.Base(filepath.Dir(path))
-			if dir != "" && dir != "." {
-				category = dir
-			}
-
-			sets := []string{}
-			if category == "macroverse" || strings.Contains(filepath.ToSlash(path), "/macroverse/") {
-				sets = []string{"macroverse-origin", "macroverse-set", "vj-cosmic", "vj-wire-ready"}
-			}
-
-			existing = append(existing, ShaderEntry{
-				ID:       maxID,
-				Path:     path,
-				Name:     name,
-				Category: category,
-				Tags:     []string{},
-				Sets:     sets,
-				Format:   format,
-				FileHash: fileHash,
-			})
+			existing = append(existing, buildShaderEntry(path, maxID))
 			added++
 		}
 
@@ -1245,8 +1212,9 @@ func triggerIncrementalIndex() {
 			cleaned = append(cleaned, e)
 		}
 
+		backfilled := backfillEntriesMetadata(cleaned)
 		writeIndex(cleaned)
-		logSection("WATCH", fmt.Sprintf("native scan done: %d total, %d added, %d removed", len(cleaned), added, removed))
+		logSection("WATCH", fmt.Sprintf("native scan done: %d total, %d added, %d removed, %d metadata backfill", len(cleaned), added, removed, backfilled))
 	}()
 }
 
@@ -2297,40 +2265,7 @@ func consoleKeyListener(port string) {
 						continue
 					}
 					maxID++
-					ext := strings.ToLower(filepath.Ext(path))
-					format := "glsl"
-					if ext == ".fs" || ext == ".isf" {
-						format = "isf"
-					}
-					base := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
-					name := strings.ReplaceAll(base, "-", " ")
-					name = strings.ReplaceAll(name, "_", " ")
-
-					data, _ := os.ReadFile(path)
-					h := sha256.Sum256(data)
-					fileHash := hex.EncodeToString(h[:8])
-
-					category := "uncategorized"
-					dir := filepath.Base(filepath.Dir(path))
-					if dir != "" && dir != "." {
-						category = dir
-					}
-
-					sets := []string{}
-					if category == "macroverse" || strings.Contains(filepath.ToSlash(path), "/macroverse/") {
-						sets = []string{"macroverse-origin", "macroverse-set", "vj-cosmic", "vj-wire-ready"}
-					}
-
-					existing = append(existing, ShaderEntry{
-						ID:       maxID,
-						Path:     path,
-						Name:     name,
-						Category: category,
-						Tags:     []string{},
-						Sets:     sets,
-						Format:   format,
-						FileHash: fileHash,
-					})
+					existing = append(existing, buildShaderEntry(path, maxID))
 					added++
 				}
 
@@ -2349,8 +2284,9 @@ func consoleKeyListener(port string) {
 					cleaned = append(cleaned, e)
 				}
 
+				backfilled := backfillEntriesMetadata(cleaned)
 				writeIndex(cleaned)
-				logSection("CONSOLE", fmt.Sprintf("Scan complete: %d total, %d added, %d removed", len(cleaned), added, removed))
+				logSection("CONSOLE", fmt.Sprintf("Scan complete: %d total, %d added, %d removed, %d metadata backfill", len(cleaned), added, removed, backfilled))
 			}()
 
 		case 'q', 'Q':
@@ -2517,6 +2453,10 @@ func main() {
 		} else if len(diskFiles) > len(alive) {
 			logSection("BOOT", fmt.Sprintf("index has %d entries but %d shader files on disk — triggering merge scan", len(alive), len(diskFiles)))
 			triggerIncrementalIndex()
+		} else if backfillEntriesMetadata(alive) > 0 {
+			if err2 := writeIndex(alive); err2 == nil {
+				logSection("BOOT", "backfilled VJ-Generated tags/sets from ISF headers")
+			}
 		}
 	}
 
@@ -6488,40 +6428,7 @@ func main() {
 				continue
 			}
 			maxID++
-			ext := strings.ToLower(filepath.Ext(path))
-			format := "glsl"
-			if ext == ".fs" || ext == ".isf" {
-				format = "isf"
-			}
-			base := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
-			name := strings.ReplaceAll(base, "-", " ")
-			name = strings.ReplaceAll(name, "_", " ")
-
-			data, _ := os.ReadFile(path)
-			h := sha256.Sum256(data)
-			fileHash := hex.EncodeToString(h[:8])
-
-			category := "uncategorized"
-			dir := filepath.Base(filepath.Dir(path))
-			if dir != "" && dir != "." {
-				category = dir
-			}
-
-			sets := []string{}
-			if category == "macroverse" || strings.Contains(filepath.ToSlash(path), "/macroverse/") {
-				sets = []string{"macroverse-origin", "macroverse-set", "vj-cosmic", "vj-wire-ready"}
-			}
-
-			existing = append(existing, ShaderEntry{
-				ID:       maxID,
-				Path:     path,
-				Name:     name,
-				Category: category,
-				Tags:     []string{},
-				Sets:     sets,
-				Format:   format,
-				FileHash: fileHash,
-			})
+			existing = append(existing, buildShaderEntry(path, maxID))
 			added++
 		}
 
@@ -6540,15 +6447,17 @@ func main() {
 			cleaned = append(cleaned, e)
 		}
 
+		backfilled := backfillEntriesMetadata(cleaned)
 		writeIndex(cleaned)
-		logSection("SCAN", fmt.Sprintf("native scan done: %d total, %d added, %d removed", len(cleaned), added, removed))
+		logSection("SCAN", fmt.Sprintf("native scan done: %d total, %d added, %d removed, %d metadata backfill", len(cleaned), added, removed, backfilled))
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"ok":      true,
-			"total":   len(cleaned),
-			"added":   added,
-			"removed": removed,
+			"ok":         true,
+			"total":      len(cleaned),
+			"added":      added,
+			"removed":    removed,
+			"backfilled": backfilled,
 		})
 	})
 

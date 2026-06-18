@@ -1,0 +1,2113 @@
+{
+  "generatedAt": "2026-06-18T05:10:53.379Z",
+  "summary": {
+    "generatedShipped": 300,
+    "quarantined": 86,
+    "quarantineByTemplate": {
+      "cosmic-streak": 22,
+      "geo-voronoi": 22,
+      "copper-field": 26,
+      "tunnel-pipes": 16
+    },
+    "note": "Quarantined shaders compile but fail blank-pixel QA; excluded from Docker image; no thumbnails."
+  },
+  "quarantined": [
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-000.fs",
+      "filename": "cosmic-streak-000.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-0-1781758932291",
+      "description": "Cosmic streak cosmic-streak-0-1781758932291",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-000.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-001.fs",
+      "filename": "cosmic-streak-001.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-1-1781758932291",
+      "description": "Cosmic streak cosmic-streak-1-1781758932291",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-001.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-002.fs",
+      "filename": "cosmic-streak-002.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-2-1781758932292",
+      "description": "Cosmic streak cosmic-streak-2-1781758932292",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-002.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-003.fs",
+      "filename": "cosmic-streak-003.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-3-1781758932292",
+      "description": "Cosmic streak cosmic-streak-3-1781758932292",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-003.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-004.fs",
+      "filename": "cosmic-streak-004.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-4-1781758932293",
+      "description": "Cosmic streak cosmic-streak-4-1781758932293",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-004.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-005.fs",
+      "filename": "cosmic-streak-005.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-5-1781758932293",
+      "description": "Cosmic streak cosmic-streak-5-1781758932293",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-005.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-006.fs",
+      "filename": "cosmic-streak-006.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-6-1781758932294",
+      "description": "Cosmic streak cosmic-streak-6-1781758932294",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-006.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-007.fs",
+      "filename": "cosmic-streak-007.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-7-1781758932294",
+      "description": "Cosmic streak cosmic-streak-7-1781758932294",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-007.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-008.fs",
+      "filename": "cosmic-streak-008.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-8-1781758932295",
+      "description": "Cosmic streak cosmic-streak-8-1781758932295",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-008.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-009.fs",
+      "filename": "cosmic-streak-009.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-9-1781758932295",
+      "description": "Cosmic streak cosmic-streak-9-1781758932295",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-009.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-010.fs",
+      "filename": "cosmic-streak-010.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-10-1781758932295",
+      "description": "Cosmic streak cosmic-streak-10-1781758932295",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-010.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-011.fs",
+      "filename": "cosmic-streak-011.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-11-1781758932296",
+      "description": "Cosmic streak cosmic-streak-11-1781758932296",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-011.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-w2-000.fs",
+      "filename": "cosmic-streak-w2-000.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-0-1781758991420",
+      "description": "Cosmic streak cosmic-streak-0-1781758991420",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-000.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-w2-001.fs",
+      "filename": "cosmic-streak-w2-001.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-1-1781758991420",
+      "description": "Cosmic streak cosmic-streak-1-1781758991420",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-001.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-w2-002.fs",
+      "filename": "cosmic-streak-w2-002.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-2-1781758991421",
+      "description": "Cosmic streak cosmic-streak-2-1781758991421",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-002.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-w2-003.fs",
+      "filename": "cosmic-streak-w2-003.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-3-1781758991421",
+      "description": "Cosmic streak cosmic-streak-3-1781758991421",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-003.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-w2-004.fs",
+      "filename": "cosmic-streak-w2-004.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-4-1781758991422",
+      "description": "Cosmic streak cosmic-streak-4-1781758991422",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-004.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-w2-005.fs",
+      "filename": "cosmic-streak-w2-005.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-5-1781758991422",
+      "description": "Cosmic streak cosmic-streak-5-1781758991422",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-005.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-w2-006.fs",
+      "filename": "cosmic-streak-w2-006.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-6-1781758991423",
+      "description": "Cosmic streak cosmic-streak-6-1781758991423",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-006.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-w2-007.fs",
+      "filename": "cosmic-streak-w2-007.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-7-1781758991423",
+      "description": "Cosmic streak cosmic-streak-7-1781758991423",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-007.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-w2-008.fs",
+      "filename": "cosmic-streak-w2-008.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-8-1781758991424",
+      "description": "Cosmic streak cosmic-streak-8-1781758991424",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-008.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-w2-009.fs",
+      "filename": "cosmic-streak-w2-009.fs",
+      "template": "cosmic-streak",
+      "category": "cosmic",
+      "seed": "streak cosmic-streak-9-1781758991424",
+      "description": "Cosmic streak cosmic-streak-9-1781758991424",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-009.fs",
+      "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-000.fs",
+      "filename": "geo-voronoi-000.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-0-1781758932296",
+      "description": "Voronoi glow geo-voronoi-0-1781758932296",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-000.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-001.fs",
+      "filename": "geo-voronoi-001.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-1-1781758932297",
+      "description": "Voronoi glow geo-voronoi-1-1781758932297",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-001.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-002.fs",
+      "filename": "geo-voronoi-002.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-2-1781758932297",
+      "description": "Voronoi glow geo-voronoi-2-1781758932297",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-002.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-003.fs",
+      "filename": "geo-voronoi-003.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-3-1781758932298",
+      "description": "Voronoi glow geo-voronoi-3-1781758932298",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-003.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-004.fs",
+      "filename": "geo-voronoi-004.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-4-1781758932298",
+      "description": "Voronoi glow geo-voronoi-4-1781758932298",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-004.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-005.fs",
+      "filename": "geo-voronoi-005.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-5-1781758932299",
+      "description": "Voronoi glow geo-voronoi-5-1781758932299",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-005.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-006.fs",
+      "filename": "geo-voronoi-006.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-6-1781758932299",
+      "description": "Voronoi glow geo-voronoi-6-1781758932299",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-006.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-007.fs",
+      "filename": "geo-voronoi-007.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-7-1781758932300",
+      "description": "Voronoi glow geo-voronoi-7-1781758932300",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-007.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-008.fs",
+      "filename": "geo-voronoi-008.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-8-1781758932301",
+      "description": "Voronoi glow geo-voronoi-8-1781758932301",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-008.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-009.fs",
+      "filename": "geo-voronoi-009.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-9-1781758932301",
+      "description": "Voronoi glow geo-voronoi-9-1781758932301",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-009.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-010.fs",
+      "filename": "geo-voronoi-010.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-10-1781758932302",
+      "description": "Voronoi glow geo-voronoi-10-1781758932302",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-010.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-011.fs",
+      "filename": "geo-voronoi-011.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-11-1781758932302",
+      "description": "Voronoi glow geo-voronoi-11-1781758932302",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-011.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w2-000.fs",
+      "filename": "geo-voronoi-w2-000.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-0-1781758991475",
+      "description": "Voronoi glow geo-voronoi-0-1781758991475",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-000.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w2-001.fs",
+      "filename": "geo-voronoi-w2-001.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-1-1781758991477",
+      "description": "Voronoi glow geo-voronoi-1-1781758991477",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-001.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w2-002.fs",
+      "filename": "geo-voronoi-w2-002.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-2-1781758991478",
+      "description": "Voronoi glow geo-voronoi-2-1781758991478",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-002.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w2-003.fs",
+      "filename": "geo-voronoi-w2-003.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-3-1781758991478",
+      "description": "Voronoi glow geo-voronoi-3-1781758991478",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-003.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w2-004.fs",
+      "filename": "geo-voronoi-w2-004.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-4-1781758991479",
+      "description": "Voronoi glow geo-voronoi-4-1781758991479",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-004.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w2-005.fs",
+      "filename": "geo-voronoi-w2-005.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-5-1781758991479",
+      "description": "Voronoi glow geo-voronoi-5-1781758991479",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-005.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w2-006.fs",
+      "filename": "geo-voronoi-w2-006.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-6-1781758991480",
+      "description": "Voronoi glow geo-voronoi-6-1781758991480",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-006.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w2-007.fs",
+      "filename": "geo-voronoi-w2-007.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-7-1781758991481",
+      "description": "Voronoi glow geo-voronoi-7-1781758991481",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-007.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w2-008.fs",
+      "filename": "geo-voronoi-w2-008.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-8-1781758991481",
+      "description": "Voronoi glow geo-voronoi-8-1781758991481",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-008.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w2-009.fs",
+      "filename": "geo-voronoi-w2-009.fs",
+      "template": "geo-voronoi",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-9-1781758991482",
+      "description": "Voronoi glow geo-voronoi-9-1781758991482",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-009.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-000-m0.fs",
+      "filename": "copper-field-000-m0.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-0-1781758932283",
+      "description": "Copper field copper-field-0-1781758932283",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-000-m0.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-000.fs",
+      "filename": "copper-field-000.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-0-1781758932283",
+      "description": "Copper field copper-field-0-1781758932283",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-000.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-001-m1.fs",
+      "filename": "copper-field-001-m1.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-1-1781758932285",
+      "description": "Copper field copper-field-1-1781758932285",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-001-m1.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-001.fs",
+      "filename": "copper-field-001.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-1-1781758932285",
+      "description": "Copper field copper-field-1-1781758932285",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-001.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-002-m2.fs",
+      "filename": "copper-field-002-m2.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-2-1781758932286",
+      "description": "Copper field copper-field-2-1781758932286",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-002-m2.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-002.fs",
+      "filename": "copper-field-002.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-2-1781758932286",
+      "description": "Copper field copper-field-2-1781758932286",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-002.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-003-m3.fs",
+      "filename": "copper-field-003-m3.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-3-1781758932286",
+      "description": "Copper field copper-field-3-1781758932286",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-003-m3.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-003.fs",
+      "filename": "copper-field-003.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-3-1781758932286",
+      "description": "Copper field copper-field-3-1781758932286",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-003.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-004.fs",
+      "filename": "copper-field-004.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-4-1781758932287",
+      "description": "Copper field copper-field-4-1781758932287",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-004.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-005.fs",
+      "filename": "copper-field-005.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-5-1781758932287",
+      "description": "Copper field copper-field-5-1781758932287",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-005.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-006.fs",
+      "filename": "copper-field-006.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-6-1781758932288",
+      "description": "Copper field copper-field-6-1781758932288",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-006.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-007.fs",
+      "filename": "copper-field-007.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-7-1781758932288",
+      "description": "Copper field copper-field-7-1781758932288",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-007.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-008.fs",
+      "filename": "copper-field-008.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-8-1781758932289",
+      "description": "Copper field copper-field-8-1781758932289",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-008.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-009.fs",
+      "filename": "copper-field-009.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-9-1781758932289",
+      "description": "Copper field copper-field-9-1781758932289",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-009.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-010.fs",
+      "filename": "copper-field-010.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-10-1781758932290",
+      "description": "Copper field copper-field-10-1781758932290",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-010.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-011.fs",
+      "filename": "copper-field-011.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-11-1781758932290",
+      "description": "Copper field copper-field-11-1781758932290",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-011.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-w2-000.fs",
+      "filename": "copper-field-w2-000.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-0-1781758991406",
+      "description": "Copper field copper-field-0-1781758991406",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-w2-000.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-w2-001.fs",
+      "filename": "copper-field-w2-001.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-1-1781758991408",
+      "description": "Copper field copper-field-1-1781758991408",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-w2-001.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-w2-002.fs",
+      "filename": "copper-field-w2-002.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-2-1781758991409",
+      "description": "Copper field copper-field-2-1781758991409",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-w2-002.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-w2-003.fs",
+      "filename": "copper-field-w2-003.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-3-1781758991410",
+      "description": "Copper field copper-field-3-1781758991410",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-w2-003.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-w2-004.fs",
+      "filename": "copper-field-w2-004.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-4-1781758991411",
+      "description": "Copper field copper-field-4-1781758991411",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-w2-004.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-w2-005.fs",
+      "filename": "copper-field-w2-005.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-5-1781758991411",
+      "description": "Copper field copper-field-5-1781758991411",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-w2-005.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-w2-006.fs",
+      "filename": "copper-field-w2-006.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-6-1781758991412",
+      "description": "Copper field copper-field-6-1781758991412",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-w2-006.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-w2-007.fs",
+      "filename": "copper-field-w2-007.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-7-1781758991413",
+      "description": "Copper field copper-field-7-1781758991413",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-w2-007.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-w2-008.fs",
+      "filename": "copper-field-w2-008.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-8-1781758991413",
+      "description": "Copper field copper-field-8-1781758991413",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-w2-008.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-w2-009.fs",
+      "filename": "copper-field-w2-009.fs",
+      "template": "copper-field",
+      "category": "macroverse",
+      "seed": "field copper-field-9-1781758991414",
+      "description": "Copper field copper-field-9-1781758991414",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "macroverse",
+        "cosmic"
+      ],
+      "sets": [
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/macroverse/copper-field-w2-009.fs",
+      "qaError": "blank render var=13.5 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-000-m0.fs",
+      "filename": "tunnel-pipes-000-m0.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-0-1781758932303",
+      "description": "Retro pipes tunnel-pipes-0-1781758932303",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-000-m0.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-000.fs",
+      "filename": "tunnel-pipes-000.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-0-1781758932303",
+      "description": "Retro pipes tunnel-pipes-0-1781758932303",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-000.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-001-m1.fs",
+      "filename": "tunnel-pipes-001-m1.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-1-1781758932303",
+      "description": "Retro pipes tunnel-pipes-1-1781758932303",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-001-m1.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-001.fs",
+      "filename": "tunnel-pipes-001.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-1-1781758932303",
+      "description": "Retro pipes tunnel-pipes-1-1781758932303",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-001.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-002-m2.fs",
+      "filename": "tunnel-pipes-002-m2.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-2-1781758932304",
+      "description": "Retro pipes tunnel-pipes-2-1781758932304",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-002-m2.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-002.fs",
+      "filename": "tunnel-pipes-002.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-2-1781758932304",
+      "description": "Retro pipes tunnel-pipes-2-1781758932304",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-002.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-003-m3.fs",
+      "filename": "tunnel-pipes-003-m3.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-3-1781758932304",
+      "description": "Retro pipes tunnel-pipes-3-1781758932304",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-003-m3.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-003.fs",
+      "filename": "tunnel-pipes-003.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-3-1781758932304",
+      "description": "Retro pipes tunnel-pipes-3-1781758932304",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-003.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-004.fs",
+      "filename": "tunnel-pipes-004.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-4-1781758932304",
+      "description": "Retro pipes tunnel-pipes-4-1781758932304",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-004.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-005.fs",
+      "filename": "tunnel-pipes-005.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-5-1781758932305",
+      "description": "Retro pipes tunnel-pipes-5-1781758932305",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-005.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-006.fs",
+      "filename": "tunnel-pipes-006.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-6-1781758932305",
+      "description": "Retro pipes tunnel-pipes-6-1781758932305",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-006.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-007.fs",
+      "filename": "tunnel-pipes-007.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-7-1781758932306",
+      "description": "Retro pipes tunnel-pipes-7-1781758932306",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-007.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-008.fs",
+      "filename": "tunnel-pipes-008.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-8-1781758932306",
+      "description": "Retro pipes tunnel-pipes-8-1781758932306",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-008.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-009.fs",
+      "filename": "tunnel-pipes-009.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-9-1781758932307",
+      "description": "Retro pipes tunnel-pipes-9-1781758932307",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-009.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-010.fs",
+      "filename": "tunnel-pipes-010.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-10-1781758932307",
+      "description": "Retro pipes tunnel-pipes-10-1781758932307",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-010.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-011.fs",
+      "filename": "tunnel-pipes-011.fs",
+      "template": "tunnel-pipes",
+      "category": "tunnel",
+      "seed": "pipes tunnel-pipes-11-1781758932308",
+      "description": "Retro pipes tunnel-pipes-11-1781758932308",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "tunnel"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-011.fs",
+      "qaError": "blank render var=25.1 black=75.8%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    }
+  ],
+  "generatedSample": [
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-000-m0-m0.fs",
+      "filename": "ambient-cloud-000-m0-m0.fs",
+      "template": "ambient-cloud",
+      "category": "ambient",
+      "seed": "drift ambient-cloud-0-1781758904673",
+      "description": "Cloud drift ambient-cloud-0-1781758904673",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "ambient"
+      ],
+      "sets": [
+        "vj-ambient",
+        "vj-wire-ready"
+      ]
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-000-m0.fs",
+      "filename": "ambient-cloud-000-m0.fs",
+      "template": "ambient-cloud",
+      "category": "ambient",
+      "seed": "drift ambient-cloud-0-1781758904673",
+      "description": "Cloud drift ambient-cloud-0-1781758904673",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "ambient"
+      ],
+      "sets": [
+        "vj-ambient",
+        "vj-wire-ready"
+      ]
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-000-m1.fs",
+      "filename": "ambient-cloud-000-m1.fs",
+      "template": "ambient-cloud",
+      "category": "ambient",
+      "seed": "drift ambient-cloud-0-1781758904673",
+      "description": "Cloud drift ambient-cloud-0-1781758904673",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "ambient"
+      ],
+      "sets": [
+        "vj-ambient",
+        "vj-wire-ready"
+      ]
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-000.fs",
+      "filename": "ambient-cloud-000.fs",
+      "template": "ambient-cloud",
+      "category": "ambient",
+      "seed": "drift ambient-cloud-0-1781758904673",
+      "description": "Cloud drift ambient-cloud-0-1781758904673",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "ambient"
+      ],
+      "sets": [
+        "vj-ambient",
+        "vj-wire-ready"
+      ]
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-001-m1-m2.fs",
+      "filename": "ambient-cloud-001-m1-m2.fs",
+      "template": "ambient-cloud",
+      "category": "ambient",
+      "seed": "drift ambient-cloud-1-1781758904673",
+      "description": "Cloud drift ambient-cloud-1-1781758904673",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "ambient"
+      ],
+      "sets": [
+        "vj-ambient",
+        "vj-wire-ready"
+      ]
+    }
+  ],
+  "generatedWithMetadata": 300
+}

@@ -53,6 +53,9 @@ while ($round -lt $MaxRounds) {
   }
 }
 
+Write-Host "`nSeeding metadata manifest (quarantine + tags)..." -ForegroundColor Cyan
+node scripts/seed-generated-metadata.mjs
+
 Write-Host "`nBaking thumbnails for VJ-Generated..." -ForegroundColor Cyan
 node scripts/bake-thumbnails-offline.mjs --dir=shaders/VJ-Generated --merge --concurrency=3
 
