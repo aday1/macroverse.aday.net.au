@@ -1,18 +1,579 @@
 {
-  "generatedAt": "2026-06-18T05:33:12.965Z",
+  "generatedAt": "2026-06-18T05:40:25.536Z",
   "summary": {
-    "generatedShipped": 450,
-    "quarantined": 96,
+    "generatedShipped": 738,
+    "quarantined": 204,
     "quarantineByTemplate": {
+      "chroma-bars-w4": 12,
+      "chroma-bars-w4b": 12,
       "cosmic-streak": 22,
+      "starfield-parallax-w4": 12,
+      "void-portal-w4": 12,
       "geo-voronoi": 22,
       "geo-voronoi-w3": 10,
+      "hex-honeycomb-w4": 12,
+      "hex-honeycomb-w4b": 12,
       "copper-field": 26,
+      "wave-interference-w4": 12,
+      "wave-interference-w4b": 12,
+      "circuit-trace-w4": 12,
       "tunnel-pipes": 16
     },
     "note": "Quarantined shaders compile but fail blank-pixel QA; excluded from Docker image; no thumbnails."
   },
   "quarantined": [
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-000.fs",
+      "filename": "chroma-bars-w4-000.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-0-1781761128252",
+      "description": "Chroma bars chroma-bars-0-1781761128252",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-000.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-001.fs",
+      "filename": "chroma-bars-w4-001.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-1-1781761128253",
+      "description": "Chroma bars chroma-bars-1-1781761128253",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-001.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-002.fs",
+      "filename": "chroma-bars-w4-002.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-2-1781761128253",
+      "description": "Chroma bars chroma-bars-2-1781761128253",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-002.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-003.fs",
+      "filename": "chroma-bars-w4-003.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-3-1781761128254",
+      "description": "Chroma bars chroma-bars-3-1781761128254",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-003.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-004.fs",
+      "filename": "chroma-bars-w4-004.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-4-1781761128255",
+      "description": "Chroma bars chroma-bars-4-1781761128255",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-004.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-005.fs",
+      "filename": "chroma-bars-w4-005.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-5-1781761128256",
+      "description": "Chroma bars chroma-bars-5-1781761128256",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-005.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-006.fs",
+      "filename": "chroma-bars-w4-006.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-6-1781761128256",
+      "description": "Chroma bars chroma-bars-6-1781761128256",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-006.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-007.fs",
+      "filename": "chroma-bars-w4-007.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-7-1781761128257",
+      "description": "Chroma bars chroma-bars-7-1781761128257",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-007.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-008.fs",
+      "filename": "chroma-bars-w4-008.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-8-1781761128258",
+      "description": "Chroma bars chroma-bars-8-1781761128258",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-008.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-009.fs",
+      "filename": "chroma-bars-w4-009.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-9-1781761128258",
+      "description": "Chroma bars chroma-bars-9-1781761128258",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-009.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-010.fs",
+      "filename": "chroma-bars-w4-010.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-10-1781761128259",
+      "description": "Chroma bars chroma-bars-10-1781761128259",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-010.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4-011.fs",
+      "filename": "chroma-bars-w4-011.fs",
+      "template": "chroma-bars-w4",
+      "category": "colour",
+      "seed": "bars chroma-bars-11-1781761128260",
+      "description": "Chroma bars chroma-bars-11-1781761128260",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-011.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-000.fs",
+      "filename": "chroma-bars-w4b-000.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-0-1781761186762",
+      "description": "Chroma bars chroma-bars-0-1781761186762",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-000.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-001.fs",
+      "filename": "chroma-bars-w4b-001.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-1-1781761186763",
+      "description": "Chroma bars chroma-bars-1-1781761186763",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-001.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-002.fs",
+      "filename": "chroma-bars-w4b-002.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-2-1781761186765",
+      "description": "Chroma bars chroma-bars-2-1781761186765",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-002.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-003.fs",
+      "filename": "chroma-bars-w4b-003.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-3-1781761186766",
+      "description": "Chroma bars chroma-bars-3-1781761186766",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-003.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-004.fs",
+      "filename": "chroma-bars-w4b-004.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-4-1781761186767",
+      "description": "Chroma bars chroma-bars-4-1781761186767",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-004.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-005.fs",
+      "filename": "chroma-bars-w4b-005.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-5-1781761186767",
+      "description": "Chroma bars chroma-bars-5-1781761186767",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-005.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-006.fs",
+      "filename": "chroma-bars-w4b-006.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-6-1781761186768",
+      "description": "Chroma bars chroma-bars-6-1781761186768",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-006.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-007.fs",
+      "filename": "chroma-bars-w4b-007.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-7-1781761186769",
+      "description": "Chroma bars chroma-bars-7-1781761186769",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-007.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-008.fs",
+      "filename": "chroma-bars-w4b-008.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-8-1781761186770",
+      "description": "Chroma bars chroma-bars-8-1781761186770",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-008.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-009.fs",
+      "filename": "chroma-bars-w4b-009.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-9-1781761186771",
+      "description": "Chroma bars chroma-bars-9-1781761186771",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-009.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-010.fs",
+      "filename": "chroma-bars-w4b-010.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-10-1781761186772",
+      "description": "Chroma bars chroma-bars-10-1781761186772",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-010.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/colour/chroma-bars-w4b-011.fs",
+      "filename": "chroma-bars-w4b-011.fs",
+      "template": "chroma-bars-w4b",
+      "category": "colour",
+      "seed": "bars chroma-bars-11-1781761186773",
+      "description": "Chroma bars chroma-bars-11-1781761186773",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "colour"
+      ],
+      "sets": [
+        "vj-colour",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4b-011.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
     {
       "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/cosmic-streak-000.fs",
       "filename": "cosmic-streak-000.fs",
@@ -515,6 +1076,570 @@
       ],
       "originalPath": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w2-009.fs",
       "qaError": "blank render var=26.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-000.fs",
+      "filename": "starfield-parallax-w4-000.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-0-1781761128154",
+      "description": "Starfield parallax starfield-parallax-0-1781761128154",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-000.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-001.fs",
+      "filename": "starfield-parallax-w4-001.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-1-1781761128155",
+      "description": "Starfield parallax starfield-parallax-1-1781761128155",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-001.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-002.fs",
+      "filename": "starfield-parallax-w4-002.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-2-1781761128156",
+      "description": "Starfield parallax starfield-parallax-2-1781761128156",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-002.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-003.fs",
+      "filename": "starfield-parallax-w4-003.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-3-1781761128157",
+      "description": "Starfield parallax starfield-parallax-3-1781761128157",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-003.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-004.fs",
+      "filename": "starfield-parallax-w4-004.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-4-1781761128159",
+      "description": "Starfield parallax starfield-parallax-4-1781761128159",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-004.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-005.fs",
+      "filename": "starfield-parallax-w4-005.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-5-1781761128162",
+      "description": "Starfield parallax starfield-parallax-5-1781761128162",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-005.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-006.fs",
+      "filename": "starfield-parallax-w4-006.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-6-1781761128164",
+      "description": "Starfield parallax starfield-parallax-6-1781761128164",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-006.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-007.fs",
+      "filename": "starfield-parallax-w4-007.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-7-1781761128166",
+      "description": "Starfield parallax starfield-parallax-7-1781761128166",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-007.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-008.fs",
+      "filename": "starfield-parallax-w4-008.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-8-1781761128167",
+      "description": "Starfield parallax starfield-parallax-8-1781761128167",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-008.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-009.fs",
+      "filename": "starfield-parallax-w4-009.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-9-1781761128168",
+      "description": "Starfield parallax starfield-parallax-9-1781761128168",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-009.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-010.fs",
+      "filename": "starfield-parallax-w4-010.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-10-1781761128169",
+      "description": "Starfield parallax starfield-parallax-10-1781761128169",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-010.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/starfield-parallax-w4-011.fs",
+      "filename": "starfield-parallax-w4-011.fs",
+      "template": "starfield-parallax-w4",
+      "category": "cosmic",
+      "seed": "parallax starfield-parallax-11-1781761128170",
+      "description": "Starfield parallax starfield-parallax-11-1781761128170",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-011.fs",
+      "qaError": "blank render var=32.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-000.fs",
+      "filename": "void-portal-w4-000.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-0-1781761128261",
+      "description": "Void portal void-portal-0-1781761128261",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-000.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-001.fs",
+      "filename": "void-portal-w4-001.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-1-1781761128262",
+      "description": "Void portal void-portal-1-1781761128262",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-001.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-002.fs",
+      "filename": "void-portal-w4-002.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-2-1781761128264",
+      "description": "Void portal void-portal-2-1781761128264",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-002.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-003.fs",
+      "filename": "void-portal-w4-003.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-3-1781761128265",
+      "description": "Void portal void-portal-3-1781761128265",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-003.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-004.fs",
+      "filename": "void-portal-w4-004.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-4-1781761128265",
+      "description": "Void portal void-portal-4-1781761128265",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-004.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-005.fs",
+      "filename": "void-portal-w4-005.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-5-1781761128266",
+      "description": "Void portal void-portal-5-1781761128266",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-005.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-006.fs",
+      "filename": "void-portal-w4-006.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-6-1781761128267",
+      "description": "Void portal void-portal-6-1781761128267",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-006.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-007.fs",
+      "filename": "void-portal-w4-007.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-7-1781761128267",
+      "description": "Void portal void-portal-7-1781761128267",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-007.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-008.fs",
+      "filename": "void-portal-w4-008.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-8-1781761128268",
+      "description": "Void portal void-portal-8-1781761128268",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-008.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-009.fs",
+      "filename": "void-portal-w4-009.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-9-1781761128269",
+      "description": "Void portal void-portal-9-1781761128269",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-009.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-010.fs",
+      "filename": "void-portal-w4-010.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-10-1781761128272",
+      "description": "Void portal void-portal-10-1781761128272",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-010.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/cosmic/void-portal-w4-011.fs",
+      "filename": "void-portal-w4-011.fs",
+      "template": "void-portal-w4",
+      "category": "cosmic",
+      "seed": "portal void-portal-11-1781761128273",
+      "description": "Void portal void-portal-11-1781761128273",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "cosmic"
+      ],
+      "sets": [
+        "vj-cosmic",
+        "macroverse-origin",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-011.fs",
+      "qaError": "blank render var=12.2 black=0.0%",
       "shipped": false,
       "thumbnail": false,
       "status": "quarantined-unfixable"
@@ -1256,6 +2381,558 @@
       "status": "quarantined-unfixable"
     },
     {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-000.fs",
+      "filename": "hex-honeycomb-w4-000.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-0-1781761128171",
+      "description": "Hex honeycomb hex-honeycomb-0-1781761128171",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-000.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-001.fs",
+      "filename": "hex-honeycomb-w4-001.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-1-1781761128173",
+      "description": "Hex honeycomb hex-honeycomb-1-1781761128173",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-001.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-002.fs",
+      "filename": "hex-honeycomb-w4-002.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-2-1781761128174",
+      "description": "Hex honeycomb hex-honeycomb-2-1781761128174",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-002.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-003.fs",
+      "filename": "hex-honeycomb-w4-003.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-3-1781761128174",
+      "description": "Hex honeycomb hex-honeycomb-3-1781761128174",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-003.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-004.fs",
+      "filename": "hex-honeycomb-w4-004.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-4-1781761128175",
+      "description": "Hex honeycomb hex-honeycomb-4-1781761128175",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-004.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-005.fs",
+      "filename": "hex-honeycomb-w4-005.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-5-1781761128176",
+      "description": "Hex honeycomb hex-honeycomb-5-1781761128176",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-005.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-006.fs",
+      "filename": "hex-honeycomb-w4-006.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-6-1781761128177",
+      "description": "Hex honeycomb hex-honeycomb-6-1781761128177",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-006.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-007.fs",
+      "filename": "hex-honeycomb-w4-007.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-7-1781761128178",
+      "description": "Hex honeycomb hex-honeycomb-7-1781761128178",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-007.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-008.fs",
+      "filename": "hex-honeycomb-w4-008.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-8-1781761128179",
+      "description": "Hex honeycomb hex-honeycomb-8-1781761128179",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-008.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-009.fs",
+      "filename": "hex-honeycomb-w4-009.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-9-1781761128180",
+      "description": "Hex honeycomb hex-honeycomb-9-1781761128180",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-009.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-010.fs",
+      "filename": "hex-honeycomb-w4-010.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-10-1781761128182",
+      "description": "Hex honeycomb hex-honeycomb-10-1781761128182",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-010.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4-011.fs",
+      "filename": "hex-honeycomb-w4-011.fs",
+      "template": "hex-honeycomb-w4",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-11-1781761128183",
+      "description": "Hex honeycomb hex-honeycomb-11-1781761128183",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-011.fs",
+      "qaError": "blank render var=9.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-000.fs",
+      "filename": "hex-honeycomb-w4b-000.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-0-1781761186739",
+      "description": "Hex honeycomb hex-honeycomb-0-1781761186739",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-000.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-001.fs",
+      "filename": "hex-honeycomb-w4b-001.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-1-1781761186740",
+      "description": "Hex honeycomb hex-honeycomb-1-1781761186740",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-001.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-002.fs",
+      "filename": "hex-honeycomb-w4b-002.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-2-1781761186742",
+      "description": "Hex honeycomb hex-honeycomb-2-1781761186742",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-002.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-003.fs",
+      "filename": "hex-honeycomb-w4b-003.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-3-1781761186743",
+      "description": "Hex honeycomb hex-honeycomb-3-1781761186743",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-003.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-004.fs",
+      "filename": "hex-honeycomb-w4b-004.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-4-1781761186744",
+      "description": "Hex honeycomb hex-honeycomb-4-1781761186744",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-004.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-005.fs",
+      "filename": "hex-honeycomb-w4b-005.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-5-1781761186744",
+      "description": "Hex honeycomb hex-honeycomb-5-1781761186744",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-005.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-006.fs",
+      "filename": "hex-honeycomb-w4b-006.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-6-1781761186745",
+      "description": "Hex honeycomb hex-honeycomb-6-1781761186745",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-006.fs",
+      "qaError": "blank-or-compile-failure",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-007.fs",
+      "filename": "hex-honeycomb-w4b-007.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-7-1781761186746",
+      "description": "Hex honeycomb hex-honeycomb-7-1781761186746",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-007.fs",
+      "qaError": "blank render var=24.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-008.fs",
+      "filename": "hex-honeycomb-w4b-008.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-8-1781761186746",
+      "description": "Hex honeycomb hex-honeycomb-8-1781761186746",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-008.fs",
+      "qaError": "blank render var=24.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-009.fs",
+      "filename": "hex-honeycomb-w4b-009.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-9-1781761186747",
+      "description": "Hex honeycomb hex-honeycomb-9-1781761186747",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-009.fs",
+      "qaError": "blank render var=24.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-010.fs",
+      "filename": "hex-honeycomb-w4b-010.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-10-1781761186748",
+      "description": "Hex honeycomb hex-honeycomb-10-1781761186748",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-010.fs",
+      "qaError": "blank render var=24.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-011.fs",
+      "filename": "hex-honeycomb-w4b-011.fs",
+      "template": "hex-honeycomb-w4b",
+      "category": "geometric",
+      "seed": "honeycomb hex-honeycomb-11-1781761186749",
+      "description": "Hex honeycomb hex-honeycomb-11-1781761186749",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4b-011.fs",
+      "qaError": "blank render var=24.1 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
       "path": "shaders/_quarantine/VJ-Generated/ISF/macroverse/copper-field-000-m0.fs",
       "filename": "copper-field-000-m0.fs",
       "template": "copper-field",
@@ -1880,6 +3557,834 @@
       "status": "quarantined-unfixable"
     },
     {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-000.fs",
+      "filename": "wave-interference-w4-000.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-0-1781761128137",
+      "description": "Wave interference wave-interference-0-1781761128137",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-000.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-001.fs",
+      "filename": "wave-interference-w4-001.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-1-1781761128138",
+      "description": "Wave interference wave-interference-1-1781761128138",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-001.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-002.fs",
+      "filename": "wave-interference-w4-002.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-2-1781761128139",
+      "description": "Wave interference wave-interference-2-1781761128139",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-002.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-003.fs",
+      "filename": "wave-interference-w4-003.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-3-1781761128140",
+      "description": "Wave interference wave-interference-3-1781761128140",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-003.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-004.fs",
+      "filename": "wave-interference-w4-004.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-4-1781761128141",
+      "description": "Wave interference wave-interference-4-1781761128141",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-004.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-005.fs",
+      "filename": "wave-interference-w4-005.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-5-1781761128142",
+      "description": "Wave interference wave-interference-5-1781761128142",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-005.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-006.fs",
+      "filename": "wave-interference-w4-006.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-6-1781761128143",
+      "description": "Wave interference wave-interference-6-1781761128143",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-006.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-007.fs",
+      "filename": "wave-interference-w4-007.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-7-1781761128143",
+      "description": "Wave interference wave-interference-7-1781761128143",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-007.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-008.fs",
+      "filename": "wave-interference-w4-008.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-8-1781761128145",
+      "description": "Wave interference wave-interference-8-1781761128145",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-008.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-009.fs",
+      "filename": "wave-interference-w4-009.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-9-1781761128146",
+      "description": "Wave interference wave-interference-9-1781761128146",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-009.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-010.fs",
+      "filename": "wave-interference-w4-010.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-10-1781761128147",
+      "description": "Wave interference wave-interference-10-1781761128147",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-010.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4-011.fs",
+      "filename": "wave-interference-w4-011.fs",
+      "template": "wave-interference-w4",
+      "category": "organic",
+      "seed": "interference wave-interference-11-1781761128149",
+      "description": "Wave interference wave-interference-11-1781761128149",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-011.fs",
+      "qaError": "blank render var=2.7 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-000.fs",
+      "filename": "wave-interference-w4b-000.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-0-1781761186714",
+      "description": "Wave interference wave-interference-0-1781761186714",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-000.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-001.fs",
+      "filename": "wave-interference-w4b-001.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-1-1781761186716",
+      "description": "Wave interference wave-interference-1-1781761186716",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-001.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-002.fs",
+      "filename": "wave-interference-w4b-002.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-2-1781761186717",
+      "description": "Wave interference wave-interference-2-1781761186717",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-002.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-003.fs",
+      "filename": "wave-interference-w4b-003.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-3-1781761186718",
+      "description": "Wave interference wave-interference-3-1781761186718",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-003.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-004.fs",
+      "filename": "wave-interference-w4b-004.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-4-1781761186719",
+      "description": "Wave interference wave-interference-4-1781761186719",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-004.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-005.fs",
+      "filename": "wave-interference-w4b-005.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-5-1781761186720",
+      "description": "Wave interference wave-interference-5-1781761186720",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-005.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-006.fs",
+      "filename": "wave-interference-w4b-006.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-6-1781761186722",
+      "description": "Wave interference wave-interference-6-1781761186722",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-006.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-007.fs",
+      "filename": "wave-interference-w4b-007.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-7-1781761186723",
+      "description": "Wave interference wave-interference-7-1781761186723",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-007.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-008.fs",
+      "filename": "wave-interference-w4b-008.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-8-1781761186724",
+      "description": "Wave interference wave-interference-8-1781761186724",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-008.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-009.fs",
+      "filename": "wave-interference-w4b-009.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-9-1781761186724",
+      "description": "Wave interference wave-interference-9-1781761186724",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-009.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-010.fs",
+      "filename": "wave-interference-w4b-010.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-10-1781761186725",
+      "description": "Wave interference wave-interference-10-1781761186725",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-010.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/organic/wave-interference-w4b-011.fs",
+      "filename": "wave-interference-w4b-011.fs",
+      "template": "wave-interference-w4b",
+      "category": "organic",
+      "seed": "interference wave-interference-11-1781761186726",
+      "description": "Wave interference wave-interference-11-1781761186726",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "organic"
+      ],
+      "sets": [
+        "vj-organic",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/organic/wave-interference-w4b-011.fs",
+      "qaError": "blank render var=2.3 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-000.fs",
+      "filename": "circuit-trace-w4-000.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-0-1781761128221",
+      "description": "Circuit trace circuit-trace-0-1781761128221",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-000.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-001.fs",
+      "filename": "circuit-trace-w4-001.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-1-1781761128222",
+      "description": "Circuit trace circuit-trace-1-1781761128222",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-001.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-002.fs",
+      "filename": "circuit-trace-w4-002.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-2-1781761128222",
+      "description": "Circuit trace circuit-trace-2-1781761128222",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-002.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-003.fs",
+      "filename": "circuit-trace-w4-003.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-3-1781761128223",
+      "description": "Circuit trace circuit-trace-3-1781761128223",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-003.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-004.fs",
+      "filename": "circuit-trace-w4-004.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-4-1781761128231",
+      "description": "Circuit trace circuit-trace-4-1781761128231",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-004.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-005.fs",
+      "filename": "circuit-trace-w4-005.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-5-1781761128232",
+      "description": "Circuit trace circuit-trace-5-1781761128232",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-005.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-006.fs",
+      "filename": "circuit-trace-w4-006.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-6-1781761128234",
+      "description": "Circuit trace circuit-trace-6-1781761128234",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-006.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-007.fs",
+      "filename": "circuit-trace-w4-007.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-7-1781761128236",
+      "description": "Circuit trace circuit-trace-7-1781761128236",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-007.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-008.fs",
+      "filename": "circuit-trace-w4-008.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-8-1781761128237",
+      "description": "Circuit trace circuit-trace-8-1781761128237",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-008.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-009.fs",
+      "filename": "circuit-trace-w4-009.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-9-1781761128237",
+      "description": "Circuit trace circuit-trace-9-1781761128237",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-009.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-010.fs",
+      "filename": "circuit-trace-w4-010.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-10-1781761128238",
+      "description": "Circuit trace circuit-trace-10-1781761128238",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-010.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/techno/circuit-trace-w4-011.fs",
+      "filename": "circuit-trace-w4-011.fs",
+      "template": "circuit-trace-w4",
+      "category": "techno",
+      "seed": "trace circuit-trace-11-1781761128239",
+      "description": "Circuit trace circuit-trace-11-1781761128239",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "techno"
+      ],
+      "sets": [
+        "vj-techno",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-011.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
       "path": "shaders/_quarantine/VJ-Generated/ISF/tunnel/tunnel-pipes-000-m0.fs",
       "filename": "tunnel-pipes-000-m0.fs",
       "template": "tunnel-pipes",
@@ -2340,5 +4845,5 @@
       ]
     }
   ],
-  "generatedWithMetadata": 450
+  "generatedWithMetadata": 738
 }

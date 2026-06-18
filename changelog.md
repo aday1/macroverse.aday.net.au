@@ -24,6 +24,7 @@ Showcase: https://showcase.macroverse.aday.net.au/ (GitHub Pages CNAME; mirror h
 - **ISF metadata indexing** — native scan + boot backfill parse ISF `TAGS` into gallery sets (`vj-*`, `macroverse-origin`) and tags for all `VJ-Generated` shaders.
 - **Baked thumbnails** — `thumbnails-baked.json` (~2400+ entries, full public library bake) copied into Docker image as `thumbnails.json`; gallery grids no longer require runtime thumbnail generation on live/dev.
 - **Template v2 + w3 wave** — brighter factory templates; 150 w3 variants added (140 pass QA); `geo-voronoi` reworked (`w3b` replacements). Quarantine archive now 96 entries (unshipped).
+- **w4 factory wave (Jun 2026)** — 12 new templates (`glitch-scanlines`, `rgb-split`, `aurora-curtain`, `beat-radar`, etc.); **288 net-new** VJ-Generated shaders (738 total factory set on live/dev); aday lane syncs full FortyTwo tree including VJ-Generated.
 - **Factory orchestrator** — `scripts/run-shader-factory.ps1` for repeatable generation waves; `scripts/seed-generated-metadata.mjs` for quarantine manifest.
 
 ### Public library expansion (Jun 2026)

@@ -432,6 +432,292 @@ void main() {
 }`;
     },
   },
+  {
+    id: 'glitch-scanlines',
+    category: 'glitch',
+    tags: ['vj-glitch', 'digital'],
+    build: (s) => {
+      const h = hash(s);
+      const density = (40 + h.i(0, 80)).toFixed(0);
+      const jitter = (0.02 + h.f(1) * 0.08).toFixed(3);
+      return `${isfHeader({ description: `Glitch scanlines ${s}`, category: 'glitch', tags: ['vj-glitch'], inputs: `${COMMON_INPUTS},
+        { "NAME": "lineDensity", "TYPE": "float", "DEFAULT": ${density}.0, "MIN": 20.0, "MAX": 120.0 },
+        { "NAME": "jitterAmp", "TYPE": "float", "DEFAULT": ${jitter}, "MIN": 0.0, "MAX": 0.15 }` })}
+${COMMON_DEFINES}
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    float line = step(0.5, fract(uv.y * lineDensity + sin(uv.x * 30.0 + time * 8.0) * jitterAmp * 10.0));
+    float block = step(0.7, fract(uv.x * 12.0 + time * 2.5));
+    vec3 col = mix(vec3(0.12, 0.85, 0.75), vec3(0.85, 0.15, 0.55), line);
+    col = mix(col, vec3(0.95, 0.9, 0.2), block * 0.5);
+    col += vec3(0.08, 0.05, 0.15) * (1.0 - line);
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'rgb-split',
+    category: 'glitch',
+    tags: ['vj-glitch', 'vj-colour'],
+    build: (s) => {
+      const h = hash(s);
+      const split = (0.01 + h.f(0) * 0.04).toFixed(3);
+      return `${isfHeader({ description: `RGB split ${s}`, category: 'glitch', tags: ['vj-glitch', 'vj-colour'], inputs: `${COMMON_INPUTS},
+        { "NAME": "splitAmt", "TYPE": "float", "DEFAULT": ${split}, "MIN": 0.0, "MAX": 0.08 }` })}
+${COMMON_DEFINES}
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    float wave = sin(uv.y * 18.0 + time * 3.0) * splitAmt;
+    float r = sin((uv.x + wave) * 24.0 + time) * 0.5 + 0.5;
+    float g = sin(uv.x * 24.0 + time * 1.1) * 0.5 + 0.5;
+    float b = sin((uv.x - wave) * 24.0 - time * 0.8) * 0.5 + 0.5;
+    vec3 col = vec3(r, g, b);
+    col = mix(vec3(0.1, 0.08, 0.14), col, 0.9);
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'wave-interference',
+    category: 'organic',
+    tags: ['vj-organic', 'vj-ambient'],
+    build: (s) => {
+      const h = hash(s);
+      const freq = (6 + h.i(0, 10)).toFixed(0);
+      return `${isfHeader({ description: `Wave interference ${s}`, category: 'organic', tags: ['vj-organic'], inputs: `${COMMON_INPUTS},
+        { "NAME": "freq", "TYPE": "float", "DEFAULT": ${freq}.0, "MIN": 3.0, "MAX": 18.0 }` })}
+${COMMON_DEFINES}
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    vec2 p = (uv - 0.5) * vec2(resolution.x / resolution.y, 1.0);
+    float w1 = sin(length(p) * freq - time * 2.0);
+    float w2 = sin(p.x * freq + time * 1.3) * cos(p.y * freq - time);
+    float v = w1 * w2 * 0.5 + 0.5;
+    v = v * 0.85 + 0.15;
+    vec3 col = mix(vec3(0.1, 0.16, 0.24), vec3(0.35, 0.82, 0.9), v);
+    col += vec3(0.9, 0.45, 0.2) * pow(v, 4.0) * 0.4;
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'starfield-parallax',
+    category: 'cosmic',
+    tags: ['vj-cosmic', 'space'],
+    build: (s) => {
+      const h = hash(s);
+      const layers = (2 + h.i(0, 4)).toFixed(0);
+      return `${isfHeader({ description: `Starfield parallax ${s}`, category: 'cosmic', tags: ['vj-cosmic'], inputs: `${COMMON_INPUTS},
+        { "NAME": "layerCount", "TYPE": "float", "DEFAULT": ${layers}.0, "MIN": 2.0, "MAX": 6.0 }` })}
+${COMMON_DEFINES}
+float hash21(vec2 p) { return fract(sin(dot(p, vec2(41.2, 89.4))) * 1031.7); }
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    vec3 col = vec3(0.03, 0.04, 0.12);
+    for (float i = 0.0; i < 6.0; i++) {
+        if (i >= layerCount) break;
+        float sc = 8.0 + i * 6.0;
+        vec2 p = uv * sc + vec2(time * (0.05 + i * 0.02), 0.0);
+        vec2 id = floor(p);
+        float star = step(0.965, hash21(id + i));
+        col += vec3(0.85, 0.92, 1.0) * star * (0.8 + 0.2 * sin(time + i));
+    }
+    col += vec3(0.12, 0.14, 0.28) * (0.4 + 0.2 * sin(uv.x * 6.0 + time));
+    col = max(col, vec3(0.08, 0.09, 0.16));
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'hex-honeycomb',
+    category: 'geometric',
+    tags: ['vj-geometric', 'grid'],
+    build: (s) => {
+      const h = hash(s);
+      const scale = (4 + h.i(0, 8)).toFixed(0);
+      return `${isfHeader({ description: `Hex honeycomb ${s}`, category: 'geometric', tags: ['vj-geometric'], inputs: `${COMMON_INPUTS},
+        { "NAME": "hexScale", "TYPE": "float", "DEFAULT": ${scale}.0, "MIN": 2.0, "MAX": 14.0 }` })}
+${COMMON_DEFINES}
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy * hexScale;
+    vec2 r = vec2(1.0, 1.732);
+    vec2 h = r * 0.5;
+    vec2 a = mod(uv, r) - h;
+    vec2 b = mod(uv + h, r) - h;
+    float d = min(dot(a,a), dot(b,b));
+    float edge = smoothstep(0.2, 0.04, sqrt(d));
+    float pulse = 0.5 + 0.5 * sin(time * 2.0 + uv.x + uv.y);
+    vec3 col = mix(vec3(0.14, 0.16, 0.24), vec3(0.35, 0.95, 0.8), edge * pulse + 0.2);
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'beat-radar',
+    category: 'techno',
+    tags: ['vj-techno', 'pulse'],
+    build: (s) => {
+      const h = hash(s);
+      const spokes = (4 + h.i(0, 8)).toFixed(0);
+      return `${isfHeader({ description: `Beat radar ${s}`, category: 'techno', tags: ['vj-techno'], inputs: `${COMMON_INPUTS},
+        { "NAME": "spokeCount", "TYPE": "float", "DEFAULT": ${spokes}.0, "MIN": 3.0, "MAX": 16.0 }` })}
+${COMMON_DEFINES}
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy - 0.5;
+    uv.x *= resolution.x / resolution.y;
+    float a = atan(uv.y, uv.x);
+    float r = length(uv);
+    float sweep = fract(a / 6.28318 + time * 0.3);
+    float spoke = 0.5 + 0.5 * cos(a * spokeCount + time * 4.0);
+    float ring = smoothstep(0.02, 0.0, abs(fract(r * 8.0 - time) - 0.5));
+    vec3 col = vec3(0.05, 0.02, 0.1);
+    col += vec3(0.1, 0.95, 0.5) * ring * spoke;
+    col += vec3(0.9, 0.2, 0.6) * sweep * smoothstep(0.5, 0.0, r);
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'liquid-mercury',
+    category: 'organic',
+    tags: ['vj-organic', 'vj-dark'],
+    build: (s) => {
+      const h = hash(s);
+      const flow = (0.5 + h.f(0) * 2).toFixed(2);
+      return `${isfHeader({ description: `Liquid mercury ${s}`, category: 'organic', tags: ['vj-organic'], inputs: `${COMMON_INPUTS},
+        { "NAME": "flowSpeed", "TYPE": "float", "DEFAULT": ${flow}, "MIN": 0.2, "MAX": 3.0 }` })}
+${COMMON_DEFINES}
+float hash21(vec2 p) { return fract(sin(dot(p, vec2(12.9, 78.2))) * 43758.5); }
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    vec2 p = uv * 4.0;
+    float n = hash21(floor(p + time * flowSpeed * 0.1));
+    float blob = smoothstep(0.35, 0.0, length(fract(p + n) - 0.5));
+    vec3 col = mix(vec3(0.08, 0.09, 0.12), vec3(0.75, 0.78, 0.82), blob);
+    col += vec3(0.15, 0.2, 0.25) * (1.0 - blob);
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'aurora-curtain',
+    category: 'ambient',
+    tags: ['vj-ambient', 'vj-cosmic'],
+    build: (s) => {
+      const h = hash(s);
+      const bands = (3 + h.i(0, 5)).toFixed(0);
+      return `${isfHeader({ description: `Aurora curtain ${s}`, category: 'ambient', tags: ['vj-ambient', 'vj-cosmic'], inputs: `${COMMON_INPUTS},
+        { "NAME": "bandCount", "TYPE": "float", "DEFAULT": ${bands}.0, "MIN": 2.0, "MAX": 10.0 }` })}
+${COMMON_DEFINES}
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    float curtain = 0.0;
+    for (float i = 0.0; i < 10.0; i++) {
+        if (i >= bandCount) break;
+        curtain += sin(uv.x * (3.0 + i) + time * (0.3 + i * 0.05) + i) * 0.5 + 0.5;
+    }
+    curtain /= bandCount;
+    vec3 col = mix(vec3(0.02, 0.05, 0.1), vec3(0.2, 0.9, 0.55), curtain * uv.y);
+    col += vec3(0.5, 0.2, 0.9) * curtain * (1.0 - uv.y) * 0.4;
+    col = max(col, vec3(0.04, 0.06, 0.1));
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'circuit-trace',
+    category: 'techno',
+    tags: ['vj-techno', 'vj-geometric'],
+    build: (s) => {
+      const h = hash(s);
+      const grid = (6 + h.i(0, 10)).toFixed(0);
+      return `${isfHeader({ description: `Circuit trace ${s}`, category: 'techno', tags: ['vj-techno'], inputs: `${COMMON_INPUTS},
+        { "NAME": "gridSize", "TYPE": "float", "DEFAULT": ${grid}.0, "MIN": 4.0, "MAX": 18.0 }` })}
+${COMMON_DEFINES}
+float hash21(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy * gridSize;
+    vec2 id = floor(uv);
+    vec2 f = fract(uv);
+    float path = step(0.55, hash21(id + floor(time * 0.5)));
+    float trace = min(abs(f.x - 0.5), abs(f.y - 0.5));
+    trace = smoothstep(0.12, 0.0, trace) * (0.35 + 0.65 * path);
+    vec3 col = vec3(0.08, 0.1, 0.16);
+    col += vec3(0.15, 0.95, 0.85) * trace;
+    col += vec3(0.95, 0.35, 0.1) * trace * sin(time * 6.0 + id.x + id.y) * 0.5;
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'fractal-branch',
+    category: 'organic',
+    tags: ['vj-organic', 'vj-dark'],
+    build: (s) => {
+      const h = hash(s);
+      const twist = (1.5 + h.f(0) * 3).toFixed(2);
+      return `${isfHeader({ description: `Fractal branch ${s}`, category: 'organic', tags: ['vj-organic'], inputs: `${COMMON_INPUTS},
+        { "NAME": "twistAmt", "TYPE": "float", "DEFAULT": ${twist}, "MIN": 0.5, "MAX": 5.0 }` })}
+${COMMON_DEFINES}
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy - 0.5;
+    uv.x *= resolution.x / resolution.y;
+    float a = atan(uv.y, uv.x) + length(uv) * twistAmt;
+    float branch = abs(sin(a * 5.0 + time * 0.5));
+    branch = smoothstep(0.92, 0.98, branch);
+    vec3 col = vec3(0.05, 0.08, 0.06);
+    col += vec3(0.35, 0.85, 0.45) * branch;
+    col += vec3(0.15, 0.25, 0.12) * (1.0 - branch) * 0.6;
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'chroma-bars',
+    category: 'colour',
+    tags: ['vj-colour', 'bars'],
+    build: (s) => {
+      const h = hash(s);
+      const bars = (6 + h.i(0, 10)).toFixed(0);
+      return `${isfHeader({ description: `Chroma bars ${s}`, category: 'colour', tags: ['vj-colour'], inputs: `${COMMON_INPUTS},
+        { "NAME": "barCount", "TYPE": "float", "DEFAULT": ${bars}.0, "MIN": 4.0, "MAX": 20.0 }` })}
+${COMMON_DEFINES}
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    float bar = floor(uv.x * barCount);
+    float hueVal = fract(bar * 0.17 + time * 0.2);
+    vec3 col = vec3(abs(sin(hueVal * 6.28)), abs(sin(hueVal * 6.28 + 2.1)), abs(sin(hueVal * 6.28 + 4.2)));
+    col = mix(vec3(0.08), col, 0.85 + 0.15 * sin(time * 3.0 + bar));
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
+  {
+    id: 'void-portal',
+    category: 'cosmic',
+    tags: ['vj-cosmic', 'macroverse-origin'],
+    build: (s) => {
+      const h = hash(s);
+      const rings = (3 + h.i(0, 6)).toFixed(0);
+      return `${isfHeader({ description: `Void portal ${s}`, category: 'cosmic', tags: ['vj-cosmic', 'macroverse-origin'], inputs: `${COMMON_INPUTS},
+        { "NAME": "ringCount", "TYPE": "float", "DEFAULT": ${rings}.0, "MIN": 2.0, "MAX": 10.0 }` })}
+${COMMON_DEFINES}
+void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy - 0.5;
+    uv.x *= resolution.x / resolution.y;
+    float r = length(uv);
+    float ring = abs(fract(r * ringCount - time * 0.4) - 0.5);
+    ring = smoothstep(0.15, 0.0, ring);
+    vec3 col = vec3(0.06, 0.02, 0.14);
+    col += vec3(0.65, 0.35, 1.0) * ring * 1.2;
+    col += vec3(0.98, 0.6, 0.2) * ring * (0.5 + 0.5 * sin(atan(uv.y, uv.x) * 3.0 + time));
+    col += vec3(0.15, 0.08, 0.25) * (1.0 - smoothstep(0.2, 0.7, r));
+    col *= smoothstep(0.85, 0.08, r) * 0.7 + 0.3;
+    col = max(col, vec3(0.05, 0.03, 0.1));
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    },
+  },
 ];
 
 function existingNames(dir) {
@@ -463,7 +749,9 @@ function writeShader(category, filename, body) {
 function generateTierA(variantsPerTemplate = 10) {
   const written = [];
   const globalNames = existingNames(outRoot);
+  const onlyIds = process.argv.find((a) => a.startsWith('--only='))?.split('=')[1]?.split(',').filter(Boolean) || null;
   for (const tpl of TEMPLATES) {
+    if (onlyIds && !onlyIds.includes(tpl.id)) continue;
     for (let v = 0; v < variantsPerTemplate; v++) {
       const seed = `${tpl.id}-${v}-${Date.now()}`;
       const wavePart = wave ? `-${wave}` : '';

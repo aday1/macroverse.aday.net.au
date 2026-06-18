@@ -25,9 +25,14 @@ const jsonOut = process.argv.find((a) => a.startsWith('--json='))?.split('=')[1]
   || path.join(root, 'scripts', 'reports', `shader-qa-${new Date().toISOString().slice(0, 10)}.json`);
 
 const quarantineRoot = path.join(root, 'shaders', '_quarantine');
+const onlyWave = process.argv.find((a) => a.startsWith('--only-wave='))?.split('=')[1] || '';
 
 async function main() {
-  const files = walkShaders(targetDir);
+  let files = walkShaders(targetDir);
+  if (onlyWave) {
+    const needle = `-${onlyWave}-`;
+    files = files.filter((f) => path.basename(f).includes(needle));
+  }
   if (!files.length) {
     console.error('No shaders in', targetDir);
     process.exit(1);

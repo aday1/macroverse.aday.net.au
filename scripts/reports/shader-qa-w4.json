@@ -1,0 +1,1305 @@
+{
+  "dir": "C:\\aday.repo\\macroverse.aday.net.au\\shaders\\VJ-Generated",
+  "at": "2026-06-18T05:38:56.200Z",
+  "total": 324,
+  "passed": [
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-000.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-001.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-002.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-003.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-004.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-005.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-006.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-007.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-008.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-009.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-010.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-cloud-w4-011.fs",
+      "variance": 502.3451642570631
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-000.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-001.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-002.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-003.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-004.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-005.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-006.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-007.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-008.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-009.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-010.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/ambient-plasma-w4-011.fs",
+      "variance": 165.00768302964272
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-000.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-001.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-002.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-003.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-004.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-005.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-006.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-007.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-008.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-009.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-010.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/ambient/aurora-curtain-w4-011.fs",
+      "variance": 4485.014998642072
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-000.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-001.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-002.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-003.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-004.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-005.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-006.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-007.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-008.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-009.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-010.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-nebula-w4-011.fs",
+      "variance": 4350.157409541678
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-000.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-001.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-002.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-003.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-004.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-005.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-006.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-007.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-008.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-009.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-010.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/cosmic-streak-w4-011.fs",
+      "variance": 117.44653557036216
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-000.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-001.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-002.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-003.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-004.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-005.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-006.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-007.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-008.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-009.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-010.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w4-011.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-000.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-001.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-002.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-003.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-004.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-005.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-006.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-007.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-008.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-009.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-010.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w4-011.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-000.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-001.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-002.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-003.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-004.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-005.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-006.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-007.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-008.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-009.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-010.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/glitch-scanlines-w4-011.fs",
+      "variance": 5333.673822021719
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-000.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-001.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-002.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-003.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-004.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-005.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-006.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-007.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-008.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-009.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-010.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/glitch/rgb-split-w4-011.fs",
+      "variance": 6506.008138129143
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-000.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-001.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-002.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-003.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-004.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-005.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-006.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-007.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-008.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-009.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-010.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/copper-field-w4-011.fs",
+      "variance": 147.98409291010864
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-000.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-001.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-002.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-003.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-004.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-005.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-006.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-007.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-008.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-009.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-010.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/macroverse/macroverse-orbit-w4-011.fs",
+      "variance": 719.6193612133591
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-000.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-001.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-002.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-003.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-004.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-005.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-006.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-007.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-008.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-009.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-010.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/fractal-branch-w4-011.fs",
+      "variance": 2163.715437127624
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-000.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-001.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-002.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-003.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-004.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-005.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-006.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-007.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-008.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-009.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-010.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/liquid-mercury-w4-011.fs",
+      "variance": 857.6427046680607
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-000.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-001.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-002.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-003.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-004.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-005.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-006.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-007.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-008.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-009.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-010.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/plasma/plasma-fire-w4-011.fs",
+      "variance": 4783.840531591665
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-000.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-001.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-002.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-003.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-004.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-005.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-006.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-007.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-008.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-009.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-010.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-kaleido-w4-011.fs",
+      "variance": 3851.123194836804
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-000.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-001.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-002.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-003.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-004.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-005.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-006.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-007.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-008.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-009.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-010.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/psychedelic/psyche-vortex-w4-011.fs",
+      "variance": 2768.8980202875496
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-000.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-001.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-002.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-003.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-004.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-005.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-006.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-007.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-008.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-009.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-010.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/beat-radar-w4-011.fs",
+      "variance": 717.3852508941688
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-000.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-001.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-002.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-003.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-004.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-005.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-006.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-007.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-008.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-009.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-010.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-bars-w4-011.fs",
+      "variance": 6714.367508998742
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-000.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-001.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-002.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-003.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-004.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-005.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-006.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-007.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-008.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-009.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-010.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/techno-grid-w4-011.fs",
+      "variance": 395.5845783235186
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-000.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-001.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-002.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-003.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-004.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-005.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-006.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-007.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-008.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-009.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-010.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-pipes-w4-011.fs",
+      "variance": 741.9807505116653
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-000.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-001.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-002.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-003.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-004.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-005.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-006.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-007.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-008.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-009.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-010.fs",
+      "variance": 537.3728420409708
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/tunnel/tunnel-zoom-w4-011.fs",
+      "variance": 537.3728420409708
+    }
+  ],
+  "failed": [
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-000.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-001.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-002.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-003.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-004.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-005.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-006.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-007.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-008.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-009.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-010.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/colour/chroma-bars-w4-011.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-000.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-001.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-002.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-003.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-004.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-005.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-006.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-007.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-008.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-009.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-010.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/starfield-parallax-w4-011.fs",
+      "error": "blank render var=32.1 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-000.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-001.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-002.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-003.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-004.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-005.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-006.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-007.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-008.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-009.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-010.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/cosmic/void-portal-w4-011.fs",
+      "error": "blank render var=12.2 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-000.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-001.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-002.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-003.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-004.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-005.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-006.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-007.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-008.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-009.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-010.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/hex-honeycomb-w4-011.fs",
+      "error": "blank render var=9.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-000.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-001.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-002.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-003.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-004.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-005.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-006.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-007.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-008.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-009.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-010.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/organic/wave-interference-w4-011.fs",
+      "error": "blank render var=2.7 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-000.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-001.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-002.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-003.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-004.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-005.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-006.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-007.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-008.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-009.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-010.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/techno/circuit-trace-w4-011.fs",
+      "error": "blank render var=0.0 black=0.0%"
+    }
+  ]
+}
