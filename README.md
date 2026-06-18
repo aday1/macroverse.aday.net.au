@@ -4,7 +4,7 @@
 
 A GLSL/ISF shader lab and VJ tool. Two ways in — one binary.
 
-**[Try it live →](https://macroverse.aday.net.au/)** &nbsp;|&nbsp; **[Showcase →](https://aday1.github.io/macroverse.aday.net.au/)** &nbsp;|&nbsp; **[Download →](https://github.com/aday1/macroverse.aday.net.au/releases)** &nbsp;|&nbsp; **[Source / Docker →](https://github.com/aday1/macroverse.aday.net.au)**
+**[Try it live →](https://macroverse.aday.net.au/)** &nbsp;|&nbsp; **[Showcase →](https://showcase.macroverse.aday.net.au/)** &nbsp;|&nbsp; **[Download →](https://github.com/aday1/macroverse.aday.net.au/releases)** &nbsp;|&nbsp; **[Source / Docker →](https://github.com/aday1/macroverse.aday.net.au)**
 
 ---
 
@@ -417,7 +417,7 @@ VPS. Source, `docker-compose.yml`, nginx config, and bridge agent are all in thi
 | Live | https://macroverse.aday.net.au/ | Cloud edition, public library |
 | Test | https://macroverse-test.aday.net.au/ | Also macroverse-dev.aday.net.au |
 | Private | https://macroverse-private.aday.net.au/ | Basic auth required on all paths (credentials in password manager only) |
-| Showcase | https://aday1.github.io/macroverse.aday.net.au/ | GitHub Pages from `docs/` |
+| Showcase | https://showcase.macroverse.aday.net.au/ | GitHub Pages from `docs/` (CNAME alias; mirror at aday1.github.io) |
 
 ---
 

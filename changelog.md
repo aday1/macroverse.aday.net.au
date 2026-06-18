@@ -15,7 +15,7 @@ Hosted stacks on Linode (GHCR images). Work on `dev`, promote to `main` for live
 
 Each lane serves `/deploy-meta.json` (CI build + deploy timestamps, git SHA, lane_sync) and `/api/version` (semver + release tag). The GitHub showcase refreshes `docs/lane-status.json` on every Pages deploy by probing all lanes.
 
-Showcase lane dashboard: https://aday1.github.io/macroverse.aday.net.au/#lane-status
+Showcase: https://showcase.macroverse.aday.net.au/ (GitHub Pages CNAME; mirror https://aday1.github.io/macroverse.aday.net.au/)
 
 Version 42.2 — WebXR VR VJ + live remote extensions
 ---------------------------------------------------
@@ -37,6 +37,7 @@ WebXR audience and VJ controller modes on hosted lanes. VR links from the VJ dec
 - **Nick Wilson audio set** on showcase and about page: [YouTube](https://www.youtube.com/watch?v=4tfKNUwVZw0).
 - **Fringe VR captures** placeholder — edited Melbourne Fringe videos will ship when ready.
 - Showcase UX: compact section nav, origin media chips, deploy lanes moved out of hero header.
+- **Showcase alias** `showcase.macroverse.aday.net.au` → GitHub Pages (`docs/CNAME` + Cloudflare CNAME to `aday1.github.io`).
 
 ### Notes
 

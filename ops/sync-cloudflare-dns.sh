@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # Upsert proxied A records for Macroverse/ArtBastard Linode stack.
+# Upsert CNAME for GitHub Pages showcase alias (showcase.macroverse.aday.net.au).
 # Requires: CLOUDFLARE_API_TOKEN (Zone.DNS Edit on aday.net.au)
 # Optional: CLOUDFLARE_ZONE_ID (else resolved from CLOUDFLARE_ZONE_NAME)
 set -uo pipefail
 
 ORIGIN_IP="${ORIGIN_IP:-172.105.171.251}"
+SHOWCASE_CNAME_TARGET="${SHOWCASE_CNAME_TARGET:-aday1.github.io}"
 CLOUDFLARE_ZONE_NAME="${CLOUDFLARE_ZONE_NAME:-aday.net.au}"
 SYNC_MODE="${SYNC_MODE:-all}"
 
@@ -122,12 +124,82 @@ upsert_a() {
   return 1
 }
 
+delete_dns_by_name() {
+  local name="$1"
+  local type="$2"
+  local enc
+  enc="$(python3 -c "import sys,urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=''))" "$name")"
+  local list_resp list_code list_body
+  list_resp="$(api_json GET "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/dns_records?type=${type}&name=${enc}")"
+  list_code="${list_resp%%$'\n'*}"
+  list_body="${list_resp#*$'\n'}"
+  if [ "$list_code" != "200" ]; then
+    return 1
+  fi
+  local ids
+  ids="$(echo "$list_body" | python3 -c "import sys,json; d=json.load(sys.stdin); print(' '.join(r['id'] for r in (d.get('result') or [])))" 2>/dev/null || true)"
+  for id in $ids; do
+    api_json DELETE "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/dns_records/${id}" >/dev/null || true
+  done
+}
+
+upsert_cname() {
+  local name="$1"
+  local target="$2"
+  local required="$3"
+  delete_dns_by_name "$name" "A"
+  local enc
+  enc="$(python3 -c "import sys,urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=''))" "$name")"
+  local list_resp list_code list_body
+  list_resp="$(api_json GET "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/dns_records?type=CNAME&name=${enc}")"
+  list_code="${list_resp%%$'\n'*}"
+  list_body="${list_resp#*$'\n'}"
+  if [ "$list_code" != "200" ]; then
+    echo "list failed for ${name} (HTTP ${list_code})" >&2
+    [ "$required" = "1" ] && failures=$((failures + 1))
+    return 1
+  fi
+  local id
+  id="$(echo "$list_body" | python3 -c "import sys,json; d=json.load(sys.stdin); r=d.get('result') or []; print(r[0]['id'] if r else '')" 2>/dev/null || true)"
+  local body
+  body="$(printf '{"type":"CNAME","name":"%s","content":"%s","ttl":1,"proxied":true}' "$name" "$target")"
+  local action method url
+  if [ -n "$id" ]; then
+    action="updated"
+    method="PUT"
+    url="https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/dns_records/${id}"
+  else
+    action="created"
+    method="POST"
+    url="https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/dns_records"
+  fi
+  local write_resp write_code write_body
+  write_resp="$(api_json "$method" "$url" "$body")"
+  write_code="${write_resp%%$'\n'*}"
+  write_body="${write_resp#*$'\n'}"
+  if [ "$write_code" = "200" ]; then
+    echo "${action} CNAME ${name} -> ${target} (proxied)"
+    return 0
+  fi
+  echo "FAILED ${name} (HTTP ${write_code}): $(echo "$write_body" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('errors') or d)" 2>/dev/null || echo "$write_body")" >&2
+  [ "$required" = "1" ] && failures=$((failures + 1))
+  return 1
+}
+
+SHOWCASE_CNAME_NAMES=(
+  showcase.macroverse.aday.net.au
+)
+
 for n in "${REQUIRED_NAMES[@]}"; do
   upsert_a "$n" 1 || true
 done
 
 for n in "${OPTIONAL_NAMES[@]}"; do
   upsert_a "$n" 0 || true
+done
+
+for n in "${SHOWCASE_CNAME_NAMES[@]}"; do
+  upsert_cname "$n" "$SHOWCASE_CNAME_TARGET" 0 || true
 done
 
 if [ "$failures" -gt 0 ]; then

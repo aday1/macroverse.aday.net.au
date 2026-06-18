@@ -1,0 +1,23 @@
+Showcase GitHub Pages alias
+===========================
+
+URL: https://showcase.macroverse.aday.net.au/
+Origin: GitHub Pages project aday1/macroverse.aday.net.au (docs/ folder)
+Mirror: https://aday1.github.io/macroverse.aday.net.au/
+
+DNS (Cloudflare zone aday.net.au):
+  Type: CNAME
+  Name: showcase.macroverse
+  Target: aday1.github.io
+  Proxy: proxied (orange cloud) — requires Total TLS or Advanced Certificate for two-label hostnames
+
+GitHub:
+  docs/CNAME contains: showcase.macroverse.aday.net.au
+  Deployed via .github/workflows/pages.yml on push to main
+
+Automate:
+  gh workflow run sync-cloudflare-dns.yml --repo aday1/macroverse.aday.net.au
+  (needs CLOUDFLARE_DNS_API_TOKEN or CLOUDFLARE_API_TOKEN with Zone.DNS Edit)
+
+Verify:
+  curl -sS -o /dev/null -w "%{http_code}\n" https://showcase.macroverse.aday.net.au/
