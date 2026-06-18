@@ -7,6 +7,7 @@ set -uo pipefail
 
 ORIGIN_IP="${ORIGIN_IP:-172.105.171.251}"
 SHOWCASE_CNAME_TARGET="${SHOWCASE_CNAME_TARGET:-aday1.github.io}"
+SHOWCASE_CNAME_PROXIED="${SHOWCASE_CNAME_PROXIED:-false}"
 CLOUDFLARE_ZONE_NAME="${CLOUDFLARE_ZONE_NAME:-aday.net.au}"
 SYNC_MODE="${SYNC_MODE:-all}"
 
@@ -162,7 +163,8 @@ upsert_cname() {
   local id
   id="$(echo "$list_body" | python3 -c "import sys,json; d=json.load(sys.stdin); r=d.get('result') or []; print(r[0]['id'] if r else '')" 2>/dev/null || true)"
   local body
-  body="$(printf '{"type":"CNAME","name":"%s","content":"%s","ttl":1,"proxied":true}' "$name" "$target")"
+  local proxied="${SHOWCASE_CNAME_PROXIED}"
+  body="$(printf '{"type":"CNAME","name":"%s","content":"%s","ttl":1,"proxied":%s}' "$name" "$target" "$proxied")"
   local action method url
   if [ -n "$id" ]; then
     action="updated"
@@ -178,7 +180,7 @@ upsert_cname() {
   write_code="${write_resp%%$'\n'*}"
   write_body="${write_resp#*$'\n'}"
   if [ "$write_code" = "200" ]; then
-    echo "${action} CNAME ${name} -> ${target} (proxied)"
+    echo "${action} CNAME ${name} -> ${target} (proxied=${proxied})"
     return 0
   fi
   echo "FAILED ${name} (HTTP ${write_code}): $(echo "$write_body" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('errors') or d)" 2>/dev/null || echo "$write_body")" >&2

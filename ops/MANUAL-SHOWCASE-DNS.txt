@@ -9,7 +9,7 @@ DNS (Cloudflare zone aday.net.au):
   Type: CNAME
   Name: showcase.macroverse
   Target: aday1.github.io
-  Proxy: proxied (orange cloud) — requires Total TLS or Advanced Certificate for two-label hostnames
+  Proxy: DNS only (grey cloud) — GitHub Pages issues the TLS cert for the custom domain
 
 GitHub:
   docs/CNAME contains: showcase.macroverse.aday.net.au
