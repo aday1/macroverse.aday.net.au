@@ -62,38 +62,77 @@
     /* ─── Layout ───────────────────────────────────────────────────────────── */
     .wrap {
       position: relative; z-index: 1;
-      max-width: 960px; margin: 0 auto;
-      padding: 0.75rem 1.5rem 5rem;
+      max-width: 1280px; margin: 0 auto;
+      padding: 1rem 2rem 5rem;
     }
 
-    /* ─── Header (first viewport) ─────────────────────────────────────────── */
+    /* ─── Header splash ───────────────────────────────────────────────────── */
     header.hero-viewport {
       text-align: center;
-      padding: 1rem 1rem 0.85rem;
+      padding: 1.35rem 1.75rem 1.2rem;
       position: relative;
-      min-height: min(100vh, 920px);
-      min-height: min(100dvh, 920px);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
     }
     header.hero-viewport::before {
       content: '';
       position: absolute;
-      inset: 0 -0.5rem 0;
-      background: rgba(6, 4, 15, 0.88);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(136, 204, 255, 0.22);
-      border-radius: 10px;
+      inset: 0;
+      background: linear-gradient(155deg, rgba(6, 4, 15, 0.94) 0%, rgba(13, 8, 32, 0.88) 55%, rgba(6, 4, 15, 0.92) 100%);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(136, 204, 255, 0.28);
+      border-radius: 14px;
       z-index: -1;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(200, 220, 255, 0.06);
+    }
+    .hero-brand { margin-bottom: 0.15rem; }
+    .hero-pitch {
+      margin: 0.55rem auto 0;
+      max-width: 54rem;
+      font-size: clamp(0.72rem, 1.4vw, 0.86rem);
+      line-height: 1.55;
+      color: #c9b8e8;
+      letter-spacing: 0.05em;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+      gap: 1rem 1.25rem;
+      margin-top: 1.15rem;
+      text-align: left;
+    }
+    @media (max-width: 920px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .wrap { padding: 0.85rem 1.1rem 4rem; }
+    }
+    .hero-panel {
+      background: rgba(13, 8, 32, 0.62);
+      border: 1px solid rgba(68, 136, 204, 0.22);
+      border-radius: 10px;
+      padding: 1rem 1.15rem;
+      backdrop-filter: blur(8px);
+    }
+    .hero-panel-demo { border-color: rgba(0, 221, 170, 0.28); }
+    .hero-panel-origin { border-color: rgba(238, 136, 51, 0.38); }
+    .panel-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 0.55rem;
+      text-align: center;
+    }
+    .hero-panel-demo .panel-label { color: var(--teal); }
+    .hero-footer {
+      margin-top: 1rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid rgba(68, 136, 204, 0.14);
     }
 
     h1 {
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      font-size: clamp(1.55rem, 5.5vw, 2.65rem);
-      letter-spacing: 0.14em;
+      font-size: clamp(2rem, 4.5vw, 3.35rem);
+      letter-spacing: 0.16em;
       color: var(--blue);
       text-shadow: 0 0 30px var(--glow-b), 0 0 80px rgba(68,136,204,0.15);
       animation: glitch-title 11s ease-in-out infinite;
@@ -112,11 +151,11 @@
     }
 
     .tagline {
-      font-size: 0.78rem;
+      font-size: clamp(0.78rem, 1.5vw, 0.95rem);
       color: #ffd8b0;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      margin-top: 0.35rem;
+      margin-top: 0.4rem;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 14px rgba(0, 0, 0, 0.55);
     }
     .showcase-banner {
@@ -164,22 +203,29 @@
 
     /* ─── CTA buttons ──────────────────────────────────────────────────────── */
     .cta-primary {
-      display: flex; flex-wrap: wrap; gap: 0.55rem; justify-content: center; margin-top: 0.65rem;
+      display: flex; flex-wrap: wrap; gap: 0.65rem; justify-content: center; margin-top: 0;
     }
-    .cta-primary .btn { padding: 0.5rem 1.1rem; font-size: 0.78rem; }
-    .hero-live-strip {
-      display: flex; flex-wrap: wrap; gap: 0.35rem 0.65rem; justify-content: center;
-      margin-top: 0.55rem; max-width: 42rem; margin-left: auto; margin-right: auto;
+    .cta-primary .btn { padding: 0.58rem 1.25rem; font-size: 0.82rem; }
+    .hero-live-chips {
+      display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center;
+      margin-top: 0.75rem;
     }
-    .hero-live-strip a {
-      font-size: 0.68rem; letter-spacing: 0.06em; text-decoration: none;
-      color: #5dffe0; border-bottom: 1px solid rgba(0, 221, 170, 0.35);
-      padding-bottom: 1px;
+    .hero-live-chips a {
+      font-size: 0.68rem; letter-spacing: 0.05em; text-decoration: none;
+      color: #a8fff0;
+      padding: 0.3rem 0.62rem;
+      border: 1px solid rgba(0, 221, 170, 0.32);
+      background: rgba(0, 221, 170, 0.07);
+      border-radius: 4px;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
     }
-    .hero-live-strip a:hover { color: #a8fff0; border-bottom-color: rgba(0, 221, 170, 0.7); }
+    .hero-live-chips a:hover {
+      color: #e8fff8; border-color: rgba(0, 221, 170, 0.6);
+      background: rgba(0, 221, 170, 0.14);
+    }
     .scroll-cue {
-      margin-top: auto; padding-top: 0.55rem;
-      font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+      margin-top: 0.65rem;
+      font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
     }
     .scroll-cue a {
       color: var(--dim); text-decoration: none;
@@ -365,10 +411,19 @@
       border: 1px solid rgba(68,136,204,0.18);
       border-radius: 2px;
     }
-    .shader-controls.hero-shader { margin-top: 0.55rem; }
+    .shader-controls.hero-shader {
+      margin-top: 0; padding: 0;
+      background: transparent; border: none; border-radius: 0;
+    }
     .shader-controls.hero-shader .ctrl-hint-long { display: none; }
     .shader-controls .ctrl-row {
-      display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.85rem 1rem;
+      justify-items: center;
+    }
+    @media (max-width: 560px) {
+      .shader-controls .ctrl-row { grid-template-columns: repeat(2, 1fr); }
     }
     .shader-controls label {
       display: flex; flex-direction: column; gap: 4px; align-items: center;
@@ -379,7 +434,7 @@
     }
     .shader-controls .ctrl-val { color: var(--teal); }
     .shader-controls input[type=range] {
-      width: 108px; accent-color: var(--teal); cursor: pointer;
+      width: min(100%, 148px); accent-color: var(--teal); cursor: pointer;
     }
     .shader-controls .ctrl-hint {
       margin-top: 0.45rem; text-align: center;
@@ -410,13 +465,25 @@
     }
     /* ─── Live deployments mini-block ─────────────────────────────────────── */
     .deployments {
-      margin: 1.4rem auto 0; max-width: 640px;
+      margin: 1.4rem auto 0; max-width: none;
       background: rgba(6, 4, 15, 0.94); backdrop-filter: blur(10px);
       border: 1px solid rgba(136, 204, 255, 0.32);
-      padding: 0.9rem 1.1rem; font-size: 0.78rem;
+      padding: 1rem 1.25rem; font-size: 0.8rem;
       box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+      border-radius: 10px;
     }
-    .deployments .dep-row { display: grid; grid-template-columns: 110px 1fr; gap: 0.5rem 1rem; align-items: baseline; }
+    .deployments .dep-row {
+      display: grid;
+      grid-template-columns: 7.5rem 1fr 7.5rem 1fr;
+      gap: 0.55rem 1.25rem; align-items: baseline;
+    }
+    @media (max-width: 980px) {
+      .deployments .dep-row { grid-template-columns: 7.5rem 1fr; }
+    }
+    @media (max-width: 560px) {
+      .deployments .dep-row { grid-template-columns: 1fr; }
+      .deployments .dep-row > .dep-label { margin-top: 0.35rem; }
+    }
     .deployments .dep-row > .dep-label { color: #ffb86c; letter-spacing: .12em; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
     .deployments .dep-row > .dep-val { color: #f4f0ff; line-height: 1.55; }
     .deployments .dep-row > .dep-val a { color: #5dffe0; text-decoration: none; font-weight: 600; }
@@ -426,25 +493,25 @@
 
     /* ─── Origin story (hero placement) ───────────────────────────────────── */
     .origin-top {
-      margin: 0.55rem auto 0;
-      max-width: 640px;
+      margin: 0;
+      max-width: none;
       text-align: left;
-      background: rgba(6, 4, 15, 0.92);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(238, 136, 51, 0.32);
-      padding: 0.65rem 0.85rem 0.6rem;
-      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+      background: none;
+      border: none;
+      padding: 0;
+      box-shadow: none;
     }
     .origin-top h2 {
       font-size: 0.72rem;
       margin-bottom: 0.55rem;
       color: #ffb86c;
     }
+    .origin-top h2::before { content: none; }
     .origin-top p {
-      font-size: 0.76rem;
-      line-height: 1.5;
+      font-size: 0.82rem;
+      line-height: 1.6;
       color: #f0ecff;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.45rem;
     }
     .origin-top p:last-child { margin-bottom: 0; }
     .origin-top a { color: #5dffe0; font-weight: 600; }
@@ -460,9 +527,9 @@
       margin: 0.45rem 0 0.3rem;
     }
     .origin-chip {
-      display: inline-flex; flex-direction: column; gap: 0.1rem;
-      min-width: 8.5rem; flex: 1 1 8.5rem;
-      padding: 0.38rem 0.5rem;
+      display: inline-flex; flex-direction: column; gap: 0.12rem;
+      min-width: 10rem; flex: 1 1 10rem;
+      padding: 0.5rem 0.65rem;
       border-radius: 4px;
       border: 1px solid rgba(68, 136, 204, 0.28);
       background: rgba(13, 8, 32, 0.75);
@@ -499,8 +566,9 @@
     }
     .lane-sync-bar.warn { border-color: rgba(238,136,51,0.35); background: rgba(238,136,51,0.07); }
     .lane-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem;
     }
+    @media (max-width: 1100px) { .lane-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 720px) { .lane-grid { grid-template-columns: 1fr; } }
     .lane-card {
       background: rgba(13,8,32,0.82); border: 1px solid rgba(68,136,204,0.2);
@@ -534,7 +602,7 @@
     /* ─── Demo loops grid ─────────────────────────────────────────────────── */
     .demos {
       display: grid; gap: 1rem; margin-top: 1.2rem;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     }
     .demo {
       background: rgba(13,8,32,0.7); border: 1px solid rgba(68,136,204,0.18);
@@ -602,92 +670,104 @@
 
   <div class="wrap">
     <header class="hero-viewport">
-      <h1>MACROVERSE 42</h1>
-      <p class="tagline">The Wired Atelier</p>
-      <p class="showcase-banner">showcase.macroverse.aday.net.au // GitHub Showcase // not the primary live app</p>
+      <div class="hero-brand">
+        <h1>MACROVERSE 42</h1>
+        <p class="tagline">The Wired Atelier</p>
+        <p class="showcase-banner">showcase.macroverse.aday.net.au // GitHub Showcase // not the primary live app</p>
+        <p class="hero-pitch">GLSL / ISF shader lab &nbsp;&middot;&nbsp; cloud + desktop VJ &nbsp;&middot;&nbsp; WebXR audience &amp; controller &nbsp;&middot;&nbsp; participatory gig sessions &nbsp;&middot;&nbsp; LAN bridge &nbsp;&middot;&nbsp; Resolume Wire pipeline</p>
+      </div>
 
-      <div class="shader-controls hero-shader" aria-label="Background shader demo">
-        <div class="ctrl-row">
-          <label>
-            <span class="ctrl-name">Warp &nbsp;<span class="ctrl-val" id="ov-warp">1.00</span></span>
-            <input type="range" id="ctrl-warp" min="0" max="2" step="0.05" value="1">
-          </label>
-          <label>
-            <span class="ctrl-name">Speed &nbsp;<span class="ctrl-val" id="ov-speed">1.00</span></span>
-            <input type="range" id="ctrl-speed" min="0.1" max="3" step="0.05" value="1">
-          </label>
-          <label>
-            <span class="ctrl-name">Grid &nbsp;<span class="ctrl-val" id="ov-grid">1.00</span></span>
-            <input type="range" id="ctrl-grid" min="0" max="2" step="0.05" value="1">
-          </label>
-          <label>
-            <span class="ctrl-name">Palette &nbsp;<span class="ctrl-val" id="ov-pal">0.00</span></span>
-            <input type="range" id="ctrl-pal" min="-0.5" max="0.5" step="0.01" value="0">
-          </label>
+      <div class="hero-grid">
+        <div class="hero-panel hero-panel-demo">
+          <p class="panel-label">Live shader demo</p>
+          <div class="shader-controls hero-shader" aria-label="Background shader demo">
+            <div class="ctrl-row">
+              <label>
+                <span class="ctrl-name">Warp &nbsp;<span class="ctrl-val" id="ov-warp">1.00</span></span>
+                <input type="range" id="ctrl-warp" min="0" max="2" step="0.05" value="1">
+              </label>
+              <label>
+                <span class="ctrl-name">Speed &nbsp;<span class="ctrl-val" id="ov-speed">1.00</span></span>
+                <input type="range" id="ctrl-speed" min="0.1" max="3" step="0.05" value="1">
+              </label>
+              <label>
+                <span class="ctrl-name">Grid &nbsp;<span class="ctrl-val" id="ov-grid">1.00</span></span>
+                <input type="range" id="ctrl-grid" min="0" max="2" step="0.05" value="1">
+              </label>
+              <label>
+                <span class="ctrl-name">Palette &nbsp;<span class="ctrl-val" id="ov-pal">0.00</span></span>
+                <input type="range" id="ctrl-pal" min="-0.5" max="0.5" step="0.01" value="0">
+              </label>
+            </div>
+            <p class="ctrl-hint">
+              move your cursor to warp the field &nbsp;·&nbsp; <kbd>~</kbd> opens the live GLSL editor
+              <span class="ctrl-hint-long"><br>
+              <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
+              <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex &rarr; Ollama &rarr; AI &middot; A/B deck &middot; crossfader &middot; shader carousel with thumbnails &middot; startup splash shows VJ + audience QRs &middot; gig sessions (stream QR + co-VJ join) &middot; WebXR VR on Quest/headsets (audience dome or VJ controller) &middot; tag &middot; search &middot; perform your whole library &middot; export to Wire on desktop</span></span>
+            </p>
+          </div>
         </div>
-        <p class="ctrl-hint">
-          move your cursor to warp the field &nbsp;·&nbsp; <kbd>~</kbd> opens the live GLSL editor
-          <span class="ctrl-hint-long"><br>
-          <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
-          <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex &rarr; Ollama &rarr; AI &middot; A/B deck &middot; crossfader &middot; shader carousel with thumbnails &middot; startup splash shows VJ + audience QRs &middot; gig sessions (stream QR + co-VJ join) &middot; WebXR VR on Quest/headsets (audience dome or VJ controller) &middot; tag &middot; search &middot; perform your whole library &middot; export to Wire on desktop</span></span>
-        </p>
-      </div>
 
-      <section id="origin" class="origin-top" aria-label="Origin story">
-        <h2>Origin story</h2>
-        <p>
-          MacroVerse began at
-          <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Melbourne Fringe &mdash; MacroVerse</a>
-          as a live sonic and visual interpretation of the evolution of the universe &mdash; from energy stasis to heat-death dissipation.
-          <a href="https://nickewilson.net/" target="_blank" rel="noopener noreferrer">Reductionist (Nick Wilson)</a>
-          performed on battery-powered micro-instruments; Aday (Adrian Richardson) ran live video projection improv
-          that bent time and energy flow. Both are longtime Clan Analogue artists; the show ran at Abbotsford Convent&rsquo;s experimental art program
-          (free exhibition 12&ndash;4pm daily, ticketed hour-long performance sessions from 7pm).
-        </p>
-        <div class="origin-media">
-          <a class="origin-chip origin-chip-live" href="https://www.youtube.com/watch?v=4tfKNUwVZw0" target="_blank" rel="noopener noreferrer" title="Reductionist (Nick Wilson) — audio side of MacroVerse">
-            <span class="origin-chip-label">Audio</span>
-            <span class="origin-chip-title">Nick Wilson &mdash; live set (YouTube)</span>
-          </a>
-          <span class="origin-chip origin-chip-soon" aria-label="Melbourne Fringe VR videos coming soon">
-            <span class="origin-chip-label">Video</span>
-            <span class="origin-chip-title">Fringe VR captures &mdash; coming soon</span>
-          </span>
+        <div class="hero-panel hero-panel-origin">
+          <section id="origin" class="origin-top" aria-label="Origin story">
+            <h2>Origin story</h2>
+            <p>
+              MacroVerse began at
+              <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Melbourne Fringe &mdash; MacroVerse</a>
+              as a live sonic and visual interpretation of the evolution of the universe &mdash; from energy stasis to heat-death dissipation.
+              <a href="https://nickewilson.net/" target="_blank" rel="noopener noreferrer">Reductionist (Nick Wilson)</a>
+              performed on battery-powered micro-instruments; Aday (Adrian Richardson) ran live video projection improv
+              that bent time and energy flow. Both are longtime Clan Analogue artists; the show ran at Abbotsford Convent&rsquo;s experimental art program
+              (free exhibition 12&ndash;4pm daily, ticketed hour-long performance sessions from 7pm).
+            </p>
+            <div class="origin-media">
+              <a class="origin-chip origin-chip-live" href="https://www.youtube.com/watch?v=4tfKNUwVZw0" target="_blank" rel="noopener noreferrer" title="Reductionist (Nick Wilson) — audio side of MacroVerse">
+                <span class="origin-chip-label">Audio</span>
+                <span class="origin-chip-title">Nick Wilson &mdash; live set (YouTube)</span>
+              </a>
+              <span class="origin-chip origin-chip-soon" aria-label="Melbourne Fringe VR videos coming soon">
+                <span class="origin-chip-label">Video</span>
+                <span class="origin-chip-title">Fringe VR captures &mdash; coming soon</span>
+              </span>
+            </div>
+            <p class="origin-links">
+              <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Fringe event</a>
+              &nbsp;&middot;&nbsp;
+              <a href="https://nickewilson.net/" target="_blank" rel="noopener noreferrer">Nick Wilson bio</a>
+              &nbsp;&middot;&nbsp;
+              <a href="https://macroverse.aday.net.au/about.html">About</a>
+              &nbsp;&middot;&nbsp;
+              <a href="https://blog.aday.net.au">Blog timeline</a>
+            </p>
+          </section>
         </div>
-        <p class="origin-links">
-          <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Fringe event</a>
-          &nbsp;&middot;&nbsp;
-          <a href="https://nickewilson.net/" target="_blank" rel="noopener noreferrer">Nick Wilson bio</a>
-          &nbsp;&middot;&nbsp;
-          <a href="https://macroverse.aday.net.au/about.html">About</a>
-          &nbsp;&middot;&nbsp;
-          <a href="https://blog.aday.net.au">Blog timeline</a>
-        </p>
-      </section>
+      </div>
 
-      <div class="cta-primary">
-        <a class="btn btn-live" href="https://macroverse.aday.net.au/">Try it live</a>
-        <a class="btn btn-primary" href="https://github.com/aday1/macroverse.aday.net.au/releases">Download</a>
-        <a class="btn btn-secondary" href="https://github.com/aday1/macroverse.aday.net.au">Source on GitHub</a>
+      <div class="hero-footer">
+        <div class="cta-primary">
+          <a class="btn btn-live" href="https://macroverse.aday.net.au/">Try it live</a>
+          <a class="btn btn-primary" href="https://github.com/aday1/macroverse.aday.net.au/releases">Download</a>
+          <a class="btn btn-secondary" href="https://github.com/aday1/macroverse.aday.net.au">Source on GitHub</a>
+        </div>
+        <div class="hero-live-chips" aria-label="Live deployment links">
+          <a href="https://macroverse.aday.net.au/">macroverse.aday.net.au</a>
+          <a href="https://macroverse-test.aday.net.au/">macroverse-test</a>
+          <a href="https://macroverse-dev.aday.net.au/">macroverse-dev</a>
+          <a href="https://macroverse-private.aday.net.au/">macroverse-private</a>
+          <a href="https://showcase.macroverse.aday.net.au/">showcase</a>
+          <a href="https://artbastard.aday.net.au/">artbastard</a>
+        </div>
+        <nav class="cta-nav" aria-label="Showcase sections">
+          <a href="#showcase-deep">All sections</a>
+          <a href="#lane-status">Lanes</a>
+          <a href="#participatory-vj">VJ modes</a>
+          <a href="#vr-vj">WebXR</a>
+          <a href="#demos">Demos</a>
+          <a href="#screenshots">Screenshots</a>
+          <a href="#help">Help</a>
+        </nav>
+        <p class="scroll-cue"><a href="#showcase-deep">Explore showcase &darr;</a></p>
       </div>
-      <div class="hero-live-strip" aria-label="Live deployment links">
-        <a href="https://macroverse.aday.net.au/">macroverse.aday.net.au</a>
-        <a href="https://macroverse-test.aday.net.au/">macroverse-test</a>
-        <a href="https://macroverse-dev.aday.net.au/">macroverse-dev</a>
-        <a href="https://macroverse-private.aday.net.au/">macroverse-private</a>
-        <a href="https://showcase.macroverse.aday.net.au/">showcase</a>
-        <a href="https://artbastard.aday.net.au/">artbastard</a>
-      </div>
-      <p class="scroll-cue"><a href="#showcase-deep">Explore showcase &darr;</a></p>
-      <nav class="cta-nav" aria-label="Showcase sections">
-        <a href="#showcase-deep">All sections</a>
-        <a href="#lane-status">Lanes</a>
-        <a href="#participatory-vj">VJ modes</a>
-        <a href="#vr-vj">WebXR</a>
-        <a href="#demos">Demos</a>
-        <a href="#screenshots">Screenshots</a>
-        <a href="#help">Help</a>
-      </nav>
     </header>
 
     <div id="showcase-deep">
