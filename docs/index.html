@@ -583,14 +583,13 @@
     .hero-demo-inline video {
       width: 100%;
       height: auto;
-      aspect-ratio: 16 / 9;
-      max-height: clamp(88px, 12vh, 132px);
+      aspect-ratio: 4 / 3;
       display: block;
       border-radius: 5px;
       border: 1px solid rgba(68,136,204,0.28);
       background: var(--void);
       object-fit: contain;
-      object-position: center top;
+      object-position: center center;
     }
     .hero-demo-inline figcaption {
       margin-top: 0.28rem;
@@ -963,19 +962,19 @@
         <figure class="hero-demo-inline" aria-label="GLSL to Resolume Wire pipeline">
           <video src="videos/pipeline-flow.mp4" poster="videos/pipeline-flow-poster.webp"
                  autoplay loop muted playsinline preload="metadata"
-                 width="960" height="540"></video>
+                 width="960" height="720"></video>
           <figcaption><span class="demo-tag">Pipeline</span>GLSL &rarr; ISF JSON &rarr; <code>.wire</code> &rarr; Resolume. One binary, no installer.</figcaption>
         </figure>
         <figure class="hero-demo-inline" aria-label="Expose magic numbers as ISF sliders">
           <video src="videos/expose-params.mp4" poster="videos/expose-params-poster.webp"
                  autoplay loop muted playsinline preload="metadata"
-                 width="960" height="540"></video>
+                 width="960" height="720"></video>
           <figcaption><span class="demo-tag tag-expose">Expose</span>Turn magic-number GLSL literals into ISF parameter sliders for Wire &mdash; one click.</figcaption>
         </figure>
         <figure class="hero-demo-inline" aria-label="Shader fix chain">
           <video src="videos/fix-chain.mp4" poster="videos/fix-chain-poster.webp"
                  autoplay loop muted playsinline preload="metadata"
-                 width="960" height="540"></video>
+                 width="960" height="720"></video>
           <figcaption><span class="demo-tag tag-fix">Fix chain</span>Broken shader? Local regex &rarr; Ollama &rarr; AI. Stop at the first success.</figcaption>
         </figure>
       </div>
