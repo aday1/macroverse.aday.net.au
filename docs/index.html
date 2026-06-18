@@ -372,6 +372,38 @@
     .deployments .dep-row > .dep-val code { color: #ffeccc; background: rgba(0,0,0,0.4); padding: 0.1em 0.35em; border-radius: 3px; }
     .deployments .dep-note { color: #c9b8e8; font-size: 0.7rem; margin-top: 0.5rem; letter-spacing: .04em; }
 
+    /* ─── Origin story (hero placement) ───────────────────────────────────── */
+    .origin-top {
+      margin: 1.1rem auto 0;
+      max-width: 640px;
+      text-align: left;
+      background: rgba(6, 4, 15, 0.92);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(238, 136, 51, 0.32);
+      padding: 0.95rem 1.1rem 0.85rem;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+    }
+    .origin-top h2 {
+      font-size: 0.72rem;
+      margin-bottom: 0.55rem;
+      color: #ffb86c;
+    }
+    .origin-top p {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: #f0ecff;
+      margin-bottom: 0.55rem;
+    }
+    .origin-top p:last-child { margin-bottom: 0; }
+    .origin-top a { color: #5dffe0; font-weight: 600; }
+    .origin-top a:hover { color: #a8fff0; }
+    .origin-top .origin-links {
+      font-size: 0.74rem;
+      color: #c9b8e8;
+      margin-top: 0.35rem;
+    }
+    .origin-top .origin-links a { font-weight: 600; }
+
     /* ─── Lane status + changelog ─────────────────────────────────────────── */
     .lane-sync-bar {
       margin-top: 1rem; padding: 0.65rem 0.85rem;
@@ -487,6 +519,29 @@
       <h1>MACROVERSE 42</h1>
       <p class="tagline">The Wired Atelier</p>
       <p class="showcase-banner">GitHub Showcase Page // not the primary live app</p>
+
+      <section id="origin" class="origin-top" aria-label="Origin story">
+        <h2>Origin story</h2>
+        <p>
+          MacroVerse began at
+          <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Melbourne Fringe &mdash; MacroVerse</a>
+          as a live sonic and visual interpretation of the evolution of the universe &mdash; from energy stasis to heat-death dissipation.
+          <a href="https://nickewilson.net/" target="_blank" rel="noopener noreferrer">Reductionist (Nick Wilson)</a>
+          performed on battery-powered micro-instruments; Aday (Adrian Richardson) ran live video projection improv
+          that bent time and energy flow. Both are longtime Clan Analogue artists; the show ran at Abbotsford Convent&rsquo;s experimental art program
+          (free exhibition 12&ndash;4pm daily, ticketed hour-long performance sessions from 7pm).
+        </p>
+        <p class="origin-links">
+          <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Fringe event page</a>
+          &nbsp;&middot;&nbsp;
+          <a href="https://nickewilson.net/" target="_blank" rel="noopener noreferrer">Nick Wilson &mdash; artist bio</a>
+          &nbsp;&middot;&nbsp;
+          <a href="https://macroverse.aday.net.au/about.html">Full about on live app</a>
+          &nbsp;&middot;&nbsp;
+          <a href="https://blog.aday.net.au">blog timeline</a>
+        </p>
+      </section>
+
       <p class="lain-quote">your whole library, live — search it, tag it, perform it — or open the room to the audience</p>
       <div class="glow-line"></div>
       <div class="cta">
@@ -565,22 +620,7 @@
       </div>
     </header>
 
-    <section id="origin">
-      <h2>Origin story</h2>
-      <p>
-        MacroVerse began at
-        <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Melbourne Fringe</a>
-        as a live sonic and visual interpretation of the evolution of the universe &mdash; from energy stasis to heat-death dissipation.
-        Reductionist (Nick Wilson) performed on battery-powered micro-instruments; Aday (Adrian Richardson) ran live video projection improv
-        that bent time and energy flow. Both are longtime Clan Analogue artists; the show ran at Abbotsford Convent&rsquo;s experimental art program
-        (free exhibition 12&ndash;4pm daily, ticketed hour-long performance sessions from 7pm).
-      </p>
-      <p class="dim">
-        <a href="https://macroverse.aday.net.au/about.html">Full about page on the live app</a>
-        &nbsp;&middot;&nbsp;
-        <a href="https://blog.aday.net.au">Timeline on blog.aday.net.au</a>
-      </p>
-    </section>
+
 
     <section id="participatory-vj">
       <h2>Three ways in</h2>
