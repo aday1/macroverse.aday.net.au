@@ -122,6 +122,29 @@
       text-align: center;
     }
     .hero-panel-demo .panel-label { color: var(--teal); }
+    .hero-ways {
+      margin-top: 1rem;
+      padding: 1rem 1.15rem 0.85rem;
+      background: rgba(13, 8, 32, 0.55);
+      border: 1px solid rgba(136, 51, 204, 0.28);
+      border-radius: 10px;
+      text-align: left;
+    }
+    .hero-ways h2 {
+      margin: 0 0 0.85rem;
+      text-align: center;
+      font-size: 0.82rem;
+    }
+    .hero-use-cases { margin-top: 0; }
+    .hero-use-cases .use-case { padding: 0.95rem 1rem; }
+    .hero-use-cases .use-case h3 { font-size: 0.8rem; margin-bottom: 0.55rem; }
+    .hero-use-cases .use-case p { font-size: 0.8rem; line-height: 1.55; }
+    .hero-use-cases .use-case ul { font-size: 0.76rem; line-height: 1.5; }
+    .hero-ways-foot {
+      margin: 0.75rem 0 0;
+      font-size: 0.74rem;
+      text-align: center;
+    }
     .hero-footer {
       margin-top: 1rem;
       padding-top: 0.85rem;
@@ -743,6 +766,30 @@
         </div>
       </div>
 
+      <section id="participatory-vj" class="hero-ways" aria-label="Three ways in">
+        <h2>Three ways in</h2>
+        <div class="use-cases hero-use-cases">
+          <div class="use-case uc-vj">
+            <h3>Standalone VJ Tool</h3>
+            <p>Browse and perform your full GLSL/ISF library. A/B crossfader, mix modes, shader carousel, MIDI/OSC, Roli Lightpad LED blocks. Cloud or desktop. MJPEG / Spout / NDI on desktop. Tag, search, revert. One operator, one window.</p>
+          </div>
+          <div class="use-case uc-gig">
+            <h3>Participatory &amp; multiplayer VJ</h3>
+            <p><strong>Optional.</strong> Two access tiers on the same gig session (salted tokens — no raw session names in QR):</p>
+            <ul style="margin:0.5rem 0 0 1rem;line-height:1.5;color:var(--text);">
+              <li><strong>Audience participation</strong> (stream QR / <code>viewToken</code>): phones watch the SSE preview. When you enable <em>Audience participation</em> on the host, they can drag or touch the stream to drive <code>mouseX</code> / <code>mouseY</code> only.</li>
+              <li><strong>VJ collaboration</strong> (join link / <code>controlToken</code> from the top-bar <b>VJ</b> chip): hands-on co-VJ — full backend desk sync over WebSocket.</li>
+              <li><strong>WebXR VR</strong> (VJ deck QR panel): audience dome or VJ controller on Quest / WebXR headsets.</li>
+            </ul>
+          </div>
+          <div class="use-case uc-wire">
+            <h3>Resolume Wire Pipeline</h3>
+            <p><b>Desktop / self-host.</b> Load any GLSL file, check Wire compatibility, expose magic-number literals as ISF sliders, run the shader fix chain (regex &rarr; Ollama &rarr; AI), and push the finished macro straight into Resolume Wire. Cloud hosts can still use <b>Clipboard to Wire</b>.</p>
+          </div>
+        </div>
+        <p class="dim hero-ways-foot">Live app: Settings &rarr; <b>VJ Show Session ID</b> &rarr; Apply. Startup splash shows VJ + audience QRs before the index finishes loading.</p>
+      </section>
+
       <div class="hero-footer">
         <div class="cta-primary">
           <a class="btn btn-live" href="https://macroverse.aday.net.au/">Try it live</a>
@@ -804,32 +851,6 @@
       <h2>Changelog</h2>
       <p class="dim">Stable semver lines. Full history: <a href="https://github.com/aday1/macroverse.aday.net.au/blob/main/changelog.md">changelog.md on GitHub</a>.</p>
       <div id="changelogVersions" class="changelog-versions">Loading…</div>
-    </section>
-
-    <section id="participatory-vj">
-      <h2>Three ways in</h2>
-      <div class="use-cases">
-        <div class="use-case uc-vj">
-          <h3>Standalone VJ Tool</h3>
-          <p>Browse and perform your full GLSL/ISF library. A/B crossfader, mix modes, shader carousel, MIDI/OSC, Roli Lightpad LED blocks. Cloud or desktop. MJPEG / Spout / NDI on desktop. Tag, search, revert. One operator, one window.</p>
-        </div>
-        <div class="use-case uc-gig">
-          <h3>Participatory &amp; multiplayer VJ</h3>
-          <p><strong>Optional.</strong> Two access tiers on the same gig session (salted tokens — no raw session names in QR):</p>
-          <ul style="margin:0.6rem 0 0 1.1rem;font-size:0.92em;line-height:1.55;color:var(--text);">
-            <li><strong>Audience participation</strong> (stream QR / <code>viewToken</code>): phones watch the SSE preview. When you enable <em>Audience participation</em> on the host, they can drag or touch the stream to drive <code>mouseX</code> / <code>mouseY</code> only — playful, restrictive, no deck control.</li>
-            <li><strong>VJ collaboration</strong> (join link / <code>controlToken</code> from the top-bar <b>VJ</b> chip): hands-on co-VJ — full backend desk sync (crossfader, clips, mix, params) over WebSocket.</li>
-            <li><strong>WebXR VR</strong> (VJ deck QR panel &rarr; <b>Copy VR audience</b> / <b>Copy VR VJ</b>): open <code>vj-vr.html</code> on Meta Quest or any WebXR headset. Audience mode streams the live mix inside an immersive dome (or flat screen). VJ controller mode drives crossfader, decks, Auto VJ, and live-code push while the host still renders output.</li>
-          </ul>
-        </div>
-        <div class="use-case uc-wire">
-          <h3>Resolume Wire Pipeline</h3>
-          <p><b>Desktop / self-host.</b> Load any GLSL file, check Wire compatibility, expose magic-number literals as ISF sliders, run the shader fix chain (regex &rarr; Ollama &rarr; AI), and push the finished macro straight into Resolume Wire. Cloud hosts can still use <b>Clipboard to Wire</b>.</p>
-        </div>
-      </div>
-      <p class="dim" style="margin-top:1rem;">
-        Live app: Settings &rarr; <b>VJ Show Session ID</b> &rarr; Apply. VJ deck: toggle <b>Audience participation</b> for touch X/Y on the stream QR. Top-bar <b>VJ</b> chip: collaboration QR / link for co-VJs (full desk). Stream QR on output stays view-only unless participation is on (then touch steers mouse uniforms only). On first launch the loading splash also shows both QRs so you can scan before the index finishes loading.
-      </p>
     </section>
 
     <section id="vr-vj">
