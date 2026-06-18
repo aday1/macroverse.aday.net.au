@@ -25,6 +25,7 @@ const positional = process.argv.slice(2).filter((a) => !a.startsWith('--') && !a
 const targetDir = path.resolve(dirArg || positional[0] || path.join(root, 'shaders', 'VJ-Generated'));
 const merge = process.argv.includes('--merge');
 const concurrency = parseInt(process.argv.find((a) => a.startsWith('--concurrency='))?.split('=')[1] || '2', 10);
+const checkpointEvery = parseInt(process.argv.find((a) => a.startsWith('--checkpoint='))?.split('=')[1] || '100', 10);
 
 function pathKey(p) {
   return p.replace(/\\/g, '|');
@@ -60,6 +61,11 @@ async function main() {
   let done = 0;
   let failed = 0;
   let pageIdx = 0;
+  let sinceCheckpoint = 0;
+
+  function writeCache() {
+    fs.writeFileSync(outFile, JSON.stringify(cache, null, 0), 'utf8');
+  }
 
   async function bakeOne(file) {
     const rel = path.relative(root, file).replace(/\\/g, '/');
@@ -78,7 +84,12 @@ async function main() {
     } catch {
       failed++;
     }
-    if ((done + failed) % 20 === 0) console.log(`${done + failed}/${todo.length} ok=${done} fail=${failed}`);
+    sinceCheckpoint++;
+    if (sinceCheckpoint >= checkpointEvery) {
+      writeCache();
+      sinceCheckpoint = 0;
+    }
+    if ((done + failed) % 50 === 0) console.log(`${done + failed}/${todo.length} ok=${done} fail=${failed} cache=${Object.keys(cache).length}`);
   }
 
   const queue = [...todo];
@@ -91,7 +102,7 @@ async function main() {
   await Promise.all(workers);
   await browser.close();
 
-  fs.writeFileSync(outFile, JSON.stringify(cache, null, 0), 'utf8');
+  writeCache();
   console.log(`Wrote ${outFile} entries=${Object.keys(cache).length} new_ok=${done} fail=${failed}`);
 }
 

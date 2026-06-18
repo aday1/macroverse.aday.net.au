@@ -22,7 +22,8 @@ Showcase: https://showcase.macroverse.aday.net.au/ (GitHub Pages CNAME; mirror h
 - **300 new ISF VJ shaders** in `shaders/VJ-Generated/ISF/` — parametric Wired Atelier templates (macroverse, techno, cosmic, psychedelic, geometric, ambient, plasma, tunnel).
 - **QA pipeline** — `scripts/validate-shader-batch.mjs` compile + blank-pixel gate; failures quarantined under `shaders/_quarantine/` (86 unshipped; seeds/tags in `scripts/reports/quarantine-manifest.json`).
 - **ISF metadata indexing** — native scan + boot backfill parse ISF `TAGS` into gallery sets (`vj-*`, `macroverse-origin`) and tags for all `VJ-Generated` shaders.
-- **Baked thumbnails** — `thumbnails-baked.json` (300 entries) copied into Docker image as `thumbnails.json` for live/dev gallery grids (legacy ~2400 library still runtime-only).
+- **Baked thumbnails** — `thumbnails-baked.json` (~2400+ entries, full public library bake) copied into Docker image as `thumbnails.json`; gallery grids no longer require runtime thumbnail generation on live/dev.
+- **Template v2 + w3 wave** — brighter factory templates; 150 w3 variants added (140 pass QA); `geo-voronoi` reworked (`w3b` replacements). Quarantine archive now 96 entries (unshipped).
 - **Factory orchestrator** — `scripts/run-shader-factory.ps1` for repeatable generation waves; `scripts/seed-generated-metadata.mjs` for quarantine manifest.
 
 ### Public library expansion (Jun 2026)

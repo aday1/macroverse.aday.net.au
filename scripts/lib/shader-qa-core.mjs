@@ -24,13 +24,17 @@ export function loadPrepScript() {
   return fs.readFileSync(path.join(__dirname, 'shader-prep.js'), 'utf8');
 }
 
+const SKIP_SHADER_DIRS = new Set(['_quarantine', '.git', 'node_modules']);
+
 export function walkShaders(dir) {
   const out = [];
   if (!fs.existsSync(dir)) return out;
   for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, ent.name);
-    if (ent.isDirectory()) out.push(...walkShaders(full));
-    else if (/\.(fs|frag|glsl|isf)$/i.test(ent.name)) out.push(full);
+    if (ent.isDirectory()) {
+      if (SKIP_SHADER_DIRS.has(ent.name)) continue;
+      out.push(...walkShaders(full));
+    } else if (/\.(fs|frag|glsl|isf)$/i.test(ent.name)) out.push(full);
   }
   return out;
 }

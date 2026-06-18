@@ -79,8 +79,10 @@ void main() {
     float n = fbm(p);
     vec3 copper = vec3(0.85, 0.45, 0.12);
     vec3 voidCol = vec3(0.02, 0.04, 0.12);
-    vec3 col = mix(voidCol, copper, smoothstep(0.25, 0.85, n));
-    col += vec3(0.15, 0.08, 0.02) * pow(n, 3.0);
+    vec3 col = mix(voidCol, copper, smoothstep(0.15, 0.75, n));
+    col += vec3(0.22, 0.12, 0.04) * pow(n, 2.0);
+    col += vec3(0.06, 0.08, 0.14) * (1.0 - n) * 0.35;
+    col = max(col, vec3(0.04, 0.05, 0.09));
     gl_FragColor = vec4(col, 1.0);
 }`;
     },
@@ -133,10 +135,12 @@ void main() {
     vec2 uv = gl_FragCoord.xy / resolution.xy;
     vec2 p = (uv - 0.5) * vec2(resolution.x / resolution.y, 1.0);
     p.x += time * warpSpeed * 0.15;
-    float s = star(p * 40.0, time * warpSpeed);
-    vec3 col = vec3(0.02, 0.03, 0.08);
-    col += vec3(0.7, 0.85, 1.0) * s;
-    col += vec3(0.9, 0.5, 1.0) * s * 0.4;
+    float s = star(p * 36.0, time * warpSpeed);
+    float neb = sin(p.x * 3.0 + time * 0.2) * cos(p.y * 2.5 - time * 0.15) * 0.5 + 0.5;
+    vec3 col = vec3(0.08, 0.1, 0.22) + vec3(0.12, 0.08, 0.2) * neb;
+    col += vec3(0.75, 0.88, 1.0) * s * 1.4;
+    col += vec3(0.95, 0.55, 1.0) * s * 0.55;
+    col = max(col, vec3(0.05, 0.06, 0.12));
     gl_FragColor = vec4(col, 1.0);
 }`;
     },
@@ -332,21 +336,19 @@ void main() {
 ${COMMON_DEFINES}
 float hash21(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 void main() {
-    vec2 uv = gl_FragCoord.xy / resolution.xy * cells;
-    vec2 ip = floor(uv);
-    vec2 fp = fract(uv);
-    float md = 1.0;
-    for (int y = -1; y <= 1; y++) {
-      for (int x = -1; x <= 1; x++) {
-        vec2 g = vec2(float(x), float(y));
-        vec2 o = vec2(hash21(ip + g), hash21(ip + g + 17.0));
-        o = 0.5 + 0.5 * sin(time * 0.3 + 6.283 * o);
-        float d = length(g + o - fp);
-        md = min(md, d);
-      }
-    }
-    vec3 col = vec3(0.03, 0.06, 0.1);
-    col += vec3(0.2, 0.85, 0.75) * smoothstep(0.08, 0.0, md);
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    vec2 p = uv * max(cells, 2.0);
+    vec2 ip = floor(p);
+    vec2 fp = fract(p) - 0.5;
+    vec2 rnd = vec2(hash21(ip), hash21(ip + 19.0));
+    vec2 ctr = 0.35 * sin(time * 0.25 + rnd * 6.283) * 0.5;
+    float md = length(fp - ctr);
+    float edge = smoothstep(0.22, 0.02, md);
+    float fill = hash21(ip + floor(time * 0.15));
+    vec3 col = vec3(0.1, 0.14, 0.22);
+    col = mix(col, vec3(0.2, 0.55, 0.5), fill * 0.65);
+    col += vec3(0.45, 0.98, 0.88) * edge;
+    col = max(col, vec3(0.08, 0.1, 0.14));
     gl_FragColor = vec4(col, 1.0);
 }`;
     },
@@ -420,9 +422,12 @@ void main() {
     float seg = 6.28318 / pipeCount;
     float pipe = smoothstep(0.04, 0.0, abs(mod(a + time * 0.2, seg) - seg * 0.5));
     float depth = fract(1.0 / (r + 0.08) - time * 0.4);
-    vec3 col = vec3(0.12, 0.04, 0.18) + vec3(0.45, 0.95, 0.55) * pipe * depth;
-    col += vec3(0.25, 0.15, 0.35) * (1.0 - pipe) * 0.4;
-    col *= smoothstep(0.75, 0.02, r) * 0.85 + 0.15;
+    float vignette = smoothstep(0.8, 0.08, r);
+    vec3 col = vec3(0.18, 0.08, 0.28) + vec3(0.55, 0.98, 0.65) * pipe * depth;
+    col += vec3(0.35, 0.22, 0.48) * (1.0 - pipe) * 0.55;
+    col += vec3(0.08, 0.12, 0.22) * depth * 0.4;
+    col *= vignette * 0.75 + 0.25;
+    col = max(col, vec3(0.08, 0.06, 0.14));
     gl_FragColor = vec4(col, 1.0);
 }`;
     },

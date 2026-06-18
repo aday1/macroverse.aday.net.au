@@ -1,0 +1,208 @@
+{
+  "dir": "C:\\aday.repo\\macroverse.aday.net.au\\shaders\\VJ-Generated\\ISF\\geometric",
+  "at": "2026-06-18T05:24:51.037Z",
+  "total": 50,
+  "passed": [
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-000-m0-m0.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-000-m0.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-000-m1.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-000.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-001-m1-m2.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-001-m1.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-001-m3.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-001.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-002-m2.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-002.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-003-m3.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-003.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-004.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-005.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-006.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-007.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-008.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-009.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-010.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-011.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w2-000.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w2-001.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w2-002.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w2-003.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w2-004.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w2-005.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w2-006.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w2-007.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w2-008.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w2-009.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w3-000.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w3-001.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w3-002.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w3-003.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w3-004.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w3-005.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w3-006.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w3-007.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w3-008.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-rings-w3-009.fs",
+      "variance": 5451.256001302035
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3b-000.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3b-001.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3b-002.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3b-003.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3b-004.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3b-005.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3b-006.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3b-007.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3b-008.fs",
+      "variance": 1306.3512102089774
+    },
+    {
+      "path": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3b-009.fs",
+      "variance": 1306.3512102089774
+    }
+  ],
+  "failed": []
+}

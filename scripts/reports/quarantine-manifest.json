@@ -1,11 +1,12 @@
 {
-  "generatedAt": "2026-06-18T05:10:53.379Z",
+  "generatedAt": "2026-06-18T05:33:12.965Z",
   "summary": {
-    "generatedShipped": 300,
-    "quarantined": 86,
+    "generatedShipped": 450,
+    "quarantined": 96,
     "quarantineByTemplate": {
       "cosmic-streak": 22,
       "geo-voronoi": 22,
+      "geo-voronoi-w3": 10,
       "copper-field": 26,
       "tunnel-pipes": 16
     },
@@ -1019,6 +1020,236 @@
         "vj-wire-ready"
       ],
       "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w2-009.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w3-000.fs",
+      "filename": "geo-voronoi-w3-000.fs",
+      "template": "geo-voronoi-w3",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-0-1781759867749",
+      "description": "Voronoi glow geo-voronoi-0-1781759867749",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3-000.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w3-001.fs",
+      "filename": "geo-voronoi-w3-001.fs",
+      "template": "geo-voronoi-w3",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-1-1781759867750",
+      "description": "Voronoi glow geo-voronoi-1-1781759867750",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3-001.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w3-002.fs",
+      "filename": "geo-voronoi-w3-002.fs",
+      "template": "geo-voronoi-w3",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-2-1781759867751",
+      "description": "Voronoi glow geo-voronoi-2-1781759867751",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3-002.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w3-003.fs",
+      "filename": "geo-voronoi-w3-003.fs",
+      "template": "geo-voronoi-w3",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-3-1781759867751",
+      "description": "Voronoi glow geo-voronoi-3-1781759867751",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3-003.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w3-004.fs",
+      "filename": "geo-voronoi-w3-004.fs",
+      "template": "geo-voronoi-w3",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-4-1781759867752",
+      "description": "Voronoi glow geo-voronoi-4-1781759867752",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3-004.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w3-005.fs",
+      "filename": "geo-voronoi-w3-005.fs",
+      "template": "geo-voronoi-w3",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-5-1781759867753",
+      "description": "Voronoi glow geo-voronoi-5-1781759867753",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3-005.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w3-006.fs",
+      "filename": "geo-voronoi-w3-006.fs",
+      "template": "geo-voronoi-w3",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-6-1781759867753",
+      "description": "Voronoi glow geo-voronoi-6-1781759867753",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3-006.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w3-007.fs",
+      "filename": "geo-voronoi-w3-007.fs",
+      "template": "geo-voronoi-w3",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-7-1781759867754",
+      "description": "Voronoi glow geo-voronoi-7-1781759867754",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3-007.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w3-008.fs",
+      "filename": "geo-voronoi-w3-008.fs",
+      "template": "geo-voronoi-w3",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-8-1781759867755",
+      "description": "Voronoi glow geo-voronoi-8-1781759867755",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3-008.fs",
+      "qaError": "blank render var=0.0 black=0.0%",
+      "shipped": false,
+      "thumbnail": false,
+      "status": "quarantined-unfixable"
+    },
+    {
+      "path": "shaders/_quarantine/VJ-Generated/ISF/geometric/geo-voronoi-w3-009.fs",
+      "filename": "geo-voronoi-w3-009.fs",
+      "template": "geo-voronoi-w3",
+      "category": "geometric",
+      "seed": "glow geo-voronoi-9-1781759867755",
+      "description": "Voronoi glow geo-voronoi-9-1781759867755",
+      "tags": [
+        "generated",
+        "vj",
+        "wired-atelier-2026",
+        "geometric"
+      ],
+      "sets": [
+        "vj-geometric",
+        "vj-wire-ready"
+      ],
+      "originalPath": "shaders/VJ-Generated/ISF/geometric/geo-voronoi-w3-009.fs",
       "qaError": "blank render var=0.0 black=0.0%",
       "shipped": false,
       "thumbnail": false,
@@ -2109,5 +2340,5 @@
       ]
     }
   ],
-  "generatedWithMetadata": 300
+  "generatedWithMetadata": 450
 }
