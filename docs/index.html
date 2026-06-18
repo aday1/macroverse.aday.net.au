@@ -552,16 +552,16 @@
       100% { filter: brightness(1.25) saturate(1.35); }
     }
     .hero-demo-clips {
-      grid-column: 1 / -1;
-      margin-top: 0;
-      padding: 0.65rem 1rem 0.75rem;
+      margin-top: 0.75rem;
+      padding: 0.75rem 1rem 0.85rem;
       background: rgba(13, 8, 32, 0.62);
       border: 1px solid rgba(0, 221, 170, 0.22);
       border-radius: 10px;
       backdrop-filter: blur(8px);
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.5rem 0.65rem;
+      gap: 0.55rem 0.75rem;
+      overflow: visible;
     }
     .hero-demo-clips .hero-demo-strip-label {
       grid-column: 1 / -1;
@@ -582,12 +582,15 @@
     }
     .hero-demo-inline video {
       width: 100%;
-      height: clamp(72px, 10vw, 96px);
+      height: auto;
+      aspect-ratio: 16 / 9;
+      max-height: clamp(88px, 12vh, 132px);
       display: block;
       border-radius: 5px;
       border: 1px solid rgba(68,136,204,0.28);
       background: var(--void);
-      object-fit: cover;
+      object-fit: contain;
+      object-position: center top;
     }
     .hero-demo-inline figcaption {
       margin-top: 0.28rem;
@@ -953,28 +956,28 @@
           </div>
           <p class="dim hero-ways-foot">Settings &rarr; <b>VJ Show Session ID</b> &rarr; Apply. Splash shows VJ + audience QRs on load.</p>
         </div>
+      </div>
 
-        <div class="hero-demo-clips" aria-label="Macroverse pipeline demos">
-          <p class="hero-demo-strip-label">Pipeline demos</p>
-          <figure class="hero-demo-inline" aria-label="GLSL to Resolume Wire pipeline">
-            <video src="videos/pipeline-flow.mp4" poster="videos/pipeline-flow-poster.webp"
-                   autoplay loop muted playsinline preload="metadata"
-                   width="960" height="540"></video>
-            <figcaption><span class="demo-tag">Pipeline</span>GLSL &rarr; ISF JSON &rarr; <code>.wire</code> &rarr; Resolume. One binary, no installer.</figcaption>
-          </figure>
-          <figure class="hero-demo-inline" aria-label="Expose magic numbers as ISF sliders">
-            <video src="videos/expose-params.mp4" poster="videos/expose-params-poster.webp"
-                   autoplay loop muted playsinline preload="metadata"
-                   width="960" height="540"></video>
-            <figcaption><span class="demo-tag tag-expose">Expose</span>Turn magic-number GLSL literals into ISF parameter sliders for Wire &mdash; one click.</figcaption>
-          </figure>
-          <figure class="hero-demo-inline" aria-label="Shader fix chain">
-            <video src="videos/fix-chain.mp4" poster="videos/fix-chain-poster.webp"
-                   autoplay loop muted playsinline preload="metadata"
-                   width="960" height="540"></video>
-            <figcaption><span class="demo-tag tag-fix">Fix chain</span>Broken shader? Local regex &rarr; Ollama &rarr; AI. Stop at the first success.</figcaption>
-          </figure>
-        </div>
+      <div class="hero-demo-clips" aria-label="Macroverse pipeline demos">
+        <p class="hero-demo-strip-label">Pipeline demos</p>
+        <figure class="hero-demo-inline" aria-label="GLSL to Resolume Wire pipeline">
+          <video src="videos/pipeline-flow.mp4" poster="videos/pipeline-flow-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540"></video>
+          <figcaption><span class="demo-tag">Pipeline</span>GLSL &rarr; ISF JSON &rarr; <code>.wire</code> &rarr; Resolume. One binary, no installer.</figcaption>
+        </figure>
+        <figure class="hero-demo-inline" aria-label="Expose magic numbers as ISF sliders">
+          <video src="videos/expose-params.mp4" poster="videos/expose-params-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540"></video>
+          <figcaption><span class="demo-tag tag-expose">Expose</span>Turn magic-number GLSL literals into ISF parameter sliders for Wire &mdash; one click.</figcaption>
+        </figure>
+        <figure class="hero-demo-inline" aria-label="Shader fix chain">
+          <video src="videos/fix-chain.mp4" poster="videos/fix-chain-poster.webp"
+                 autoplay loop muted playsinline preload="metadata"
+                 width="960" height="540"></video>
+          <figcaption><span class="demo-tag tag-fix">Fix chain</span>Broken shader? Local regex &rarr; Ollama &rarr; AI. Stop at the first success.</figcaption>
+        </figure>
       </div>
 
       <div class="hero-footer">
