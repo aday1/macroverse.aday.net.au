@@ -536,12 +536,16 @@
       0% { filter: brightness(1.05) saturate(1.1); }
       100% { filter: brightness(1.25) saturate(1.35); }
     }
-    .hero-pipeline-inline {
+    .hero-demo-clips {
       margin-top: 0.75rem;
       border-top: 1px solid rgba(0,221,170,0.18);
       padding-top: 0.65rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      flex: 1;
     }
-    .hero-pipeline-inline video {
+    .hero-demo-inline video {
       width: 100%;
       display: block;
       border-radius: 6px;
@@ -550,15 +554,15 @@
       aspect-ratio: 16 / 9;
       object-fit: cover;
     }
-    .hero-pipeline-inline figcaption {
-      margin-top: 0.4rem;
-      font-size: 0.68rem;
-      line-height: 1.45;
+    .hero-demo-inline figcaption {
+      margin-top: 0.35rem;
+      font-size: 0.66rem;
+      line-height: 1.42;
       color: #c9b8e8;
       letter-spacing: 0.04em;
       text-align: center;
     }
-    .hero-pipeline-inline .demo-tag {
+    .hero-demo-inline .demo-tag {
       display: inline-block;
       margin-right: 0.4rem;
       color: var(--copper);
@@ -567,6 +571,8 @@
       font-size: 0.6rem;
       font-weight: 700;
     }
+    .hero-demo-inline .demo-tag.tag-expose { color: var(--teal); }
+    .hero-demo-inline .demo-tag.tag-fix { color: #cc88ff; }
     .hero-panel-demo {
       display: flex;
       flex-direction: column;
@@ -852,12 +858,26 @@
               <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
               <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex &rarr; Ollama &rarr; AI &middot; A/B deck &middot; crossfader &middot; shader carousel with thumbnails &middot; startup splash shows VJ + audience QRs &middot; gig sessions (stream QR + co-VJ join) &middot; WebXR VR on Quest/headsets (audience dome or VJ controller) &middot; tag &middot; search &middot; perform your whole library &middot; export to Wire on desktop</span></span>
             </p>
-            <figure class="hero-pipeline-inline" aria-label="GLSL to Resolume Wire pipeline">
-              <video src="videos/pipeline-flow.mp4" poster="videos/pipeline-flow-poster.webp"
-                     autoplay loop muted playsinline preload="metadata"
-                     width="960" height="540"></video>
-              <figcaption><span class="demo-tag">Pipeline</span>GLSL &rarr; ISF JSON &rarr; <code>.wire</code> &rarr; Resolume. One binary, no installer.</figcaption>
-            </figure>
+            <div class="hero-demo-clips" aria-label="Macroverse pipeline demos">
+              <figure class="hero-demo-inline" aria-label="GLSL to Resolume Wire pipeline">
+                <video src="videos/pipeline-flow.mp4" poster="videos/pipeline-flow-poster.webp"
+                       autoplay loop muted playsinline preload="metadata"
+                       width="960" height="540"></video>
+                <figcaption><span class="demo-tag">Pipeline</span>GLSL &rarr; ISF JSON &rarr; <code>.wire</code> &rarr; Resolume. One binary, no installer.</figcaption>
+              </figure>
+              <figure class="hero-demo-inline" aria-label="Expose magic numbers as ISF sliders">
+                <video src="videos/expose-params.mp4" poster="videos/expose-params-poster.webp"
+                       autoplay loop muted playsinline preload="metadata"
+                       width="960" height="540"></video>
+                <figcaption><span class="demo-tag tag-expose">Expose</span>Turn magic-number GLSL literals into ISF parameter sliders for Wire &mdash; one click.</figcaption>
+              </figure>
+              <figure class="hero-demo-inline" aria-label="Shader fix chain">
+                <video src="videos/fix-chain.mp4" poster="videos/fix-chain-poster.webp"
+                       autoplay loop muted playsinline preload="metadata"
+                       width="960" height="540"></video>
+                <figcaption><span class="demo-tag tag-fix">Fix chain</span>Broken shader? Local regex &rarr; Ollama &rarr; AI. Stop at the first success.</figcaption>
+              </figure>
+            </div>
           </div>
         </div>
 
