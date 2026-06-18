@@ -158,7 +158,29 @@
     }
 
     /* ─── CTA buttons ──────────────────────────────────────────────────────── */
-    .cta { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2rem; }
+    .cta-primary {
+      display: flex; flex-wrap: wrap; gap: 0.85rem; justify-content: center; margin-top: 1.75rem;
+    }
+    .cta-nav {
+      display: flex; flex-wrap: wrap; gap: 0.45rem; justify-content: center;
+      margin-top: 0.85rem; max-width: 52rem; margin-left: auto; margin-right: auto;
+    }
+    .cta-nav a {
+      padding: 0.32rem 0.62rem;
+      font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase;
+      text-decoration: none; color: #b8d4ff;
+      border: 1px solid rgba(68, 136, 204, 0.28);
+      background: rgba(6, 4, 15, 0.72);
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .cta-nav a:hover {
+      color: #e8f4ff; border-color: rgba(0, 221, 170, 0.45); background: rgba(0, 221, 170, 0.08);
+    }
+    .hero-dash {
+      margin: 2.25rem 0 0; padding: 2rem 0 0;
+      border-top: 1px solid rgba(68, 136, 204, 0.14);
+    }
+    .hero-dash h2 { margin-top: 0; }
     .btn {
       padding: 0.65rem 1.5rem; font-family: inherit; font-size: 0.9rem;
       letter-spacing: 0.08em; text-decoration: none; border: 1px solid;
@@ -403,6 +425,40 @@
       margin-top: 0.35rem;
     }
     .origin-top .origin-links a { font-weight: 600; }
+    .origin-media {
+      display: flex; flex-wrap: wrap; gap: 0.55rem;
+      margin: 0.65rem 0 0.45rem;
+    }
+    .origin-chip {
+      display: inline-flex; flex-direction: column; gap: 0.12rem;
+      min-width: 9.5rem; flex: 1 1 9.5rem;
+      padding: 0.5rem 0.65rem;
+      border-radius: 4px;
+      border: 1px solid rgba(68, 136, 204, 0.28);
+      background: rgba(13, 8, 32, 0.75);
+      text-decoration: none;
+    }
+    .origin-chip-live {
+      border-color: rgba(0, 221, 170, 0.42);
+      background: rgba(0, 221, 170, 0.07);
+    }
+    .origin-chip-live:hover {
+      border-color: rgba(0, 221, 170, 0.65);
+      background: rgba(0, 221, 170, 0.14);
+    }
+    .origin-chip-soon {
+      opacity: 0.72;
+      border-style: dashed;
+      cursor: default;
+    }
+    .origin-chip-label {
+      font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #ffb86c; font-weight: 700;
+    }
+    .origin-chip-title {
+      font-size: 0.78rem; color: #f4f0ff; line-height: 1.35;
+    }
+    .origin-chip-live .origin-chip-title { color: #a8fff0; }
 
     /* ─── Lane status + changelog ─────────────────────────────────────────── */
     .lane-sync-bar {
@@ -531,35 +587,45 @@
           that bent time and energy flow. Both are longtime Clan Analogue artists; the show ran at Abbotsford Convent&rsquo;s experimental art program
           (free exhibition 12&ndash;4pm daily, ticketed hour-long performance sessions from 7pm).
         </p>
+        <div class="origin-media">
+          <a class="origin-chip origin-chip-live" href="https://www.youtube.com/watch?v=4tfKNUwVZw0" target="_blank" rel="noopener noreferrer" title="Reductionist (Nick Wilson) — audio side of MacroVerse">
+            <span class="origin-chip-label">Audio</span>
+            <span class="origin-chip-title">Nick Wilson &mdash; live set (YouTube)</span>
+          </a>
+          <span class="origin-chip origin-chip-soon" aria-label="Melbourne Fringe VR videos coming soon">
+            <span class="origin-chip-label">Video</span>
+            <span class="origin-chip-title">Fringe VR captures &mdash; coming soon</span>
+          </span>
+        </div>
         <p class="origin-links">
-          <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Fringe event page</a>
+          <a href="https://www.melbournefringe.com.au/whats-on/events/macroverse" target="_blank" rel="noopener noreferrer">Fringe event</a>
           &nbsp;&middot;&nbsp;
-          <a href="https://nickewilson.net/" target="_blank" rel="noopener noreferrer">Nick Wilson &mdash; artist bio</a>
+          <a href="https://nickewilson.net/" target="_blank" rel="noopener noreferrer">Nick Wilson bio</a>
           &nbsp;&middot;&nbsp;
-          <a href="https://macroverse.aday.net.au/about.html">Full about on live app</a>
+          <a href="https://macroverse.aday.net.au/about.html">About</a>
           &nbsp;&middot;&nbsp;
-          <a href="https://blog.aday.net.au">blog timeline</a>
+          <a href="https://blog.aday.net.au">Blog timeline</a>
         </p>
       </section>
 
       <p class="lain-quote">your whole library, live — search it, tag it, perform it — or open the room to the audience</p>
       <div class="glow-line"></div>
-      <div class="cta">
+      <div class="cta-primary">
         <a class="btn btn-live" href="https://macroverse.aday.net.au/">Try it live</a>
         <a class="btn btn-primary" href="https://github.com/aday1/macroverse.aday.net.au/releases">Download</a>
         <a class="btn btn-secondary" href="https://github.com/aday1/macroverse.aday.net.au">Source on GitHub</a>
-        <a class="btn btn-secondary" href="https://macroverse.aday.net.au/about.html">About MacroVerse</a>
-        <a class="btn btn-secondary" href="#lane-status">Deploy lanes</a>
-        <a class="btn btn-secondary" href="#changelog">Changelog</a>
-        <a class="btn btn-secondary" href="#cloud-edition">Cloud vs local</a>
-        <a class="btn btn-secondary" href="#participatory-vj">Participatory VJ</a>
-        <a class="btn btn-secondary" href="#vr-vj">WebXR / VR</a>
-        <a class="btn btn-secondary" href="#lan-bridge">LAN bridge agent</a>
-        <a class="btn btn-secondary" href="#self-host">Self-host</a>
-        <a class="btn btn-secondary" href="#origin">Origin story</a>
-        <a class="btn btn-secondary" href="#demos">Demo loops</a>
-        <a class="btn btn-secondary" href="#help">Help &amp; Shortcuts</a>
       </div>
+      <nav class="cta-nav" aria-label="Showcase sections">
+        <a href="#origin">Origin</a>
+        <a href="#lane-status">Lanes</a>
+        <a href="#participatory-vj">VJ modes</a>
+        <a href="#vr-vj">WebXR</a>
+        <a href="#cloud-edition">Cloud vs local</a>
+        <a href="#lan-bridge">LAN bridge</a>
+        <a href="#self-host">Self-host</a>
+        <a href="#demos">Demos</a>
+        <a href="#help">Help</a>
+      </nav>
 
       <div class="deployments" aria-label="Live deployments">
         <div class="dep-row">
@@ -578,47 +644,47 @@
         </div>
         <p class="dep-note">// this is the GitHub showcase page &mdash; the live runtimes above serve the actual app</p>
       </div>
-
-      <section id="lane-status" aria-label="Deployment lane status">
-        <h2>Deploy lanes</h2>
-        <p class="dim">Live probe snapshot &mdash; semver, git SHA, deploy age, and feature set per lane. Refreshed when this showcase deploys; ages tick every minute in your browser.</p>
-        <div id="laneSyncBar" class="lane-sync-bar">Loading lane status…</div>
-        <div id="laneGrid" class="lane-grid"></div>
-        <p class="lane-status-foot" id="laneStatusFoot"></p>
-      </section>
-
-      <section id="changelog" aria-label="Version changelog">
-        <h2>Changelog</h2>
-        <p class="dim">Stable semver lines. Full history: <a href="https://github.com/aday1/macroverse.aday.net.au/blob/main/changelog.md">changelog.md on GitHub</a>.</p>
-        <div id="changelogVersions" class="changelog-versions">Loading…</div>
-      </section>
-
-      <div class="shader-controls">
-        <div class="ctrl-row">
-          <label>
-            <span class="ctrl-name">Warp &nbsp;<span class="ctrl-val" id="ov-warp">1.00</span></span>
-            <input type="range" id="ctrl-warp" min="0" max="2" step="0.05" value="1">
-          </label>
-          <label>
-            <span class="ctrl-name">Speed &nbsp;<span class="ctrl-val" id="ov-speed">1.00</span></span>
-            <input type="range" id="ctrl-speed" min="0.1" max="3" step="0.05" value="1">
-          </label>
-          <label>
-            <span class="ctrl-name">Grid &nbsp;<span class="ctrl-val" id="ov-grid">1.00</span></span>
-            <input type="range" id="ctrl-grid" min="0" max="2" step="0.05" value="1">
-          </label>
-          <label>
-            <span class="ctrl-name">Palette &nbsp;<span class="ctrl-val" id="ov-pal">0.00</span></span>
-            <input type="range" id="ctrl-pal" min="-0.5" max="0.5" step="0.01" value="0">
-          </label>
-        </div>
-        <p class="ctrl-hint">
-          move your cursor to warp the field &nbsp;·&nbsp; <kbd>~</kbd> opens the live GLSL editor<br>
-          <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
-          <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex &rarr; Ollama &rarr; AI &middot; A/B deck &middot; crossfader &middot; shader carousel with thumbnails &middot; startup splash shows VJ + audience QRs &middot; gig sessions (stream QR + co-VJ join) &middot; WebXR VR on Quest/headsets (audience dome or VJ controller) &middot; tag &middot; search &middot; perform your whole library &middot; export to Wire on desktop</span>
-        </p>
-      </div>
     </header>
+
+    <section id="lane-status" class="hero-dash" aria-label="Deployment lane status">
+      <h2>Deploy lanes</h2>
+      <p class="dim">Live probe snapshot &mdash; semver, git SHA, deploy age, and feature set per lane. Refreshed when this showcase deploys; ages tick every minute in your browser.</p>
+      <div id="laneSyncBar" class="lane-sync-bar">Loading lane status…</div>
+      <div id="laneGrid" class="lane-grid"></div>
+      <p class="lane-status-foot" id="laneStatusFoot"></p>
+    </section>
+
+    <section id="changelog" aria-label="Version changelog">
+      <h2>Changelog</h2>
+      <p class="dim">Stable semver lines. Full history: <a href="https://github.com/aday1/macroverse.aday.net.au/blob/main/changelog.md">changelog.md on GitHub</a>.</p>
+      <div id="changelogVersions" class="changelog-versions">Loading…</div>
+    </section>
+
+    <div class="shader-controls hero-dash" style="border-top:none;padding-top:0;margin-top:1.5rem">
+      <div class="ctrl-row">
+        <label>
+          <span class="ctrl-name">Warp &nbsp;<span class="ctrl-val" id="ov-warp">1.00</span></span>
+          <input type="range" id="ctrl-warp" min="0" max="2" step="0.05" value="1">
+        </label>
+        <label>
+          <span class="ctrl-name">Speed &nbsp;<span class="ctrl-val" id="ov-speed">1.00</span></span>
+          <input type="range" id="ctrl-speed" min="0.1" max="3" step="0.05" value="1">
+        </label>
+        <label>
+          <span class="ctrl-name">Grid &nbsp;<span class="ctrl-val" id="ov-grid">1.00</span></span>
+          <input type="range" id="ctrl-grid" min="0" max="2" step="0.05" value="1">
+        </label>
+        <label>
+          <span class="ctrl-name">Palette &nbsp;<span class="ctrl-val" id="ov-pal">0.00</span></span>
+          <input type="range" id="ctrl-pal" min="-0.5" max="0.5" step="0.01" value="0">
+        </label>
+      </div>
+      <p class="ctrl-hint">
+        move your cursor to warp the field &nbsp;·&nbsp; <kbd>~</kbd> opens the live GLSL editor<br>
+        <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
+        <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex &rarr; Ollama &rarr; AI &middot; A/B deck &middot; crossfader &middot; shader carousel with thumbnails &middot; startup splash shows VJ + audience QRs &middot; gig sessions (stream QR + co-VJ join) &middot; WebXR VR on Quest/headsets (audience dome or VJ controller) &middot; tag &middot; search &middot; perform your whole library &middot; export to Wire on desktop</span>
+      </p>
+    </div>
 
 
 

@@ -10,7 +10,8 @@
         "Copy VR audience / Copy VR VJ QR shortcuts",
         "Live GLSL push from VR (vj:shader-live)",
         "Auto VJ shader-swap vs depth-motion toggles",
-        "Shared vjStreamCore for flat + VR output"
+        "Shared vjStreamCore for flat + VR output",
+        "Showcase origin block with Nick Wilson audio + Fringe VR placeholder"
       ]
     },
     {

@@ -31,6 +31,13 @@ WebXR audience and VJ controller modes on hosted lanes. VR links from the VJ dec
 - **Auto VJ toggles** — independent shader-swap vs depth/param motion when Auto VJ is on (persisted in localStorage).
 - **Shared stream core** — `vjStreamCore.ts` for deck A/B + mix rendering on flat output and VR pages.
 
+### Showcase & origin (Jun 2026)
+
+- **Origin story** moved under the showcase banner with Fringe + Nick Wilson bio links.
+- **Nick Wilson audio set** on showcase and about page: [YouTube](https://www.youtube.com/watch?v=4tfKNUwVZw0).
+- **Fringe VR captures** placeholder — edited Melbourne Fringe videos will ship when ready.
+- Showcase UX: compact section nav, origin media chips, deploy lanes moved out of hero header.
+
 ### Notes
 
 - Flat 2D GLSL shaders map onto the VR dome; ray-marched 360 content looks best in sphere mode.
