@@ -625,7 +625,7 @@ function buildToolbar(): void {
 
   const shortcutHint = document.createElement('span');
   shortcutHint.style.cssText = 'color:var(--crt-dim);font-size:10px;';
-  shortcutHint.innerHTML = '<b style="color:var(--amiga-accent);">←→↑↓</b> navigate &nbsp; <b style="color:var(--amiga-accent);">1-9</b> toggle tag &nbsp; <b style="color:var(--amiga-accent);">Shift+1-9</b> toggle set &nbsp; <b style="color:var(--amiga-accent);">A</b> set prompt &nbsp; <b style="color:var(--amiga-accent);">F</b> fav &nbsp; <b style="color:var(--amiga-accent);">R</b> rename &nbsp; <b style="color:var(--amiga-accent);">?</b> full help';
+  shortcutHint.innerHTML = '<b style="color:var(--amiga-accent);">←→↑↓</b> navigate &nbsp; <b style="color:var(--amiga-accent);">1-9</b> toggle tag &nbsp; <b style="color:var(--amiga-accent);">Shift+1-9,0</b> toggle set &nbsp; <b style="color:var(--amiga-accent);">A</b> set prompt &nbsp; <b style="color:var(--amiga-accent);">F</b> fav &nbsp; <b style="color:var(--amiga-accent);">R</b> rename &nbsp; <b style="color:var(--amiga-accent);">?</b> full help';
   row3.appendChild(shortcutHint);
 
   const seedBtn = document.createElement('button');
@@ -684,6 +684,8 @@ function buildToolbar(): void {
       if (dirCat === 'abstract' && !sets.includes('vj-ambient') && !sets.includes('vj-geometric')) sets.push('vj-ambient');
       if (dirCat === 'color' && !sets.includes('vj-colour')) sets.push('vj-colour');
       if (dirCat === 'concept' && !GALLERY_PRESET_SETS.some((s) => sets.includes(s))) sets.push('vj-ambient');
+      if (dirCat === 'macroverse' && !sets.includes('macroverse-set')) sets.push('macroverse-set');
+      if (/[/\\|]macroverse[/\\|]/.test(e.path || '') && !sets.includes('macroverse-set')) sets.push('macroverse-set');
       if ((e.sets || []).join(',') === sets.join(',')) return Promise.resolve();
       queued++;
       return postUpdate({ id: e.id, sets }).then(() => {
@@ -1101,7 +1103,8 @@ function showToggleSetModal(): void {
   );
   if (name === null || !name.trim()) return;
   const num = parseInt(name.trim(), 10);
-  const resolved = (num >= 1 && num <= 9 && GALLERY_PRESET_SETS[num - 1]) ? GALLERY_PRESET_SETS[num - 1] : name.trim();
+  const presetIdx = num === 0 ? 9 : (num >= 1 && num <= 9 ? num - 1 : -1);
+  const resolved = (presetIdx >= 0 && GALLERY_PRESET_SETS[presetIdx]) ? GALLERY_PRESET_SETS[presetIdx] : name.trim();
   toggleSetOnFocused(resolved);
 }
 
@@ -1230,7 +1233,9 @@ function setupGalleryKeyboard(): void {
       case '?':
         e.preventDefault(); toggleShortcutHud(); return;
     }
-    const digit = e.key >= '1' && e.key <= '9' ? parseInt(e.key, 10) - 1 : -1;
+    let digit = -1;
+    if (e.key >= '1' && e.key <= '9') digit = parseInt(e.key, 10) - 1;
+    else if (e.key === '0') digit = 9;
     if (digit >= 0) {
       e.preventDefault();
       if (e.shiftKey) {

@@ -1212,12 +1212,18 @@ func triggerIncrementalIndex() {
 				category = dir
 			}
 
+			sets := []string{}
+			if category == "macroverse" || strings.Contains(filepath.ToSlash(path), "/macroverse/") {
+				sets = []string{"macroverse-set", "vj-cosmic", "vj-wire-ready"}
+			}
+
 			existing = append(existing, ShaderEntry{
 				ID:       maxID,
 				Path:     path,
 				Name:     name,
 				Category: category,
 				Tags:     []string{},
+				Sets:     sets,
 				Format:   format,
 				FileHash: fileHash,
 			})
@@ -2310,12 +2316,18 @@ func consoleKeyListener(port string) {
 						category = dir
 					}
 
+					sets := []string{}
+					if category == "macroverse" || strings.Contains(filepath.ToSlash(path), "/macroverse/") {
+						sets = []string{"macroverse-set", "vj-cosmic", "vj-wire-ready"}
+					}
+
 					existing = append(existing, ShaderEntry{
 						ID:       maxID,
 						Path:     path,
 						Name:     name,
 						Category: category,
 						Tags:     []string{},
+						Sets:     sets,
 						Format:   format,
 						FileHash: fileHash,
 					})
@@ -6491,12 +6503,18 @@ func main() {
 				category = dir
 			}
 
+			sets := []string{}
+			if category == "macroverse" || strings.Contains(filepath.ToSlash(path), "/macroverse/") {
+				sets = []string{"macroverse-set", "vj-cosmic", "vj-wire-ready"}
+			}
+
 			existing = append(existing, ShaderEntry{
 				ID:       maxID,
 				Path:     path,
 				Name:     name,
 				Category: category,
 				Tags:     []string{},
+				Sets:     sets,
 				Format:   format,
 				FileHash: fileHash,
 			})
