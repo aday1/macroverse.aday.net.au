@@ -63,19 +63,24 @@
     .wrap {
       position: relative; z-index: 1;
       max-width: 960px; margin: 0 auto;
-      padding: 2rem 1.5rem 5rem;
+      padding: 0.75rem 1.5rem 5rem;
     }
 
-    /* ─── Header ───────────────────────────────────────────────────────────── */
-    header {
+    /* ─── Header (first viewport) ─────────────────────────────────────────── */
+    header.hero-viewport {
       text-align: center;
-      padding: 5rem 1rem 3.5rem;
+      padding: 1rem 1rem 0.85rem;
       position: relative;
+      min-height: min(100vh, 920px);
+      min-height: min(100dvh, 920px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
-    header::before {
+    header.hero-viewport::before {
       content: '';
       position: absolute;
-      inset: 2rem -0.5rem 0;
+      inset: 0 -0.5rem 0;
       background: rgba(6, 4, 15, 0.88);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(136, 204, 255, 0.22);
@@ -87,8 +92,8 @@
     h1 {
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      font-size: clamp(2rem, 7vw, 3.8rem);
-      letter-spacing: 0.18em;
+      font-size: clamp(1.55rem, 5.5vw, 2.65rem);
+      letter-spacing: 0.14em;
       color: var(--blue);
       text-shadow: 0 0 30px var(--glow-b), 0 0 80px rgba(68,136,204,0.15);
       animation: glitch-title 11s ease-in-out infinite;
@@ -107,17 +112,17 @@
     }
 
     .tagline {
-      font-size: 0.95rem;
+      font-size: 0.78rem;
       color: #ffd8b0;
-      letter-spacing: 0.22em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      margin-top: 0.6rem;
+      margin-top: 0.35rem;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 14px rgba(0, 0, 0, 0.55);
     }
     .showcase-banner {
-      margin: 0.9rem auto 0;
+      margin: 0.45rem auto 0;
       display: inline-block;
-      padding: 0.38rem 0.72rem;
+      padding: 0.28rem 0.55rem;
       border: 1px solid rgba(68, 136, 204, 0.55);
       color: #cde5ff;
       font-size: 0.72rem;
@@ -159,11 +164,31 @@
 
     /* ─── CTA buttons ──────────────────────────────────────────────────────── */
     .cta-primary {
-      display: flex; flex-wrap: wrap; gap: 0.85rem; justify-content: center; margin-top: 1.75rem;
+      display: flex; flex-wrap: wrap; gap: 0.55rem; justify-content: center; margin-top: 0.65rem;
     }
+    .cta-primary .btn { padding: 0.5rem 1.1rem; font-size: 0.78rem; }
+    .hero-live-strip {
+      display: flex; flex-wrap: wrap; gap: 0.35rem 0.65rem; justify-content: center;
+      margin-top: 0.55rem; max-width: 42rem; margin-left: auto; margin-right: auto;
+    }
+    .hero-live-strip a {
+      font-size: 0.68rem; letter-spacing: 0.06em; text-decoration: none;
+      color: #5dffe0; border-bottom: 1px solid rgba(0, 221, 170, 0.35);
+      padding-bottom: 1px;
+    }
+    .hero-live-strip a:hover { color: #a8fff0; border-bottom-color: rgba(0, 221, 170, 0.7); }
+    .scroll-cue {
+      margin-top: auto; padding-top: 0.55rem;
+      font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .scroll-cue a {
+      color: var(--dim); text-decoration: none;
+      transition: color 0.15s;
+    }
+    .scroll-cue a:hover { color: var(--teal); }
     .cta-nav {
-      display: flex; flex-wrap: wrap; gap: 0.45rem; justify-content: center;
-      margin-top: 0.85rem; max-width: 52rem; margin-left: auto; margin-right: auto;
+      display: flex; flex-wrap: wrap; gap: 0.35rem; justify-content: center;
+      margin-top: 0.45rem; max-width: 52rem; margin-left: auto; margin-right: auto;
     }
     .cta-nav a {
       padding: 0.32rem 0.62rem;
@@ -176,11 +201,14 @@
     .cta-nav a:hover {
       color: #e8f4ff; border-color: rgba(0, 221, 170, 0.45); background: rgba(0, 221, 170, 0.08);
     }
+    #showcase-deep { padding-top: 0.5rem; }
+    #showcase-deep > .lain-quote { margin-top: 0.5rem; }
     .hero-dash {
       margin: 2.25rem 0 0; padding: 2rem 0 0;
       border-top: 1px solid rgba(68, 136, 204, 0.14);
     }
     .hero-dash h2 { margin-top: 0; }
+    .deployments-foot { margin-top: 2.5rem; }
     .btn {
       padding: 0.65rem 1.5rem; font-family: inherit; font-size: 0.9rem;
       letter-spacing: 0.08em; text-decoration: none; border: 1px solid;
@@ -332,11 +360,13 @@
 
     /* ─── Shader controls strip ────────────────────────────────────────────── */
     .shader-controls {
-      margin-top: 1.6rem; padding: 1rem 1.2rem 0.8rem;
+      margin-top: 0.65rem; padding: 0.65rem 1rem 0.55rem;
       background: rgba(13,8,32,0.65); backdrop-filter: blur(8px);
       border: 1px solid rgba(68,136,204,0.18);
       border-radius: 2px;
     }
+    .shader-controls.hero-shader { margin-top: 0.55rem; }
+    .shader-controls.hero-shader .ctrl-hint-long { display: none; }
     .shader-controls .ctrl-row {
       display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; justify-content: center;
     }
@@ -349,12 +379,12 @@
     }
     .shader-controls .ctrl-val { color: var(--teal); }
     .shader-controls input[type=range] {
-      width: 120px; accent-color: var(--teal); cursor: pointer;
+      width: 108px; accent-color: var(--teal); cursor: pointer;
     }
     .shader-controls .ctrl-hint {
-      margin-top: 0.75rem; text-align: center;
+      margin-top: 0.45rem; text-align: center;
       font-size: 10px; color: var(--dim); letter-spacing: .05em;
-      line-height: 1.8;
+      line-height: 1.55;
     }
     .shader-controls .ctrl-hint kbd {
       color: var(--blue); font-family: inherit;
@@ -396,13 +426,13 @@
 
     /* ─── Origin story (hero placement) ───────────────────────────────────── */
     .origin-top {
-      margin: 1.1rem auto 0;
+      margin: 0.55rem auto 0;
       max-width: 640px;
       text-align: left;
       background: rgba(6, 4, 15, 0.92);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(238, 136, 51, 0.32);
-      padding: 0.95rem 1.1rem 0.85rem;
+      padding: 0.65rem 0.85rem 0.6rem;
       box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
     }
     .origin-top h2 {
@@ -411,10 +441,10 @@
       color: #ffb86c;
     }
     .origin-top p {
-      font-size: 0.82rem;
-      line-height: 1.65;
+      font-size: 0.76rem;
+      line-height: 1.5;
       color: #f0ecff;
-      margin-bottom: 0.55rem;
+      margin-bottom: 0.4rem;
     }
     .origin-top p:last-child { margin-bottom: 0; }
     .origin-top a { color: #5dffe0; font-weight: 600; }
@@ -426,13 +456,13 @@
     }
     .origin-top .origin-links a { font-weight: 600; }
     .origin-media {
-      display: flex; flex-wrap: wrap; gap: 0.55rem;
-      margin: 0.65rem 0 0.45rem;
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin: 0.45rem 0 0.3rem;
     }
     .origin-chip {
-      display: inline-flex; flex-direction: column; gap: 0.12rem;
-      min-width: 9.5rem; flex: 1 1 9.5rem;
-      padding: 0.5rem 0.65rem;
+      display: inline-flex; flex-direction: column; gap: 0.1rem;
+      min-width: 8.5rem; flex: 1 1 8.5rem;
+      padding: 0.38rem 0.5rem;
       border-radius: 4px;
       border: 1px solid rgba(68, 136, 204, 0.28);
       background: rgba(13, 8, 32, 0.75);
@@ -571,10 +601,37 @@
   <div class="scanline"></div>
 
   <div class="wrap">
-    <header>
+    <header class="hero-viewport">
       <h1>MACROVERSE 42</h1>
       <p class="tagline">The Wired Atelier</p>
       <p class="showcase-banner">showcase.macroverse.aday.net.au // GitHub Showcase // not the primary live app</p>
+
+      <div class="shader-controls hero-shader" aria-label="Background shader demo">
+        <div class="ctrl-row">
+          <label>
+            <span class="ctrl-name">Warp &nbsp;<span class="ctrl-val" id="ov-warp">1.00</span></span>
+            <input type="range" id="ctrl-warp" min="0" max="2" step="0.05" value="1">
+          </label>
+          <label>
+            <span class="ctrl-name">Speed &nbsp;<span class="ctrl-val" id="ov-speed">1.00</span></span>
+            <input type="range" id="ctrl-speed" min="0.1" max="3" step="0.05" value="1">
+          </label>
+          <label>
+            <span class="ctrl-name">Grid &nbsp;<span class="ctrl-val" id="ov-grid">1.00</span></span>
+            <input type="range" id="ctrl-grid" min="0" max="2" step="0.05" value="1">
+          </label>
+          <label>
+            <span class="ctrl-name">Palette &nbsp;<span class="ctrl-val" id="ov-pal">0.00</span></span>
+            <input type="range" id="ctrl-pal" min="-0.5" max="0.5" step="0.01" value="0">
+          </label>
+        </div>
+        <p class="ctrl-hint">
+          move your cursor to warp the field &nbsp;·&nbsp; <kbd>~</kbd> opens the live GLSL editor
+          <span class="ctrl-hint-long"><br>
+          <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
+          <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex &rarr; Ollama &rarr; AI &middot; A/B deck &middot; crossfader &middot; shader carousel with thumbnails &middot; startup splash shows VJ + audience QRs &middot; gig sessions (stream QR + co-VJ join) &middot; WebXR VR on Quest/headsets (audience dome or VJ controller) &middot; tag &middot; search &middot; perform your whole library &middot; export to Wire on desktop</span></span>
+        </p>
+      </div>
 
       <section id="origin" class="origin-top" aria-label="Origin story">
         <h2>Origin story</h2>
@@ -608,24 +665,34 @@
         </p>
       </section>
 
-      <p class="lain-quote">your whole library, live — search it, tag it, perform it — or open the room to the audience</p>
-      <div class="glow-line"></div>
       <div class="cta-primary">
         <a class="btn btn-live" href="https://macroverse.aday.net.au/">Try it live</a>
         <a class="btn btn-primary" href="https://github.com/aday1/macroverse.aday.net.au/releases">Download</a>
         <a class="btn btn-secondary" href="https://github.com/aday1/macroverse.aday.net.au">Source on GitHub</a>
       </div>
+      <div class="hero-live-strip" aria-label="Live deployment links">
+        <a href="https://macroverse.aday.net.au/">macroverse.aday.net.au</a>
+        <a href="https://macroverse-test.aday.net.au/">macroverse-test</a>
+        <a href="https://macroverse-dev.aday.net.au/">macroverse-dev</a>
+        <a href="https://macroverse-private.aday.net.au/">macroverse-private</a>
+        <a href="https://showcase.macroverse.aday.net.au/">showcase</a>
+        <a href="https://artbastard.aday.net.au/">artbastard</a>
+      </div>
+      <p class="scroll-cue"><a href="#showcase-deep">Explore showcase &darr;</a></p>
       <nav class="cta-nav" aria-label="Showcase sections">
-        <a href="#origin">Origin</a>
+        <a href="#showcase-deep">All sections</a>
         <a href="#lane-status">Lanes</a>
         <a href="#participatory-vj">VJ modes</a>
         <a href="#vr-vj">WebXR</a>
-        <a href="#cloud-edition">Cloud vs local</a>
-        <a href="#lan-bridge">LAN bridge</a>
-        <a href="#self-host">Self-host</a>
         <a href="#demos">Demos</a>
+        <a href="#screenshots">Screenshots</a>
         <a href="#help">Help</a>
       </nav>
+    </header>
+
+    <div id="showcase-deep">
+      <p class="lain-quote">your whole library, live — search it, tag it, perform it — or open the room to the audience</p>
+      <div class="glow-line"></div>
 
       <div class="deployments" aria-label="Live deployments">
         <div class="dep-row">
@@ -644,7 +711,6 @@
         </div>
         <p class="dep-note">// this is the GitHub showcase page &mdash; the live runtimes above serve the actual app</p>
       </div>
-    </header>
 
     <section id="lane-status" class="hero-dash" aria-label="Deployment lane status">
       <h2>Deploy lanes</h2>
@@ -659,34 +725,6 @@
       <p class="dim">Stable semver lines. Full history: <a href="https://github.com/aday1/macroverse.aday.net.au/blob/main/changelog.md">changelog.md on GitHub</a>.</p>
       <div id="changelogVersions" class="changelog-versions">Loading…</div>
     </section>
-
-    <div class="shader-controls hero-dash" style="border-top:none;padding-top:0;margin-top:1.5rem">
-      <div class="ctrl-row">
-        <label>
-          <span class="ctrl-name">Warp &nbsp;<span class="ctrl-val" id="ov-warp">1.00</span></span>
-          <input type="range" id="ctrl-warp" min="0" max="2" step="0.05" value="1">
-        </label>
-        <label>
-          <span class="ctrl-name">Speed &nbsp;<span class="ctrl-val" id="ov-speed">1.00</span></span>
-          <input type="range" id="ctrl-speed" min="0.1" max="3" step="0.05" value="1">
-        </label>
-        <label>
-          <span class="ctrl-name">Grid &nbsp;<span class="ctrl-val" id="ov-grid">1.00</span></span>
-          <input type="range" id="ctrl-grid" min="0" max="2" step="0.05" value="1">
-        </label>
-        <label>
-          <span class="ctrl-name">Palette &nbsp;<span class="ctrl-val" id="ov-pal">0.00</span></span>
-          <input type="range" id="ctrl-pal" min="-0.5" max="0.5" step="0.01" value="0">
-        </label>
-      </div>
-      <p class="ctrl-hint">
-        move your cursor to warp the field &nbsp;·&nbsp; <kbd>~</kbd> opens the live GLSL editor<br>
-        <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
-        <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex &rarr; Ollama &rarr; AI &middot; A/B deck &middot; crossfader &middot; shader carousel with thumbnails &middot; startup splash shows VJ + audience QRs &middot; gig sessions (stream QR + co-VJ join) &middot; WebXR VR on Quest/headsets (audience dome or VJ controller) &middot; tag &middot; search &middot; perform your whole library &middot; export to Wire on desktop</span>
-      </p>
-    </div>
-
-
 
     <section id="participatory-vj">
       <h2>Three ways in</h2>
@@ -911,7 +949,7 @@ npm start</code></pre>
       </div>
     </section>
 
-    <section>
+    <section id="screenshots">
       <h2>Screenshots</h2>
       <p class="dim">Live screenshots of the desktop UI. See the <a href="#demos">Demo loops</a> section above for procedural feature loops.</p>
       <div class="screenshots">
@@ -1171,6 +1209,25 @@ ffmpeg -i http://localhost:8765/api/output/macrocam/stream -f v4l2 /dev/video0
       <div class="node"></div>
       <div class="node-line"></div>
       <div class="node"></div>
+    </div>
+
+      <div class="deployments deployments-foot" aria-label="Live deployments (footer)">
+        <div class="dep-row">
+          <span class="dep-label">Live</span>
+          <span class="dep-val"><a href="https://macroverse.aday.net.au">macroverse.aday.net.au</a> &mdash; cloud edition (public library)</span>
+          <span class="dep-label">Test</span>
+          <span class="dep-val"><a href="https://macroverse-test.aday.net.au">macroverse-test.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://macroverse-dev.aday.net.au">macroverse-dev.aday.net.au</a></span>
+          <span class="dep-label">Private</span>
+          <span class="dep-val"><a href="https://macroverse-private.aday.net.au">macroverse-private.aday.net.au</a> &mdash; full library; basic auth on all paths (invite-only credentials)</span>
+          <span class="dep-label">Showcase</span>
+          <span class="dep-val"><a href="https://showcase.macroverse.aday.net.au/">showcase.macroverse.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://aday1.github.io/macroverse.aday.net.au/">GitHub Pages mirror</a></span>
+          <span class="dep-label">Source</span>
+          <span class="dep-val"><a href="https://github.com/aday1/macroverse.aday.net.au">github.com/aday1/macroverse.aday.net.au</a> &mdash; Docker Compose, bridge agent, CI images</span>
+          <span class="dep-label">ArtBastard</span>
+          <span class="dep-val"><a href="https://artbastard.aday.net.au">artbastard.aday.net.au</a> &nbsp;&middot;&nbsp; <a href="https://artbastard-test.aday.net.au">artbastard-test.aday.net.au</a></span>
+        </div>
+        <p class="dep-note">// live runtimes above &mdash; <a href="#origin" style="color:#5dffe0;">back to top</a></p>
+      </div>
     </div>
 
     <footer>

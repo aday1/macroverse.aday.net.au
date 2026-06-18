@@ -38,6 +38,7 @@ WebXR audience and VJ controller modes on hosted lanes. VR links from the VJ dec
 - **Fringe VR captures** placeholder — edited Melbourne Fringe videos will ship when ready.
 - Showcase UX: compact section nav, origin media chips, deploy lanes moved out of hero header.
 - **Showcase alias** `showcase.macroverse.aday.net.au` → GitHub Pages (`docs/CNAME` + Cloudflare CNAME to `aday1.github.io`).
+- **Showcase first viewport** — shader demo sliders + origin story + live lane links above the fold; deep sections (lanes, three ways in, demos, screenshots, help) on scroll.
 
 ### Notes
 
