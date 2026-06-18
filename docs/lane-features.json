@@ -11,7 +11,10 @@
         "Live GLSL push from VR (vj:shader-live)",
         "Auto VJ shader-swap vs depth-motion toggles",
         "Shared vjStreamCore for flat + VR output",
-        "Showcase origin block with Nick Wilson audio note + show AV recording placeholder"
+        "Showcase origin block with Nick Wilson audio note + show AV recording placeholder",
+        "Macroverse set: 6 universe narrative ISF shaders (macroverse-set preset)",
+        "Showcase hero: three ways in, wider splash, about page restyle",
+        "VR support under development notice across showcase and app"
       ]
     },
     {

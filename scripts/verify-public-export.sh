@@ -12,8 +12,8 @@ if [ ! -d shaders/starter-pack ]; then
 fi
 
 count=$(find shaders/starter-pack -type f | wc -l | tr -d ' ')
-if [ "$count" -gt 55 ]; then
-  echo "starter-pack contains $count files, max is 55."
+if [ "$count" -gt 60 ]; then
+  echo "starter-pack contains $count files, max is 60."
   exit 1
 fi
 

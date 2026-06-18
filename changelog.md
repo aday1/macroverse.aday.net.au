@@ -41,6 +41,7 @@ WebXR audience and VJ controller modes on hosted lanes. VR links from the VJ dec
 - **Showcase hero UX** — wider 1280px layout, two-column splash (shader demo + origin), content-hugging card (no empty viewport gap), live lane chips.
 - **Showcase hero** — Three ways in moved into hero panel; about.html restyled like showcase with M42 logo and red-green WebGL background.
 - **VR notice** — “VR SUPPORT UNDER DEVELOPMENT” on showcase, about, vj-vr.html, splash VR QRs, and gig QR hub.
+- **Macroverse set (Microvirtuosity)** — six compiling ISF shaders in `starter-pack/macroverse/` (Energy Field through Living Our Best Life); gallery preset `macroverse-set` (Shift+0); auto-tagged on index scan.
 
 ### Notes
 
