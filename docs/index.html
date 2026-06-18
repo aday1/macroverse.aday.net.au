@@ -192,6 +192,24 @@
       text-transform: uppercase;
       background: rgba(6, 18, 38, 0.82);
     }
+    .vr-dev-banner {
+      display: inline-block;
+      margin: 0.45rem auto 0;
+      padding: 0.32rem 0.72rem;
+      border: 1px dashed rgba(238, 136, 51, 0.65);
+      color: #ffcc88;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(238, 136, 51, 0.1);
+      box-shadow: 0 0 16px rgba(238, 136, 51, 0.15);
+    }
+    .vr-dev-banner--block {
+      display: block;
+      margin: 0 0 1rem;
+      text-align: center;
+    }
     .lain-quote {
       font-size: 0.82rem;
       color: #ebe4ff;
@@ -697,6 +715,7 @@
         <h1>MACROVERSE 42</h1>
         <p class="tagline">The Wired Atelier</p>
         <p class="showcase-banner">showcase.macroverse.aday.net.au // GitHub Showcase // not the primary live app</p>
+        <p class="vr-dev-banner" role="status">VR SUPPORT UNDER DEVELOPMENT</p>
         <p class="hero-pitch">GLSL / ISF shader lab &nbsp;&middot;&nbsp; cloud + desktop VJ &nbsp;&middot;&nbsp; WebXR audience &amp; controller &nbsp;&middot;&nbsp; participatory gig sessions &nbsp;&middot;&nbsp; LAN bridge &nbsp;&middot;&nbsp; Resolume Wire pipeline</p>
       </div>
 
@@ -855,6 +874,7 @@
 
     <section id="vr-vj">
       <h2>WebXR / VR VJ</h2>
+      <p class="vr-dev-banner vr-dev-banner--block" role="status">VR SUPPORT UNDER DEVELOPMENT</p>
       <p>
         Scan a VR link from the VJ deck QR panel or open <code>vj-vr.html</code> on a Meta Quest (or any WebXR browser). The host desk still renders the mix; VR clients subscribe to the same signed gig session.
       </p>

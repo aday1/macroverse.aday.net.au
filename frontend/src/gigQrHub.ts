@@ -64,6 +64,19 @@ function buildHubDom(): HTMLElement {
     hint.className = 'gig-qr-hub-hint';
     hint.textContent = item.hint;
 
+    if (item.id === 'vr-audience' || item.id === 'vr-vj') {
+      const vrDev = document.createElement('div');
+      vrDev.className = 'gig-qr-hub-vr-dev';
+      vrDev.setAttribute('role', 'status');
+      vrDev.textContent = 'VR SUPPORT UNDER DEVELOPMENT';
+      card.appendChild(label);
+      card.appendChild(vrDev);
+      card.appendChild(hint);
+    } else {
+      card.appendChild(label);
+      card.appendChild(hint);
+    }
+
     const canvas = document.createElement('canvas');
     canvas.width = 160;
     canvas.height = 160;
@@ -77,8 +90,6 @@ function buildHubDom(): HTMLElement {
       copyGigUrl(item.buildUrl(getVjSessionId()), copyBtn);
     });
 
-    card.appendChild(label);
-    card.appendChild(hint);
     card.appendChild(canvas);
     card.appendChild(copyBtn);
     grid.appendChild(card);

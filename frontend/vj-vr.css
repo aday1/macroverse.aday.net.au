@@ -9,7 +9,27 @@ body {
   overflow: hidden;
 }
 
+.vr-dev-banner {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffcc88;
+  background: rgba(238, 136, 51, 0.14);
+  border-bottom: 1px dashed rgba(238, 136, 51, 0.55);
+}
+
 #layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+body {
   display: flex;
   flex-direction: column;
   height: 100vh;

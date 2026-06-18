@@ -1833,6 +1833,18 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; background: v
   color: var(--crt-fg);
   font-weight: bold;
 }
+.splash-vr-dev {
+  margin: 0.2rem 0 0.35rem;
+  font-size: clamp(0.52rem, 1.2vw, 0.62rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #ffcc88;
+  border: 1px dashed rgba(238, 136, 51, 0.55);
+  background: rgba(238, 136, 51, 0.1);
+  padding: 0.2rem 0.35rem;
+  border-radius: 3px;
+}
 .splash-vj-qr-block canvas {
   background: #fff;
   padding: clamp(6px, 1.2vw, 12px);
@@ -1925,6 +1937,19 @@ body.gig-qr-hub-open {
   color: var(--amiga-copper);
   font-weight: bold;
   text-align: center;
+}
+.gig-qr-hub-vr-dev {
+  margin: 0.15rem 0 0.25rem;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: #ffcc88;
+  border: 1px dashed rgba(238, 136, 51, 0.55);
+  background: rgba(238, 136, 51, 0.1);
+  padding: 0.2rem 0.3rem;
+  border-radius: 3px;
 }
 .gig-qr-hub-hint {
   font-size: 9px;
