@@ -358,6 +358,7 @@ function buildVjShaderCarousel(opts: {
   }
 
   function requestVisibleCarouselThumbnails(): void {
+    if (!AUTO_GENERATE_MISSING_CAROUSEL_THUMBNAILS) return;
     const visible = pathsVisibleInTrack();
     if (visible.length > 0) enqueueIdleThumbnailGeneration(visible, { front: true });
   }
@@ -370,6 +371,7 @@ function buildVjShaderCarousel(opts: {
     }
     carouselVisObserver = new IntersectionObserver(
       (observed) => {
+        if (!AUTO_GENERATE_MISSING_CAROUSEL_THUMBNAILS) return;
         const need: string[] = [];
         for (const ent of observed) {
           if (!ent.isIntersecting) continue;
@@ -566,6 +568,7 @@ const DECK_CANVAS_H = 236;
 /** Fallback internal size until preview column is measured. */
 const OUTPUT_CANVAS_FALLBACK_W = 960;
 const OUTPUT_CANVAS_FALLBACK_H = 540;
+const AUTO_GENERATE_MISSING_CAROUSEL_THUMBNAILS = false;
 
 const VERT_SRC = `precision highp float;
 attribute vec2 a_pos;
