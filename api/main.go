@@ -146,18 +146,45 @@ func thumbnailsPath() string {
 	return filepath.Join(exeDir(), "thumbnails.json")
 }
 
+func thumbnailsBakedPath() string {
+	return filepath.Join(exeDir(), "thumbnails-baked.json")
+}
+
+func normalizeThumbnailKey(key string) string {
+	key = strings.TrimSpace(key)
+	key = strings.ReplaceAll(key, "\\", "|")
+	key = strings.ReplaceAll(key, "/", "|")
+	for strings.Contains(key, "||") {
+		key = strings.ReplaceAll(key, "||", "|")
+	}
+	return strings.Trim(key, "|")
+}
+
+func mergeThumbnailFile(path string) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return
+	}
+	var raw map[string]string
+	if json.Unmarshal(data, &raw) != nil {
+		return
+	}
+	for key, value := range raw {
+		norm := normalizeThumbnailKey(key)
+		if norm == "" || value == "" {
+			continue
+		}
+		thumbnailsCache[norm] = value
+	}
+}
+
 var thumbnailsMu sync.Mutex
 var thumbnailsCache = make(map[string]string)
 
 func loadThumbnailsCache() {
 	thumbnailsCache = make(map[string]string)
-	data, err := os.ReadFile(thumbnailsPath())
-	if err != nil {
-		return
-	}
-	if json.Unmarshal(data, &thumbnailsCache) != nil {
-		thumbnailsCache = make(map[string]string)
-	}
+	mergeThumbnailFile(thumbnailsBakedPath())
+	mergeThumbnailFile(thumbnailsPath())
 }
 
 func saveThumbnailsCache() error {
@@ -278,11 +305,11 @@ func hostCapabilities() map[string]bool {
 	desktop := hostMode() == "desktop"
 	_, _, agentErr := findAgentExe()
 	return map[string]bool{
-		"desktopShell":  desktop,
-		"cursorAgent":   desktop && agentErr == nil,
-		"localAgents":   desktop,
-		"wirePipeline":  desktop,
-		"videoOutput":   desktop,
+		"desktopShell": desktop,
+		"cursorAgent":  desktop && agentErr == nil,
+		"localAgents":  desktop,
+		"wirePipeline": desktop,
+		"videoOutput":  desktop,
 	}
 }
 
@@ -1661,6 +1688,50 @@ func logHTTP(method, rawPath string, status int, dur time.Duration) {
 
 func readIndex() ([]ShaderEntry, error) {
 	return readIndexFromDB()
+}
+
+func normalizeShaderEntryKey(path string) string {
+	key := strings.TrimSpace(path)
+	key = strings.ReplaceAll(key, "\\", "|")
+	key = strings.ReplaceAll(key, "/", "|")
+	for strings.Contains(key, "||") {
+		key = strings.ReplaceAll(key, "||", "|")
+	}
+	return strings.Trim(key, "|")
+}
+
+func dedupeShaderEntries(arr []ShaderEntry) ([]ShaderEntry, int) {
+	if len(arr) == 0 {
+		return arr, 0
+	}
+	out := make([]ShaderEntry, 0, len(arr))
+	seenPaths := make(map[string]struct{}, len(arr))
+	seenHashes := make(map[string]struct{}, len(arr))
+	removed := 0
+	for _, e := range arr {
+		pathKey := normalizeShaderEntryKey(e.Path)
+		if pathKey != "" {
+			if _, ok := seenPaths[pathKey]; ok {
+				removed++
+				continue
+			}
+		}
+		hashKey := strings.ToLower(strings.TrimSpace(e.FileHash))
+		if hashKey != "" {
+			if _, ok := seenHashes[hashKey]; ok {
+				removed++
+				continue
+			}
+		}
+		if pathKey != "" {
+			seenPaths[pathKey] = struct{}{}
+		}
+		if hashKey != "" {
+			seenHashes[hashKey] = struct{}{}
+		}
+		out = append(out, e)
+	}
+	return out, removed
 }
 
 func writeIndex(arr []ShaderEntry) error {
@@ -3210,7 +3281,13 @@ func main() {
 			}
 		}
 		arr = bannedFiltered
-		logSection("INDEX", fmt.Sprintf("serving %d shader entries", len(arr)))
+		hiddenDuplicates := 0
+		arr, hiddenDuplicates = dedupeShaderEntries(arr)
+		if hiddenDuplicates > 0 {
+			logSection("INDEX", fmt.Sprintf("serving %d shader entries (%d duplicate entries hidden)", len(arr), hiddenDuplicates))
+		} else {
+			logSection("INDEX", fmt.Sprintf("serving %d shader entries", len(arr)))
+		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-cache, no-store")
 		json.NewEncoder(w).Encode(arr)
@@ -3583,11 +3660,11 @@ func main() {
 		logSection("SHADER", fmt.Sprintf("tag-scan: scanned %d, mouse-interactive=%d, roliblock=%d, uniforms-filled=%d", scanned, mouseTagged, roliTagged, uniformsFilled))
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"ok":              true,
-			"scanned":         scanned,
-			"mouseTagged":     mouseTagged,
-			"roliTagged":      roliTagged,
-			"uniformsFilled":  uniformsFilled,
+			"ok":             true,
+			"scanned":        scanned,
+			"mouseTagged":    mouseTagged,
+			"roliTagged":     roliTagged,
+			"uniformsFilled": uniformsFilled,
 		})
 	})
 
@@ -5279,12 +5356,12 @@ func main() {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"ok":         len(compileErrors) == 0,
-			"total":      len(wireFiles),
-			"updated":    updated,
-			"compiled":   compiled,
-			"errors":     compileErrors,
-			"wireFiles":  wireFiles,
+			"ok":        len(compileErrors) == 0,
+			"total":     len(wireFiles),
+			"updated":   updated,
+			"compiled":  compiled,
+			"errors":    compileErrors,
+			"wireFiles": wireFiles,
 		})
 	})
 
@@ -7039,7 +7116,7 @@ func main() {
 		} else if r.Method == http.MethodGet {
 			if pathsParam := r.URL.Query().Get("paths"); pathsParam != "" {
 				for _, k := range strings.Split(pathsParam, "|") {
-					k = strings.TrimSpace(strings.ReplaceAll(k, "\\", "|"))
+					k = normalizeThumbnailKey(k)
 					if k != "" {
 						pathsToFetch = append(pathsToFetch, k)
 					}
@@ -7048,7 +7125,7 @@ func main() {
 		}
 		if len(pathsToFetch) > 0 {
 			for _, k := range pathsToFetch {
-				k = strings.TrimSpace(strings.ReplaceAll(k, "\\", "|"))
+				k = normalizeThumbnailKey(k)
 				if k == "" {
 					continue
 				}
@@ -7090,7 +7167,7 @@ func main() {
 			http.Error(w, "path and dataUrl required", 400)
 			return
 		}
-		key := strings.ReplaceAll(pathNorm, "\\", "|")
+		key := normalizeThumbnailKey(pathNorm)
 		thumbnailsMu.Lock()
 		if len(thumbnailsCache) == 0 {
 			loadThumbnailsCache()
@@ -9349,7 +9426,7 @@ Shader to refactor:
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"sessions":          listAllSessions(),
+			"sessions":         listAllSessions(),
 			"defaultSessionId": defaultVJSessionID,
 		})
 	})
@@ -9511,12 +9588,12 @@ Shader to refactor:
 	var lastPollLog time.Time
 	var pollMu sync.Mutex
 	pollPaths := map[string]bool{
-		"/api/agent-status":          true,
-		"/api/output/status":         true,
-		"/api/server":                true,
-		"/api/watch/status":          true,
-		"/api/output/macrocam/frame": true,
-		"/api/thumbnails":            true,
+		"/api/agent-status":             true,
+		"/api/output/status":            true,
+		"/api/server":                   true,
+		"/api/watch/status":             true,
+		"/api/output/macrocam/frame":    true,
+		"/api/thumbnails":               true,
 		"/api/vj-output/stream":         true,
 		"/api/vj-output/state":          true,
 		"/api/vj-output/audience-mouse": true,

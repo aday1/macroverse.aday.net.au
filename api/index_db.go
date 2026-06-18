@@ -157,6 +157,7 @@ func writeIndexToDB(arr []ShaderEntry) error {
 	if err := initIndexDB(); err != nil {
 		return err
 	}
+	arr, _ = dedupeShaderEntries(arr)
 	tx, err := indexDB.Begin()
 	if err != nil {
 		return err

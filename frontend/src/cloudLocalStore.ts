@@ -15,7 +15,7 @@ export type LocalStoreStats = {
 };
 
 function normPath(path: string): string {
-  return (path || '').replace(/\\/g, '|');
+  return (path || '').replace(/[\\/]+/g, '|').replace(/^\|+|\|+$/g, '');
 }
 
 function entryNameFromPath(path: string): string {

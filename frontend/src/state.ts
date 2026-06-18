@@ -138,7 +138,7 @@ export function setShowTrashShaders(v: boolean): void {
 const thumbnailCache: Map<string, string> = new Map();
 
 function normalizeThumbnailKey(path: string): string {
-  return (path || '').replace(/\\/g, '|');
+  return (path || '').replace(/[\\/]+/g, '|').replace(/^\|+|\|+$/g, '');
 }
 
 export function getThumbnail(path: string): string | undefined {

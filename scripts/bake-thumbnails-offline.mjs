@@ -28,14 +28,23 @@ const concurrency = parseInt(process.argv.find((a) => a.startsWith('--concurrenc
 const checkpointEvery = parseInt(process.argv.find((a) => a.startsWith('--checkpoint='))?.split('=')[1] || '100', 10);
 
 function pathKey(p) {
-  return p.replace(/\\/g, '|');
+  return p.replace(/[\\/]+/g, '|').replace(/^\|+|\|+$/g, '');
+}
+
+function normalizeCache(raw) {
+  const out = {};
+  for (const [key, value] of Object.entries(raw || {})) {
+    const norm = pathKey(key);
+    if (norm && value) out[norm] = value;
+  }
+  return out;
 }
 
 async function main() {
   let cache = {};
   if (merge && fs.existsSync(outFile)) {
     try {
-      cache = JSON.parse(fs.readFileSync(outFile, 'utf8'));
+      cache = normalizeCache(JSON.parse(fs.readFileSync(outFile, 'utf8')));
     } catch {
       cache = {};
     }
