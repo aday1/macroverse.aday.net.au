@@ -94,10 +94,12 @@
     }
     .hero-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
-      gap: 1rem 1.25rem;
-      margin-top: 1.15rem;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      gap: 0.85rem 1.25rem;
+      margin-top: 1rem;
       text-align: left;
+      align-items: start;
     }
     @media (max-width: 920px) {
       .hero-grid { grid-template-columns: 1fr; }
@@ -109,6 +111,7 @@
       border-radius: 10px;
       padding: 1rem 1.15rem;
       backdrop-filter: blur(8px);
+      min-height: 0;
     }
     .hero-panel-demo { border-color: rgba(0, 221, 170, 0.28); }
     .hero-panel-origin { border-color: rgba(238, 136, 51, 0.38); }
@@ -537,30 +540,50 @@
       100% { filter: brightness(1.25) saturate(1.35); }
     }
     .hero-demo-clips {
-      margin-top: 0.75rem;
-      border-top: 1px solid rgba(0,221,170,0.18);
-      padding-top: 0.65rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-      flex: 1;
+      grid-column: 1 / -1;
+      margin-top: 0;
+      padding: 0.65rem 1rem 0.75rem;
+      background: rgba(13, 8, 32, 0.62);
+      border: 1px solid rgba(0, 221, 170, 0.22);
+      border-radius: 10px;
+      backdrop-filter: blur(8px);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.5rem 0.65rem;
+    }
+    .hero-demo-clips .hero-demo-strip-label {
+      grid-column: 1 / -1;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      text-align: center;
+      margin-bottom: 0.1rem;
+    }
+    @media (max-width: 720px) {
+      .hero-demo-clips { grid-template-columns: 1fr; }
+    }
+    .hero-demo-inline {
+      margin: 0;
+      min-width: 0;
     }
     .hero-demo-inline video {
       width: 100%;
+      height: clamp(72px, 10vw, 96px);
       display: block;
-      border-radius: 6px;
+      border-radius: 5px;
       border: 1px solid rgba(68,136,204,0.28);
       background: var(--void);
-      aspect-ratio: 16 / 9;
       object-fit: cover;
     }
     .hero-demo-inline figcaption {
-      margin-top: 0.35rem;
-      font-size: 0.66rem;
-      line-height: 1.42;
+      margin-top: 0.28rem;
+      font-size: 0.58rem;
+      line-height: 1.35;
       color: #c9b8e8;
-      letter-spacing: 0.04em;
-      text-align: center;
+      letter-spacing: 0.03em;
+      text-align: left;
     }
     .hero-demo-inline .demo-tag {
       display: inline-block;
@@ -573,15 +596,12 @@
     }
     .hero-demo-inline .demo-tag.tag-expose { color: var(--teal); }
     .hero-demo-inline .demo-tag.tag-fix { color: #cc88ff; }
-    .hero-panel-demo {
-      display: flex;
-      flex-direction: column;
-    }
     .hero-panel-demo .shader-controls.hero-shader {
-      flex: 1;
       display: flex;
       flex-direction: column;
+      gap: 0;
     }
+
     .shader-controls .ctrl-hint {
       margin-top: 0.45rem; text-align: center;
       font-size: 10px; color: var(--dim); letter-spacing: .05em;
@@ -654,10 +674,10 @@
     }
     .origin-top h2::before { content: none; }
     .origin-top p {
-      font-size: 0.82rem;
-      line-height: 1.6;
+      font-size: 0.8rem;
+      line-height: 1.55;
       color: #f0ecff;
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.35rem;
     }
     .origin-top p:last-child { margin-bottom: 0; }
     .origin-top a { color: #5dffe0; font-weight: 600; }
@@ -858,26 +878,6 @@
               <span style="color:var(--teal);">run it in Macroverse — bind every slider to MIDI faders or OSC · expose hidden uniforms &amp; numeric literals · pipe in audio FFT · watch it react</span><br>
               <span style="color:#cc88ff;">broken shader? the LLM repair chain fixes it: regex &rarr; Ollama &rarr; AI &middot; A/B deck &middot; crossfader &middot; shader carousel with thumbnails &middot; startup splash shows VJ + audience QRs &middot; gig sessions (stream QR + co-VJ join) &middot; WebXR VR on Quest/headsets (audience dome or VJ controller) &middot; tag &middot; search &middot; perform your whole library &middot; export to Wire on desktop</span></span>
             </p>
-            <div class="hero-demo-clips" aria-label="Macroverse pipeline demos">
-              <figure class="hero-demo-inline" aria-label="GLSL to Resolume Wire pipeline">
-                <video src="videos/pipeline-flow.mp4" poster="videos/pipeline-flow-poster.webp"
-                       autoplay loop muted playsinline preload="metadata"
-                       width="960" height="540"></video>
-                <figcaption><span class="demo-tag">Pipeline</span>GLSL &rarr; ISF JSON &rarr; <code>.wire</code> &rarr; Resolume. One binary, no installer.</figcaption>
-              </figure>
-              <figure class="hero-demo-inline" aria-label="Expose magic numbers as ISF sliders">
-                <video src="videos/expose-params.mp4" poster="videos/expose-params-poster.webp"
-                       autoplay loop muted playsinline preload="metadata"
-                       width="960" height="540"></video>
-                <figcaption><span class="demo-tag tag-expose">Expose</span>Turn magic-number GLSL literals into ISF parameter sliders for Wire &mdash; one click.</figcaption>
-              </figure>
-              <figure class="hero-demo-inline" aria-label="Shader fix chain">
-                <video src="videos/fix-chain.mp4" poster="videos/fix-chain-poster.webp"
-                       autoplay loop muted playsinline preload="metadata"
-                       width="960" height="540"></video>
-                <figcaption><span class="demo-tag tag-fix">Fix chain</span>Broken shader? Local regex &rarr; Ollama &rarr; AI. Stop at the first success.</figcaption>
-              </figure>
-            </div>
           </div>
         </div>
 
@@ -914,6 +914,28 @@
               <a href="https://blog.aday.net.au">Blog timeline</a>
             </p>
           </section>
+        </div>
+
+        <div class="hero-demo-clips" aria-label="Macroverse pipeline demos">
+          <p class="hero-demo-strip-label">Pipeline demos</p>
+          <figure class="hero-demo-inline" aria-label="GLSL to Resolume Wire pipeline">
+            <video src="videos/pipeline-flow.mp4" poster="videos/pipeline-flow-poster.webp"
+                   autoplay loop muted playsinline preload="metadata"
+                   width="960" height="540"></video>
+            <figcaption><span class="demo-tag">Pipeline</span>GLSL &rarr; ISF JSON &rarr; <code>.wire</code> &rarr; Resolume. One binary, no installer.</figcaption>
+          </figure>
+          <figure class="hero-demo-inline" aria-label="Expose magic numbers as ISF sliders">
+            <video src="videos/expose-params.mp4" poster="videos/expose-params-poster.webp"
+                   autoplay loop muted playsinline preload="metadata"
+                   width="960" height="540"></video>
+            <figcaption><span class="demo-tag tag-expose">Expose</span>Turn magic-number GLSL literals into ISF parameter sliders for Wire &mdash; one click.</figcaption>
+          </figure>
+          <figure class="hero-demo-inline" aria-label="Shader fix chain">
+            <video src="videos/fix-chain.mp4" poster="videos/fix-chain-poster.webp"
+                   autoplay loop muted playsinline preload="metadata"
+                   width="960" height="540"></video>
+            <figcaption><span class="demo-tag tag-fix">Fix chain</span>Broken shader? Local regex &rarr; Ollama &rarr; AI. Stop at the first success.</figcaption>
+          </figure>
         </div>
       </div>
 

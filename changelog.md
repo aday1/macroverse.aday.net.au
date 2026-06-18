@@ -42,7 +42,7 @@ WebXR audience and VJ controller modes on hosted lanes. VR links from the VJ dec
 - **Showcase hero** — Three ways in moved into hero panel; about.html restyled like showcase with M42 logo and red-green WebGL background.
 - **VR notice** — “VR SUPPORT UNDER DEVELOPMENT” on showcase, about, vj-vr.html, splash VR QRs, and gig QR hub.
 - **MacroVerse Origin shader set** — six compiling ISF shaders in `starter-pack/macroverse/` (Energy Field through Living Our Best Life); VJ set `macroverse-origin`; baked into factory index; Gallery Seed + Wire export.
-- **Showcase hero demo clips** — Pipeline, Expose, and Fix chain loops under the live shader sliders (fills left hero column).
+- **Showcase hero demo clips** — Pipeline, Expose, and Fix chain loops in a compact three-across strip below the slider + origin row (no column height mismatch).
 
 ### Notes
 
