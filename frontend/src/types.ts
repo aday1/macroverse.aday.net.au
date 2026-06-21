@@ -114,3 +114,28 @@ export interface VersionResponse {
   releaseTag?: string;
   splashLine?: string;
 }
+
+export interface LocalStatusResponse {
+  pid?: number;
+  lane?: string;
+  privateLibrary?: boolean;
+  privateAuthorized?: boolean;
+  identityMarkers?: Record<string, boolean>;
+  bindHost?: string;
+  port?: string;
+  url?: string;
+  hostMode?: string;
+  readonly?: boolean;
+  version?: string;
+  gitRev?: string;
+  gitBranch?: string;
+  gitDirty?: boolean;
+  sourcePaths?: string[];
+  sourceStatus?: Array<{ path: string; valid: boolean; reason?: string }>;
+  indexPath?: string;
+  settingsPath?: string;
+  shaderCount?: number;
+  osc?: { running?: boolean; port?: number };
+  sessions?: Array<{ id?: string; bridgeConnected?: boolean; wsClientCount?: number; clientCount?: number; streamClients?: number; hasSignal?: boolean }>;
+  timestamp?: string;
+}

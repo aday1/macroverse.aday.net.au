@@ -313,6 +313,105 @@ func hostCapabilities() map[string]bool {
 	}
 }
 
+func truthyEnv(name string) bool {
+	v := strings.ToLower(strings.TrimSpace(os.Getenv(name)))
+	return v == "1" || v == "true" || v == "yes" || v == "on"
+}
+
+func launchLane() string {
+	lane := strings.ToLower(strings.TrimSpace(os.Getenv("MACROVERSE_LANE")))
+	switch lane {
+	case "live", "dev", "aday", "local":
+		return lane
+	}
+	if hostMode() == "cloud" {
+		return "live"
+	}
+	return "local"
+}
+
+func privateLibraryMode() bool {
+	return launchLane() == "aday" || truthyEnv("MACROVERSE_PRIVATE_LIBRARY")
+}
+
+func splitEnvPaths(raw string) []string {
+	if strings.TrimSpace(raw) == "" {
+		return nil
+	}
+	fields := strings.FieldsFunc(raw, func(r rune) bool {
+		return r == ';' || r == '\n' || r == '\r'
+	})
+	out := make([]string, 0, len(fields))
+	seen := make(map[string]struct{})
+	for _, f := range fields {
+		p := strings.Trim(strings.TrimSpace(f), `"`)
+		if p == "" {
+			continue
+		}
+		key := strings.ToLower(filepath.Clean(p))
+		if _, ok := seen[key]; ok {
+			continue
+		}
+		seen[key] = struct{}{}
+		out = append(out, p)
+	}
+	return out
+}
+
+func envSourcePaths() []string {
+	if paths := splitEnvPaths(os.Getenv("MACROVERSE_SOURCE_PATHS")); len(paths) > 0 {
+		return paths
+	}
+	if root := strings.TrimSpace(os.Getenv("VFX_GLSL_ROOT")); root != "" {
+		return []string{root}
+	}
+	return nil
+}
+
+func configuredBindHost() string {
+	if h := strings.TrimSpace(os.Getenv("MACROVERSE_BIND_HOST")); h != "" {
+		return h
+	}
+	if privateLibraryMode() {
+		return "127.0.0.1"
+	}
+	return "0.0.0.0"
+}
+
+func adayIdentityStatus() (bool, map[string]bool) {
+	username := strings.ToLower(strings.TrimSpace(os.Getenv("USERNAME")))
+	if username == "" {
+		username = strings.ToLower(strings.TrimSpace(os.Getenv("USER")))
+	}
+	markers := map[string]bool{
+		"explicitEnv": truthyEnv("MACROVERSE_ADAY_AUTHORIZED"),
+		"userAday":    username == "aday",
+	}
+	vaultPath := strings.TrimSpace(os.Getenv("MACROVERSE_ADAY_OBSIDIAN_MARKER"))
+	if vaultPath == "" {
+		if home, err := os.UserHomeDir(); err == nil && home != "" {
+			vaultPath = filepath.Join(home, "Desktop", "Obsidian", "YomikosPapers")
+		}
+	}
+	if vaultPath != "" {
+		if info, err := os.Stat(vaultPath); err == nil && info.IsDir() {
+			markers["obsidianVault"] = true
+		}
+	}
+	if _, err := os.Stat(filepath.Join(exeDir(), "ops", "aday-shaders.local.json")); err == nil {
+		markers["adayLocalConfig"] = true
+	}
+	return markers["explicitEnv"] || (markers["userAday"] && markers["obsidianVault"]), markers
+}
+
+func privateSourceAllowed() bool {
+	if !privateLibraryMode() {
+		return true
+	}
+	ok, _ := adayIdentityStatus()
+	return ok
+}
+
 // writeBlocked returns true and writes a 403 JSON error if the host is read-only.
 func writeBlocked(w http.ResponseWriter) bool {
 	if !isReadonlyHost() {
@@ -2468,6 +2567,20 @@ func main() {
 	srcPaths := appSettings.SourcePaths
 	oldVfx := appSettings.VfxRoot
 	settingsMu.RUnlock()
+
+	if envPaths := envSourcePaths(); len(envPaths) > 0 && (privateLibraryMode() || truthyEnv("MACROVERSE_FORCE_ENV_SOURCES")) {
+		if privateLibraryMode() && !privateSourceAllowed() {
+			logSection("BOOT", "private source env ignored: Aday identity marker was not confirmed")
+		} else {
+			srcPaths = envPaths
+			oldVfx = envPaths[0]
+			settingsMu.Lock()
+			appSettings.SourcePaths = append([]string{}, envPaths...)
+			appSettings.VfxRoot = envPaths[0]
+			settingsMu.Unlock()
+			logSection("BOOT", fmt.Sprintf("source paths forced from environment for lane %s", launchLane()))
+		}
+	}
 
 	if len(srcPaths) == 0 {
 		if oldVfx != "" {
@@ -8949,6 +9062,7 @@ Shader to refactor:
 			http.Error(w, "method not allowed", 405)
 			return
 		}
+		privateOK, identityMarkers := adayIdentityStatus()
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-cache")
 		json.NewEncoder(w).Encode(map[string]interface{}{
@@ -8957,6 +9071,11 @@ Shader to refactor:
 			"demo":              os.Getenv("DEMO_BANNER") == "true",
 			"hostMode":          hostMode(),
 			"capabilities":      hostCapabilities(),
+			"lane":              launchLane(),
+			"privateLibrary":    privateLibraryMode(),
+			"privateAuthorized": privateOK,
+			"identityMarkers":   identityMarkers,
+			"bindHost":          configuredBindHost(),
 		})
 	})
 
@@ -8967,6 +9086,63 @@ Shader to refactor:
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{"pid": os.Getpid()})
+	})
+
+	http.HandleFunc("/api/local/status", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "method not allowed", 405)
+			return
+		}
+		privateOK, identityMarkers := adayIdentityStatus()
+		sourcePaths := getSourcePaths()
+		sourceStatus := make([]map[string]interface{}, 0, len(sourcePaths))
+		for _, p := range sourcePaths {
+			item := map[string]interface{}{"path": p, "valid": false}
+			if info, err := os.Stat(p); err == nil {
+				item["valid"] = info.IsDir()
+			} else {
+				item["reason"] = err.Error()
+			}
+			sourceStatus = append(sourceStatus, item)
+		}
+		shaderCount := 0
+		if arr, err := readIndex(); err == nil {
+			shaderCount = len(arr)
+		}
+		oscState.Lock()
+		oscRunning := oscState.running
+		oscPort := oscState.port
+		oscState.Unlock()
+		v := getVersionInfo()
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Cache-Control", "no-cache")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"pid":               os.Getpid(),
+			"lane":              launchLane(),
+			"privateLibrary":    privateLibraryMode(),
+			"privateAuthorized": privateOK,
+			"identityMarkers":   identityMarkers,
+			"bindHost":          configuredBindHost(),
+			"port":              port,
+			"url":               "http://localhost:" + port,
+			"hostMode":          hostMode(),
+			"readonly":          isReadonlyHost(),
+			"version":           v.version,
+			"gitRev":            v.gitRev,
+			"gitBranch":         v.gitBranch,
+			"gitDirty":          v.gitDirty,
+			"sourcePaths":       sourcePaths,
+			"sourceStatus":      sourceStatus,
+			"indexPath":         getIndexPath(),
+			"settingsPath":      filepath.Join(exeDir(), "shader-preview-settings.json"),
+			"shaderCount":       shaderCount,
+			"osc": map[string]interface{}{
+				"running": oscRunning,
+				"port":    oscPort,
+			},
+			"sessions":  listAllSessions(),
+			"timestamp": time.Now().Format(time.RFC3339),
+		})
 	})
 
 	http.HandleFunc("/api/kill", func(w http.ResponseWriter, r *http.Request) {
@@ -9511,11 +9687,12 @@ Shader to refactor:
 	if portNum <= 0 {
 		portNum = 8765
 	}
+	bindHost := configuredBindHost()
 	var ln net.Listener
 	for attempt := 0; attempt < 20; attempt++ {
 		p := strconv.Itoa(portNum + attempt)
 		var err error
-		ln, err = net.Listen("tcp", "0.0.0.0:"+p)
+		ln, err = net.Listen("tcp", net.JoinHostPort(bindHost, p))
 		if err == nil {
 			port = p
 			break
@@ -9547,6 +9724,7 @@ Shader to refactor:
 		"Macroverse 42 - The Wired Atelier",
 		"http://localhost:" + port,
 		"",
+		"  " + cYellow + "lane: " + cReset + launchLane() + "  |  " + cDim + "bind: " + cReset + bindHost,
 		"  " + cYellow + "release: " + cReset + v.releaseTag,
 		"  " + cDim + "build: " + cReset + v.version + "  |  " + v.buildDate,
 	}

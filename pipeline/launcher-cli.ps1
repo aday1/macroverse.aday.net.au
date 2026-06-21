@@ -7,6 +7,7 @@ $buildPs1 = Join-Path $PSScriptRoot "build.ps1"
 $runPs1 = Join-Path $PSScriptRoot "run.ps1"
 $createShortcut = Join-Path $PSScriptRoot "create-shortcut.ps1"
 $laneUpdatePs1 = Join-Path $PSScriptRoot "Update-MacroverseLane.ps1"
+$runBridgePs1 = Join-Path $PSScriptRoot "run-bridge.ps1"
 $indexPs1 = Join-Path $root "shader-index.ps1"
 $bulkThumbs = Join-Path $root "scripts\bulk-thumbnails.js"
 $defaultSettings = Join-Path $root "shader-preview-settings.default.json"
@@ -32,7 +33,7 @@ Set-Location $root
 
 function Do-LaunchExe {
     Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$runPs1`"" -WorkingDirectory $root -WindowStyle Maximized
-    Write-Host "Launched server in new maximized window." -ForegroundColor Green
+    Write-Host "Launched lane selector in new maximized window." -ForegroundColor Green
 }
 
 function Do-KillSessions {
@@ -163,18 +164,28 @@ function Do-FixFailed {
     }
 }
 
+function Do-LinkBridge {
+    if (Test-Path $runBridgePs1) {
+        Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -NoExit -File `"$runBridgePs1`"" -WorkingDirectory $root
+        Write-Host "Ableton Link bridge starting in new window." -ForegroundColor Green
+    } else {
+        Write-Host "run-bridge.ps1 not found." -ForegroundColor Red
+    }
+}
+
 while ($true) {
     Write-Host ""
     Write-Host "Macroverse - Wired Atelier (41) Launcher (shell)" -ForegroundColor Cyan
     Write-Host "  Web: $webUrl" -ForegroundColor DarkGray
     Write-Host ""
-    Write-Host "  1. Launch exe (new window)    2. Kill sessions    3. Kill all MV"
+    Write-Host "  1. Launch exe / choose lane   2. Kill sessions    3. Kill all MV"
     Write-Host "  4. New session (new window)  5. Open in browser  6. Rebuild exe"
     Write-Host "  7. Reindex                   8. Regen thumbnails  9. Hard reset DB"
     Write-Host "  A. Factory reset             B. Clear cache      C. Update lane menu"
     Write-Host "  D. Update shortcuts         E. NUKE             F. Fix failed shaders"
     Write-Host "  G. Live main update          H. Dev update       I. Aday private update"
     Write-Host "  J. Deploy Aday private shaders"
+    Write-Host "  K. Start Ableton Link bridge"
     Write-Host "  Q. Quit"
     Write-Host ""
     $choice = Read-Host "Choice"
@@ -208,6 +219,8 @@ while ($true) {
         "i" { Do-UpdateLane "aday" }
         "J" { Do-DeployAday }
         "j" { Do-DeployAday }
+        "K" { Do-LinkBridge }
+        "k" { Do-LinkBridge }
         "Q" { Write-Host "Bye." -ForegroundColor Gray; exit 0 }
         "q" { Write-Host "Bye." -ForegroundColor Gray; exit 0 }
         default { Write-Host "Unknown option." -ForegroundColor DarkGray }

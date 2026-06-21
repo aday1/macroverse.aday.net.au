@@ -1,4 +1,4 @@
-import type { SourcesResponse, Settings, VersionResponse, IndexEntry } from './types.js';
+import type { SourcesResponse, Settings, VersionResponse, IndexEntry, LocalStatusResponse } from './types.js';
 import { usesLocalBrowserStore } from './hostCapabilities.js';
 import {
   applyLocalDelete,
@@ -51,6 +51,12 @@ export async function fetchVersion(opts?: FetchOpts): Promise<VersionResponse> {
   const res = await fetch(VERSION_URL, { cache: 'no-store', signal: opts?.signal });
   if (!res.ok) return {};
   return res.json() as Promise<VersionResponse>;
+}
+
+export async function fetchLocalStatus(opts?: FetchOpts): Promise<LocalStatusResponse | null> {
+  const res = await fetch('/api/local/status', { cache: 'no-store', signal: opts?.signal });
+  if (!res.ok) return null;
+  return res.json() as Promise<LocalStatusResponse>;
 }
 
 export async function fetchShader(path: string, opts?: FetchOpts): Promise<string> {

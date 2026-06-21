@@ -14,6 +14,8 @@ debug-fix-errors.log
 macroverse.db
 private-data/
 ops/aday-shaders.local.json
+.local-state/
+macroverse-bridge-agent/dist/
 nginx/auth/aday.htpasswd
 # compiled binaries
 *.exe

@@ -7,7 +7,11 @@ export interface LinkClockState {
 }
 
 type LinkCtor = new (bpm?: number) => {
-  enable: (on: boolean) => void;
+  enable?: (on?: boolean) => void;
+  disable?: () => void;
+  update?: () => void;
+  startUpdate?: (interval: number) => void;
+  stopUpdate?: () => void;
   bpm: number;
   beat: number;
   numPeers?: number;
@@ -25,9 +29,11 @@ export class AbletonLinkSession {
   async init(initialBpm = 120): Promise<boolean> {
     try {
       const mod = await import('abletonlink');
-      const AbletonLink = (mod.default ?? mod) as LinkCtor;
+      const AbletonLink = ((mod as unknown as { default?: LinkCtor }).default ?? (mod as unknown as LinkCtor));
       this.link = new AbletonLink(initialBpm);
-      this.link.enable(true);
+      this.link.bpm = initialBpm;
+      if (this.link.enable) this.link.enable();
+      else if (this.link.startUpdate) this.link.startUpdate(50);
       this.available = true;
       this.lastBeatInt = Math.floor(this.link.beat);
       return true;
@@ -40,7 +46,9 @@ export class AbletonLinkSession {
   shutdown(): void {
     if (this.link) {
       try {
-        this.link.enable(false);
+        if (this.link.disable) this.link.disable();
+        else if (this.link.enable) this.link.enable(false);
+        if (this.link.stopUpdate) this.link.stopUpdate();
       } catch {
         /* ignore */
       }
@@ -57,6 +65,7 @@ export class AbletonLinkSession {
     if (!this.link || !this.available) {
       return { bpm: 120, beat: 1, bar: 1, isPlaying: false, linkPeers: 0 };
     }
+    if (this.link.update) this.link.update();
     const beatInt = Math.floor(this.link.beat);
     if (beatInt !== this.lastBeatInt) {
       this.lastBeatInt = beatInt;

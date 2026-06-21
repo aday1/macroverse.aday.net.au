@@ -24,6 +24,7 @@ import { initSplashVjQr, refreshSplashVjQr, requestSplashDismiss, initSplashDism
 import { initSplashBuildInfo } from './splashBuildInfo.js';
 import { loadHostCapabilities } from '../hostCapabilities.js';
 import { onLocalStoreChange } from '../cloudLocalStore.js';
+import { initBackendViewer } from './backendViewer.js';
 
 let cooldownTimerId: ReturnType<typeof setInterval> | null = null;
 
@@ -211,6 +212,7 @@ export async function run(): Promise<void> {
   initMobilePanels();
   initSidebarButtons();
   initUpdateButton();
+  initBackendViewer();
 
   try {
     const s = await fetchSettings();

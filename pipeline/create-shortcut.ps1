@@ -87,9 +87,16 @@ $shortcuts = @(
     },
     @{
         Name = "Macroverse - Wired Atelier - Server only"
-        Description = "Version 42. Run server in foreground in full-screen console. Use main shortcut for menu (Reindex, NUKE, etc.)."
+        Description = "Version 42. Run server in foreground and choose live/dev/aday at boot. Use main shortcut for menu (Reindex, NUKE, etc.)."
         Target = $launchMacroverseCmd
         Args = ""
+        WindowStyle = 3
+    },
+    @{
+        Name = "Macroverse - Aday Private"
+        Description = "Version 42. Run local Aday private shader library on 127.0.0.1 with the local-only backend viewer."
+        Target = $launchMacroverseCmd
+        Args = "-Lane aday"
         WindowStyle = 3
     }
 )

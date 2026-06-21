@@ -10,6 +10,7 @@ $buildPs1 = Join-Path $PSScriptRoot "build.ps1"
 $runPs1 = Join-Path $PSScriptRoot "run.ps1"
 $createShortcut = Join-Path $PSScriptRoot "create-shortcut.ps1"
 $laneUpdatePs1 = Join-Path $PSScriptRoot "Update-MacroverseLane.ps1"
+$runBridgePs1 = Join-Path $PSScriptRoot "run-bridge.ps1"
 $indexPs1 = Join-Path $root "shader-index.ps1"
 $bulkThumbs = Join-Path $root "scripts\bulk-thumbnails.js"
 $defaultSettings = Join-Path $root "shader-preview-settings.default.json"
@@ -178,7 +179,7 @@ $gold = [System.Drawing.Color]::FromArgb(200, 160, 80)
 $copper = $accent
 
 $formWidth = 436
-$formHeight = 668
+$formHeight = 736
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "Macroverse - Wired Atelier"
 $form.Size = New-Object System.Drawing.Size($formWidth, $formHeight)
@@ -227,6 +228,36 @@ $btnH = 28
 $btnW = 132
 $gap = 8
 
+$laneLabel = New-Object System.Windows.Forms.Label
+$laneLabel.Text = "Boot lane"
+$laneLabel.Location = New-Object System.Drawing.Point(12, $y)
+$laneLabel.Size = New-Object System.Drawing.Size(74, 22)
+$laneLabel.ForeColor = $textDim
+$laneLabel.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$form.Controls.Add($laneLabel)
+
+$laneSelect = New-Object System.Windows.Forms.ComboBox
+$laneSelect.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+$laneSelect.Location = New-Object System.Drawing.Point(92, ($y - 2))
+$laneSelect.Size = New-Object System.Drawing.Size(150, 24)
+[void]$laneSelect.Items.Add("aday")
+[void]$laneSelect.Items.Add("live")
+[void]$laneSelect.Items.Add("dev")
+$laneSelect.SelectedItem = "aday"
+$laneSelect.BackColor = $bgPanel
+$laneSelect.ForeColor = $textBright
+$form.Controls.Add($laneSelect)
+
+$laneHint = New-Object System.Windows.Forms.Label
+$laneHint.Text = "Aday uses private source on 127.0.0.1"
+$laneHint.Location = New-Object System.Drawing.Point(252, $y)
+$laneHint.Size = New-Object System.Drawing.Size(172, 24)
+$laneHint.ForeColor = $textDim
+$laneHint.Font = New-Object System.Drawing.Font("Segoe UI", 8)
+$form.Controls.Add($laneHint)
+
+$y += 42
+
 function AddButton($text, $x, $refY, $color, $click) {
     $btn = New-Object System.Windows.Forms.Button
     $btn.Text = $text
@@ -243,9 +274,16 @@ function AddButton($text, $x, $refY, $color, $click) {
     return $btn
 }
 
+function Get-SelectedRunLane {
+    if ($laneSelect -and $laneSelect.SelectedItem) { return [string]$laneSelect.SelectedItem }
+    return "aday"
+}
+
 $btnRun = AddButton "Launch exe" 12 $y $accent {
+    $lane = Get-SelectedRunLane
     Set-Location $root
-    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$runPs1`"" -WorkingDirectory $root -WindowStyle Maximized
+    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$runPs1`" -Lane $lane" -WorkingDirectory $root -WindowStyle Maximized
+    $statusLabel.Text = "Launching $lane lane."
 }
 $btnKill = AddButton "Kill sessions" (12 + $btnW + $gap) $y $cRed {
     Get-Process -Name "Macroverse42" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
@@ -260,9 +298,10 @@ $btnKillAll = AddButton "Kill all MV" (12 + 2*($btnW + $gap)) $y $cRedDark {
 
 $y += $btnH + $gap
 $btnNewSession = AddButton "New session" 12 $y $accent {
+    $lane = Get-SelectedRunLane
     Set-Location $root
-    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$runPs1`"" -WorkingDirectory $root -WindowStyle Maximized
-    $statusLabel.Text = "New session started in separate window."
+    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$runPs1`" -Lane $lane" -WorkingDirectory $root -WindowStyle Maximized
+    $statusLabel.Text = "New $lane session started in separate window."
 }
 $btnWeb = AddButton "Open in browser" (12 + $btnW + $gap) $y $cBlue {
     Start-Process $webUrl
@@ -358,6 +397,25 @@ $btnFixFailed = AddButton "Fix failed shaders" (12 + 2*($btnW + $gap)) $y $cFixF
     } else {
         $statusLabel.Text = "fix-failed-shaders.ps1 not found."
     }
+}
+
+$y += $btnH + $gap
+$btnBridge = AddButton "Link bridge" 12 $y $cGreen {
+    if (Test-Path $runBridgePs1) {
+        Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -NoExit -File `"$runBridgePs1`"" -WorkingDirectory $root
+        $statusLabel.Text = "Ableton Link bridge starting. Launch Macroverse first if token minting fails."
+    } else {
+        $statusLabel.Text = "run-bridge.ps1 not found."
+    }
+}
+$btnBackendViewer = AddButton "Open app" (12 + $btnW + $gap) $y $cBlue {
+    Start-Process $webUrl
+    $statusLabel.Text = "Opened app; Backend viewer is bottom right."
+}
+$btnAdayRun = AddButton "Run Aday" (12 + 2*($btnW + $gap)) $y $cAday {
+    Set-Location $root
+    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$runPs1`" -Lane aday" -WorkingDirectory $root -WindowStyle Maximized
+    $statusLabel.Text = "Launching Aday private lane."
 }
 
 $y += $btnH + $gap
