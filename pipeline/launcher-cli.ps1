@@ -6,6 +6,7 @@ $exe = Join-Path $root "Macroverse42.exe"
 $buildPs1 = Join-Path $PSScriptRoot "build.ps1"
 $runPs1 = Join-Path $PSScriptRoot "run.ps1"
 $createShortcut = Join-Path $PSScriptRoot "create-shortcut.ps1"
+$syncGitPs1 = Join-Path $PSScriptRoot "sync-git.ps1"
 $laneUpdatePs1 = Join-Path $PSScriptRoot "Update-MacroverseLane.ps1"
 $runBridgePs1 = Join-Path $PSScriptRoot "run-bridge.ps1"
 $indexPs1 = Join-Path $root "shader-index.ps1"
@@ -28,6 +29,7 @@ if ($host.Name -eq "ConsoleHost") {
 }
 
 if (Test-Path $createShortcut) { & $createShortcut 2>$null }
+if (Test-Path $syncGitPs1) { & $syncGitPs1 -RepoRoot $repoRoot -Quiet }
 
 Set-Location $root
 

@@ -10,6 +10,7 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 $exe = Join-Path $root "Macroverse42.exe"
 $createShortcut = Join-Path $PSScriptRoot "create-shortcut.ps1"
+$syncGitPs1 = Join-Path $PSScriptRoot "sync-git.ps1"
 $adayConfigPath = Join-Path $root "ops\aday-shaders.local.json"
 $localStateDir = Join-Path $root ".local-state"
 
@@ -29,6 +30,7 @@ if ($host.Name -eq "ConsoleHost") {
 }
 
 if (Test-Path $createShortcut) { & $createShortcut 2>$null }
+if (Test-Path $syncGitPs1) { & $syncGitPs1 -RepoRoot $root -Quiet }
 
 function Select-RunLane {
     if ($Lane -ne "menu") { return $Lane }

@@ -9,12 +9,14 @@ $exe = Join-Path $root "Macroverse42.exe"
 $buildPs1 = Join-Path $PSScriptRoot "build.ps1"
 $runPs1 = Join-Path $PSScriptRoot "run.ps1"
 $createShortcut = Join-Path $PSScriptRoot "create-shortcut.ps1"
+$syncGitPs1 = Join-Path $PSScriptRoot "sync-git.ps1"
 $laneUpdatePs1 = Join-Path $PSScriptRoot "Update-MacroverseLane.ps1"
 $runBridgePs1 = Join-Path $PSScriptRoot "run-bridge.ps1"
 $indexPs1 = Join-Path $root "shader-index.ps1"
 $bulkThumbs = Join-Path $root "scripts\bulk-thumbnails.js"
 $defaultSettings = Join-Path $root "shader-preview-settings.default.json"
 $settingsPath = Join-Path $root "shader-preview-settings.json"
+$splashImagePath = Join-Path $PSScriptRoot "icon\macroverse-splash.png"
 $port = "8765"
 $webUrl = "http://localhost:$port"
 
@@ -32,33 +34,44 @@ if (Test-Path $createShortcut) { & $createShortcut 2>$null }
 if (-not $skipSplash) {
     $splash = New-Object System.Windows.Forms.Form
     $splash.FormBorderStyle = "None"
-    $splash.Size = New-Object System.Drawing.Size(380, 120)
+    $splash.Size = New-Object System.Drawing.Size(900, 420)
     $splash.StartPosition = "CenterScreen"
     $splash.Text = "Macroverse - Wired Atelier"
-    $splash.BackColor = [System.Drawing.Color]::FromArgb(37, 37, 38)
+    $splash.BackColor = [System.Drawing.Color]::FromArgb(6, 8, 18)
     $splash.Topmost = $true
     $splash.Opacity = 0
     $splash.ShowInTaskbar = $false
+    $splash.KeyPreview = $true
 
-    $splashLb = New-Object System.Windows.Forms.Label
-    $splashLb.Text = "Updating shortcut..."
-    $splashLb.ForeColor = [System.Drawing.Color]::FromArgb(220, 220, 220)
-    $splashLb.Font = New-Object System.Drawing.Font("Segoe UI", 11)
-    $splashLb.AutoSize = $true
-    $splashLb.Location = New-Object System.Drawing.Point(28, 28)
-    $splash.Controls.Add($splashLb)
+    $splashImage = $null
+    if (Test-Path -LiteralPath $splashImagePath) {
+        $splashImage = [System.Drawing.Image]::FromFile($splashImagePath)
+        $splash.BackgroundImage = $splashImage
+        $splash.BackgroundImageLayout = "Stretch"
+    }
 
-    $splashBar = New-Object System.Windows.Forms.ProgressBar
-    $splashBar.Style = "Marquee"
-    $splashBar.MarqueeAnimationSpeed = 40
-    $splashBar.Location = New-Object System.Drawing.Point(28, 68)
-    $splashBar.Size = New-Object System.Drawing.Size(324, 18)
-    $splash.Controls.Add($splashBar)
+    $statusLabel = New-Object System.Windows.Forms.Label
+    $statusLabel.Text = "Checking launcher paths"
+    $statusLabel.ForeColor = [System.Drawing.Color]::FromArgb(217, 225, 250)
+    $statusLabel.BackColor = [System.Drawing.Color]::Transparent
+    $statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Regular)
+    $statusLabel.AutoSize = $false
+    $statusLabel.Location = New-Object System.Drawing.Point(62, 324)
+    $statusLabel.Size = New-Object System.Drawing.Size(440, 24)
+    $splash.Controls.Add($statusLabel)
+
+    $progress = New-Object System.Windows.Forms.Panel
+    $progress.BackColor = [System.Drawing.Color]::FromArgb(48, 240, 222)
+    $progress.Location = New-Object System.Drawing.Point(62, 360)
+    $progress.Size = New-Object System.Drawing.Size(64, 6)
+    $splash.Controls.Add($progress)
+    $progress.BringToFront()
+    $statusLabel.BringToFront()
 
     $splashPhase = 0
-    $splashMessages = @("Updating shortcut...", "Checking paths...", "Almost ready...", "Macroverse 42 - The Wired Atelier")
+    $splashMessages = @("Checking launcher paths", "Refreshing shortcuts", "Syncing Git state", "Opening lane controls")
     $splashCloseTimer = New-Object System.Windows.Forms.Timer
-    $splashCloseTimer.Interval = 2600
+    $splashCloseTimer.Interval = 2200
     $splashCloseTimer.Add_Tick({
         $splashCloseTimer.Stop()
         $splashCloseTimer.Dispose()
@@ -70,15 +83,13 @@ if (-not $skipSplash) {
     })
 
     $splashAnim = New-Object System.Windows.Forms.Timer
-    $splashAnim.Interval = 480
+    $splashAnim.Interval = 260
     $splashAnim.Add_Tick({
         $script:splashPhase = ($script:splashPhase + 1) % $splashMessages.Length
-        $splashLb.Text = $splashMessages[$script:splashPhase]
-        $r = 200 + ($script:splashPhase * 15)
-        $g = 200 + ($script:splashPhase * 10)
-        $b = 220
-        if ($r -gt 255) { $r = 255 }; if ($g -gt 255) { $g = 255 }
-        $splashLb.ForeColor = [System.Drawing.Color]::FromArgb($r, $g, $b)
+        $statusLabel.Text = $splashMessages[$script:splashPhase]
+        $w = 64 + (($script:splashPhase + 1) * 88)
+        if ($w -gt 430) { $w = 430 }
+        $progress.Size = New-Object System.Drawing.Size($w, 6)
     })
 
     $splashFade = New-Object System.Windows.Forms.Timer
@@ -87,25 +98,36 @@ if (-not $skipSplash) {
     $splashFade.Add_Tick({
         $script:fadeStep += 1
         if ($script:fadeStep -le 12) {
-            $splash.Opacity = [Math]::Min(1.0, $script:fadeStep / 12.0)
+            $splash.Opacity = [Math]::Min(0.98, $script:fadeStep / 12.0)
         }
     })
 
+    $splash.Add_KeyDown({
+        if ($_.KeyCode -eq "Escape") { $splash.Close() }
+    })
+    $splash.Add_Click({ $splash.Close() })
     $splash.Add_Shown({
         $splashFade.Start()
         $splashAnim.Start()
         $splashCloseTimer.Start()
     })
-    [void]$splash.ShowDialog()
+    try {
+        [void]$splash.ShowDialog()
+    } finally {
+        if ($splashImage) { $splashImage.Dispose() }
+        $statusLabel.Font.Dispose()
+    }
 }
 
 $repoRoot = $root
 $gitDir = Join-Path $repoRoot ".git"
-if (Test-Path $gitDir) {
+if (Test-Path $syncGitPs1) {
+    & $syncGitPs1 -RepoRoot $repoRoot -Quiet
+} elseif (Test-Path $gitDir) {
     $oldErr = $ErrorActionPreference
     $ErrorActionPreference = "SilentlyContinue"
     Push-Location $repoRoot | Out-Null
-    git pull 2>$null | Out-Null
+    git pull --ff-only 2>$null | Out-Null
     Pop-Location -ErrorAction SilentlyContinue
     $ErrorActionPreference = $oldErr
 }
