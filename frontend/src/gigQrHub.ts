@@ -1,5 +1,6 @@
 import { drawGigQr } from './gigQr.js';
 import { copyGigUrl, GIG_QR_ITEMS } from './gigQrItems.js';
+import { refreshGigUrlOriginOverride } from './gigUrlOrigin.js';
 import { getVjSessionId, isVjViewOnlyMode } from './vjSession.js';
 import { ensureVjTokens } from './vjTokens.js';
 
@@ -9,6 +10,7 @@ export type { GigQrItem as GigQrHubItem } from './gigQrItems.js';
 let hubEl: HTMLElement | null = null;
 
 async function refreshHubQrs(root: HTMLElement, sessionId: string): Promise<void> {
+  await refreshGigUrlOriginOverride();
   try {
     await ensureVjTokens(sessionId);
   } catch {

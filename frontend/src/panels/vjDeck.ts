@@ -53,6 +53,7 @@ import { getDeckQrState, renderDeckQrOverlay, setDeckQrEnabled, type VjDeckQrId 
 import { getCodeOverlayState, renderCodeOverlayFromState } from '../vjCodeOverlay.js';
 import { applyOutputFxCanvas, getOutputFxState } from '../vjOutputFx.js';
 import { buildGigOutputUrl } from '../gigQr.js';
+import { refreshGigUrlOriginOverride } from '../gigUrlOrigin.js';
 import {
   isMixMode,
   mixModeLabelForInt,
@@ -2468,6 +2469,7 @@ function buildVjDeck(): void {
     outputUrlInput.value = typeof window !== 'undefined' ? buildGigOutputUrl(getVjSessionId()) : '';
   };
   syncOutputUrlInput();
+  void refreshGigUrlOriginOverride().then(syncOutputUrlInput);
   outputUrlInput.title = 'Pi HDMI / OBS: open this URL on the projector machine for this gig session';
   outputUrlInput.style.cssText = 'flex: 1; min-width: 120px; font-size: 9px; padding: 2px 6px; background: var(--amiga-bg); color: var(--crt-fg); border: 1px solid var(--bevel-dark); font-family: inherit;';
   const outputUrlCopy = document.createElement('button');

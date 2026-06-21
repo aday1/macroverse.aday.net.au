@@ -1,5 +1,6 @@
 import { buildGigAudienceStreamUrl, buildGigJoinUrl, buildGigVrAudienceUrl, buildGigVrControllerUrl, drawGigQr } from './gigQr.js';
 import { copyGigUrl, GIG_MANUAL_URL_ITEMS } from './gigQrItems.js';
+import { refreshGigUrlOriginOverride } from './gigUrlOrigin.js';
 import { openJumpIntoVrChooser } from './jumpIntoVr.js';
 import { getVjSessionId } from './vjSession.js';
 import { ensureVjTokens } from './vjTokens.js';
@@ -551,6 +552,10 @@ export function createVjPreviewGigQrBlock(): GigQrUiBlock {
 
   window.setTimeout(() => refresh(), 0);
   syncManualUrls();
+  void refreshGigUrlOriginOverride().then(() => {
+    syncManualUrls();
+    void refresh();
+  });
 
   return { root, refresh, isPanelVisible: () => panelVisible };
 }

@@ -1,5 +1,6 @@
 import { drawGigQr } from '../gigQr.js';
 import { copyGigUrl, GIG_QR_ITEMS, SPLASH_QR_CANVAS_IDS } from '../gigQrItems.js';
+import { refreshGigUrlOriginOverride } from '../gigUrlOrigin.js';
 import { hideSplash } from '../dom.js';
 import { getVjSessionId, isVjViewOnlyMode } from '../vjSession.js';
 import { ensureVjTokens } from '../vjTokens.js';
@@ -190,6 +191,7 @@ async function drawSplashQrs(options?: { mintTokens?: boolean }): Promise<boolea
 
   const sid = getVjSessionId();
   const px = splashQrPixelSize();
+  await refreshGigUrlOriginOverride();
   const urlKey = splashUrlsKey(sid, px);
   const resizeOnly = !options?.mintTokens && urlKey === lastSplashQrUrls;
 

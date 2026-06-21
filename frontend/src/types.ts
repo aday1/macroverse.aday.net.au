@@ -124,6 +124,7 @@ export interface LocalStatusResponse {
   bindHost?: string;
   port?: string;
   url?: string;
+  lanUrls?: string[];
   hostMode?: string;
   readonly?: boolean;
   version?: string;

@@ -2,20 +2,41 @@ import QRCode from 'qrcode';
 import { getVjSessionId } from './vjSession.js';
 import { getStoredViewerToken, vjJoinQuery, vjViewQuery } from './vjTokens.js';
 
+let gigUrlOriginOverride = '';
+
+export function setGigUrlOriginOverride(origin: string): void {
+  const raw = origin.trim().replace(/\/+$/, '');
+  if (!raw) {
+    gigUrlOriginOverride = '';
+    return;
+  }
+  try {
+    const url = new URL(raw);
+    gigUrlOriginOverride = url.origin;
+  } catch {
+    gigUrlOriginOverride = '';
+  }
+}
+
+function gigUrlOrigin(): string {
+  if (gigUrlOriginOverride) return gigUrlOriginOverride;
+  return typeof window !== 'undefined' ? window.location.origin : '';
+}
+
 function normalizeSessionId(sessionId: string): string {
   return sessionId.trim().slice(0, 64) || 'default';
 }
 
 /** Main app URL — scan to join and co-VJ this gig (signed controlToken, not raw sessionId). */
 export function buildGigJoinUrl(sessionId?: string): string {
-  const base = typeof window !== 'undefined' ? window.location.origin : '';
+  const base = gigUrlOrigin();
   const query = vjJoinQuery(sessionId);
   return `${base}/?${query}`;
 }
 
 /** Projector / Pi HDMI / operator pop-out — view-only stream (no audience UI overlay). */
 export function buildGigOutputUrl(sessionId?: string): string {
-  const base = typeof window !== 'undefined' ? window.location.origin : '';
+  const base = gigUrlOrigin();
   const query = getStoredViewerToken(sessionId)
     ? vjViewQuery(sessionId)
     : `sessionId=${encodeURIComponent(normalizeSessionId(sessionId ?? getVjSessionId()))}`;
@@ -30,7 +51,7 @@ export function buildGigAudienceStreamUrl(sessionId?: string): string {
 
 /** WebXR headset — live VJ mix inside a 360 dome or cinema screen. Requires remote=1 + viewToken. */
 export function buildGigVrUrl(sessionId?: string, mode: 'dome' | 'screen' = 'dome'): string {
-  const base = typeof window !== 'undefined' ? window.location.origin : '';
+  const base = gigUrlOrigin();
   const query = getStoredViewerToken(sessionId)
     ? vjViewQuery(sessionId)
     : `sessionId=${encodeURIComponent(normalizeSessionId(sessionId ?? getVjSessionId()))}`;
@@ -46,7 +67,7 @@ export function buildGigVrAudienceUrl(sessionId?: string, mode: 'dome' | 'screen
 
 /** WebXR VJ controller — controlToken drives host via WebSocket; same live mix stream. */
 export function buildGigVrControllerUrl(sessionId?: string, mode: 'dome' | 'screen' = 'dome'): string {
-  const base = typeof window !== 'undefined' ? window.location.origin : '';
+  const base = gigUrlOrigin();
   const cq = vjJoinQuery(sessionId);
   const vq = getStoredViewerToken(sessionId) ? vjViewQuery(sessionId) : '';
   const modeQ = mode === 'screen' ? '&mode=screen' : '';

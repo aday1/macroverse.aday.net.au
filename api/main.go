@@ -378,6 +378,99 @@ func configuredBindHost() string {
 	return "0.0.0.0"
 }
 
+func isLocalAccessIPv4(ip net.IP) bool {
+	return localAccessIPPriority(ip) >= 0
+}
+
+func localAccessIPPriority(ip net.IP) int {
+	ip4 := ip.To4()
+	if ip4 == nil {
+		return -1
+	}
+	if ip4[0] == 10 || (ip4[0] == 192 && ip4[1] == 168) {
+		return 0
+	}
+	if ip4[0] == 172 && ip4[1] >= 16 && ip4[1] <= 31 {
+		return 0
+	}
+	// Link-local and carrier-grade NAT are useful for direct show rigs
+	// and private overlays where the browser can reach the host.
+	if ip4[0] == 169 && ip4[1] == 254 {
+		return 1
+	}
+	if ip4[0] == 100 && ip4[1] >= 64 && ip4[1] <= 127 {
+		return 2
+	}
+	return -1
+}
+
+func localAccessURLs(port string) []string {
+	bindHost := configuredBindHost()
+	if bindHost == "127.0.0.1" || strings.EqualFold(bindHost, "localhost") || bindHost == "::1" {
+		return nil
+	}
+
+	seen := map[string]struct{}{}
+	type localURL struct {
+		value    string
+		priority int
+	}
+	candidates := []localURL{}
+	addIP := func(ip net.IP) {
+		priority := localAccessIPPriority(ip)
+		if priority < 0 {
+			return
+		}
+		u := "http://" + ip.String() + ":" + port
+		if _, ok := seen[u]; ok {
+			return
+		}
+		seen[u] = struct{}{}
+		candidates = append(candidates, localURL{value: u, priority: priority})
+	}
+
+	if bindHost != "" && bindHost != "0.0.0.0" && bindHost != "::" {
+		if ip := net.ParseIP(bindHost); ip != nil {
+			addIP(ip)
+		}
+	}
+
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		return nil
+	}
+	for _, iface := range ifaces {
+		if iface.Flags&net.FlagUp == 0 || iface.Flags&net.FlagLoopback != 0 {
+			continue
+		}
+		addrs, err := iface.Addrs()
+		if err != nil {
+			continue
+		}
+		for _, addr := range addrs {
+			var ip net.IP
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			}
+			addIP(ip)
+		}
+	}
+	sort.SliceStable(candidates, func(i, j int) bool {
+		if candidates[i].priority != candidates[j].priority {
+			return candidates[i].priority < candidates[j].priority
+		}
+		return candidates[i].value < candidates[j].value
+	})
+	urls := make([]string, 0, len(candidates))
+	for _, candidate := range candidates {
+		urls = append(urls, candidate.value)
+	}
+	return urls
+}
+
 func adayIdentityStatus() (bool, map[string]bool) {
 	username := strings.ToLower(strings.TrimSpace(os.Getenv("USERNAME")))
 	if username == "" {
@@ -9125,6 +9218,7 @@ Shader to refactor:
 			"bindHost":          configuredBindHost(),
 			"port":              port,
 			"url":               "http://localhost:" + port,
+			"lanUrls":           localAccessURLs(port),
 			"hostMode":          hostMode(),
 			"readonly":          isReadonlyHost(),
 			"version":           v.version,
