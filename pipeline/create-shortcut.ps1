@@ -94,9 +94,9 @@ $shortcuts = @(
     },
     @{
         Name = "Macroverse - Aday Private"
-        Description = "Version 42. Run local Aday private shader library on 127.0.0.1 with the local-only backend viewer."
+        Description = "Version 42. Ask for boot lane; Enter defaults to local Aday private shader library on 127.0.0.1."
         Target = $launchMacroverseCmd
-        Args = "-Lane aday"
+        Args = ""
         WindowStyle = 3
     }
 )

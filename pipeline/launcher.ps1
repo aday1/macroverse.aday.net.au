@@ -279,11 +279,10 @@ function Get-SelectedRunLane {
     return "aday"
 }
 
-$btnRun = AddButton "Launch exe" 12 $y $accent {
-    $lane = Get-SelectedRunLane
+$btnRun = AddButton "Choose lane" 12 $y $accent {
     Set-Location $root
-    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$runPs1`" -Lane $lane" -WorkingDirectory $root -WindowStyle Maximized
-    $statusLabel.Text = "Launching $lane lane."
+    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$runPs1`"" -WorkingDirectory $root -WindowStyle Maximized
+    $statusLabel.Text = "Opening boot lane selector. Enter defaults to Aday private."
 }
 $btnKill = AddButton "Kill sessions" (12 + $btnW + $gap) $y $cRed {
     Get-Process -Name "Macroverse42" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
@@ -298,10 +297,9 @@ $btnKillAll = AddButton "Kill all MV" (12 + 2*($btnW + $gap)) $y $cRedDark {
 
 $y += $btnH + $gap
 $btnNewSession = AddButton "New session" 12 $y $accent {
-    $lane = Get-SelectedRunLane
     Set-Location $root
-    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$runPs1`" -Lane $lane" -WorkingDirectory $root -WindowStyle Maximized
-    $statusLabel.Text = "New $lane session started in separate window."
+    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$runPs1`"" -WorkingDirectory $root -WindowStyle Maximized
+    $statusLabel.Text = "New session started with boot lane selector."
 }
 $btnWeb = AddButton "Open in browser" (12 + $btnW + $gap) $y $cBlue {
     Start-Process $webUrl

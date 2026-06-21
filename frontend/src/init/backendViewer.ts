@@ -4,6 +4,7 @@ import { midiEngine } from '../engines/midi.js';
 import { getMonitorEntries, setMonitorUpdateCallback } from '../engines/midiOscMonitor.js';
 import { oscEngine } from '../engines/osc.js';
 import * as state from '../state.js';
+import { getControllerAutoMapStatus } from './controllerAutoMap.js';
 import type { LocalStatusResponse } from '../types.js';
 
 let panel: HTMLElement | null = null;
@@ -46,11 +47,22 @@ function fftSummary(): string {
 }
 
 function midiSummary(): string {
-  if (!midiEngine.active) return 'off';
+  const auto = getControllerAutoMapStatus();
+  if (!midiEngine.active) {
+    return auto.active && auto.localOnly ? `waiting (${auto.lastMessage})` : 'off';
+  }
   const last = midiEngine.lastCC
     ? ` last CC${midiEngine.lastCC.cc}=${midiEngine.lastCC.val} ch${midiEngine.lastCC.ch + 1}`
     : '';
-  return `${midiEngine.inputs.length} input(s)${last}`;
+  const autoMap = auto.genericMappings ? `, ${auto.genericMappings} auto-map(s)` : '';
+  return `${auto.midiInputs || midiEngine.inputs.length} in / ${auto.midiOutputs} out${autoMap}${last}`;
+}
+
+function roliSummary(): string {
+  const auto = getControllerAutoMapStatus();
+  if (!auto.roliDevices && !auto.roliInputs && !auto.roliOutputs) return 'none detected';
+  if (!auto.roliDevices) return `${auto.roliInputs} touch / ${auto.roliOutputs} LED seen`;
+  return `${auto.roliReady}/${auto.roliDevices} ready (${auto.roliInputs} touch / ${auto.roliOutputs} LED)`;
 }
 
 function oscSummary(): string {
@@ -105,6 +117,9 @@ function renderBackendViewer(): void {
     </div>
     <div class="backend-viewer-row">
       <span>MIDI</span><code>${esc(midiSummary())}</code>
+    </div>
+    <div class="backend-viewer-row">
+      <span>Roli</span><code>${esc(roliSummary())}</code>
     </div>
     <div class="backend-viewer-row">
       <span>OSC</span><code>${esc(oscSummary())}</code>
@@ -169,6 +184,7 @@ export function initBackendViewer(): void {
   const stored = localStorage.getItem('macroverse-backend-viewer-collapsed');
   setCollapsed(stored === '1');
   setMonitorUpdateCallback(renderBackendViewer);
+  window.addEventListener('macroverse:controller-automap', renderBackendViewer);
   window.addEventListener('macroverse:shader-changed', renderBackendViewer);
   window.addEventListener('macroverse-shader-index-updated', renderBackendViewer);
   refreshServerStatus();
