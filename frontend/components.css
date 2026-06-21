@@ -1968,11 +1968,27 @@ body.gig-qr-hub-open {
 .gig-qr-hub-copy {
   font-size: 9px;
   padding: 4px 8px;
-  width: 100%;
   background: var(--amiga-panel);
   color: var(--amiga-copper);
   border: 1px solid var(--bevel-dark);
   cursor: pointer;
+}
+.gig-qr-hub-url {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 5px 6px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 9px;
+  color: var(--crt-fg);
+  background: var(--amiga-bg);
+  border: 1px solid var(--bevel-dark);
+}
+.gig-qr-hub-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  width: 100%;
 }
 .gig-qr-hub-foot {
   margin: 12px 0 0;

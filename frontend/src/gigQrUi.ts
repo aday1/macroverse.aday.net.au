@@ -1,4 +1,5 @@
 import { buildGigAudienceStreamUrl, buildGigJoinUrl, buildGigVrAudienceUrl, buildGigVrControllerUrl, drawGigQr } from './gigQr.js';
+import { copyGigUrl, GIG_MANUAL_URL_ITEMS } from './gigQrItems.js';
 import { openJumpIntoVrChooser } from './jumpIntoVr.js';
 import { getVjSessionId } from './vjSession.js';
 import { ensureVjTokens } from './vjTokens.js';
@@ -330,6 +331,67 @@ export function createVjPreviewGigQrBlock(): GigQrUiBlock {
   copyVrVjBtn.title = 'WebXR VJ controller — decks, mix, Auto VJ, live code';
   copyVrVjBtn.style.cssText = btnStyle;
 
+  const manualUrls = document.createElement('details');
+  manualUrls.open = true;
+  manualUrls.style.cssText =
+    'width:100%;padding:6px;border:1px solid var(--bevel-dark);background:rgba(0,0,0,0.18);box-sizing:border-box;';
+  const manualSummary = document.createElement('summary');
+  manualSummary.textContent = 'Manual stream URLs';
+  manualSummary.style.cssText =
+    'font-size:8px;text-transform:uppercase;color:var(--amiga-copper);letter-spacing:0.06em;cursor:pointer;';
+  const manualList = document.createElement('div');
+  manualList.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-top:6px;';
+  manualUrls.appendChild(manualSummary);
+  manualUrls.appendChild(manualList);
+
+  const manualUrlRows: Array<{ input: HTMLInputElement; buildUrl: (sid: string) => string }> = [];
+  const manualInputStyle =
+    'width:100%;min-width:0;box-sizing:border-box;font-size:8px;padding:3px 5px;background:var(--amiga-bg);color:var(--crt-fg);border:1px solid var(--bevel-dark);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;';
+  for (const item of GIG_MANUAL_URL_ITEMS) {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;flex-direction:column;gap:3px;width:100%;';
+    const rowHead = document.createElement('div');
+    rowHead.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:4px;';
+    const rowLabel = document.createElement('span');
+    rowLabel.textContent = item.label;
+    rowLabel.title = item.hint;
+    rowLabel.style.cssText = 'font-size:8px;color:var(--crt-dim);line-height:1.2;';
+    const actionWrap = document.createElement('span');
+    actionWrap.style.cssText = 'display:flex;gap:3px;flex:0 0 auto;';
+    const copyUrlBtn = document.createElement('button');
+    copyUrlBtn.type = 'button';
+    copyUrlBtn.textContent = 'Copy';
+    copyUrlBtn.style.cssText =
+      'font-size:7px;padding:2px 4px;background:var(--amiga-surface);color:var(--amiga-copper);border:1px solid var(--bevel-dark);cursor:pointer;';
+    const openUrlBtn = document.createElement('button');
+    openUrlBtn.type = 'button';
+    openUrlBtn.textContent = 'Open';
+    openUrlBtn.style.cssText = copyUrlBtn.style.cssText;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.readOnly = true;
+    input.title = `${item.label}: ${item.hint}`;
+    input.style.cssText = manualInputStyle;
+    input.addEventListener('focus', () => input.select());
+    input.addEventListener('click', () => input.select());
+    copyUrlBtn.addEventListener('click', () => copyGigUrl(input.value || item.buildUrl(getVjSessionId()), copyUrlBtn));
+    openUrlBtn.addEventListener('click', () => {
+      window.open(input.value || item.buildUrl(getVjSessionId()), '_blank', 'noopener,noreferrer');
+    });
+    actionWrap.appendChild(copyUrlBtn);
+    actionWrap.appendChild(openUrlBtn);
+    rowHead.appendChild(rowLabel);
+    rowHead.appendChild(actionWrap);
+    row.appendChild(rowHead);
+    row.appendChild(input);
+    manualList.appendChild(row);
+    manualUrlRows.push({ input, buildUrl: item.buildUrl });
+  }
+
+  const syncManualUrls = (sessionId = getVjSessionId()) => {
+    for (const row of manualUrlRows) row.input.value = row.buildUrl(sessionId);
+  };
+
   const syncOutputQrBtn = () => {
     outputQrBtn.textContent = isGigOutputQrVisible() ? 'Hide QR on output' : 'Show QR on output';
     streamQrBtn.textContent = isGigStreamQrVisible()
@@ -429,6 +491,7 @@ export function createVjPreviewGigQrBlock(): GigQrUiBlock {
   body.appendChild(mixRow);
   body.appendChild(audienceRow);
   body.appendChild(layoutSection);
+  body.appendChild(manualUrls);
   body.appendChild(btnRow);
   root.appendChild(body);
 
@@ -469,6 +532,7 @@ export function createVjPreviewGigQrBlock(): GigQrUiBlock {
     } catch {
       /* fallback URLs still work */
     }
+    syncManualUrls(sid);
     await drawGigQr(canvas, buildGigAudienceStreamUrl(sid), px);
   };
 
@@ -486,6 +550,7 @@ export function createVjPreviewGigQrBlock(): GigQrUiBlock {
   }
 
   window.setTimeout(() => refresh(), 0);
+  syncManualUrls();
 
   return { root, refresh, isPanelVisible: () => panelVisible };
 }

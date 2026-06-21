@@ -15,9 +15,11 @@ async function refreshHubQrs(root: HTMLElement, sessionId: string): Promise<void
     /* fallback URLs */
   }
   for (const item of GIG_QR_ITEMS) {
+    const url = item.buildUrl(sessionId);
     const canvas = root.querySelector(`[data-gig-qr-id="${item.id}"]`) as HTMLCanvasElement | null;
-    if (!canvas) continue;
-    await drawGigQr(canvas, item.buildUrl(sessionId), 160);
+    if (canvas) await drawGigQr(canvas, url, 160);
+    const urlInput = root.querySelector(`[data-gig-url-id="${item.id}"]`) as HTMLInputElement | null;
+    if (urlInput) urlInput.value = url;
   }
 }
 
@@ -87,11 +89,35 @@ function buildHubDom(): HTMLElement {
     copyBtn.className = 'gig-qr-hub-copy';
     copyBtn.textContent = 'Copy link';
     copyBtn.addEventListener('click', () => {
-      copyGigUrl(item.buildUrl(getVjSessionId()), copyBtn);
+      copyGigUrl(urlInput.value || item.buildUrl(getVjSessionId()), copyBtn);
     });
 
+    const openBtn = document.createElement('button');
+    openBtn.type = 'button';
+    openBtn.className = 'gig-qr-hub-copy gig-qr-hub-open-link';
+    openBtn.textContent = 'Open';
+    openBtn.addEventListener('click', () => {
+      const url = urlInput.value || item.buildUrl(getVjSessionId());
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+
+    const urlInput = document.createElement('input');
+    urlInput.type = 'text';
+    urlInput.readOnly = true;
+    urlInput.className = 'gig-qr-hub-url';
+    urlInput.dataset.gigUrlId = item.id;
+    urlInput.title = 'Manual URL for typing or copying on another machine';
+    urlInput.addEventListener('focus', () => urlInput.select());
+    urlInput.addEventListener('click', () => urlInput.select());
+
+    const actions = document.createElement('div');
+    actions.className = 'gig-qr-hub-actions';
+    actions.appendChild(copyBtn);
+    actions.appendChild(openBtn);
+
     card.appendChild(canvas);
-    card.appendChild(copyBtn);
+    card.appendChild(urlInput);
+    card.appendChild(actions);
     grid.appendChild(card);
   }
 

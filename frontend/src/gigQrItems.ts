@@ -1,6 +1,7 @@
 import {
   buildGigAudienceStreamUrl,
   buildGigJoinUrl,
+  buildGigOutputUrl,
   buildGigVrAudienceUrl,
   buildGigVrControllerUrl,
 } from './gigQr.js';
@@ -10,6 +11,10 @@ export interface GigQrItem {
   label: string;
   hint: string;
   buildUrl: (sessionId: string) => string;
+}
+
+export interface GigManualUrlItem extends GigQrItem {
+  manualOnly?: boolean;
 }
 
 export const GIG_QR_ITEMS: GigQrItem[] = [
@@ -37,6 +42,17 @@ export const GIG_QR_ITEMS: GigQrItem[] = [
     hint: 'Immersive remote desk + live code push',
     buildUrl: (sid) => buildGigVrControllerUrl(sid, 'dome'),
   },
+];
+
+export const GIG_MANUAL_URL_ITEMS: GigManualUrlItem[] = [
+  {
+    id: 'projector',
+    label: 'Projector / OBS',
+    hint: 'Clean view-only HDMI or browser source',
+    buildUrl: (sid) => buildGigOutputUrl(sid),
+    manualOnly: true,
+  },
+  ...GIG_QR_ITEMS,
 ];
 
 /** Splash screen canvas element ids keyed by GIG_QR_ITEMS id */

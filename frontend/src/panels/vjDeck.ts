@@ -52,6 +52,7 @@ import { isDeckLiveBound, setDeckLiveBind, toggleDeckLiveBind } from '../vjLiveB
 import { getDeckQrState, renderDeckQrOverlay, setDeckQrEnabled, type VjDeckQrId } from '../vjDeckQr.js';
 import { getCodeOverlayState, renderCodeOverlayFromState } from '../vjCodeOverlay.js';
 import { applyOutputFxCanvas, getOutputFxState } from '../vjOutputFx.js';
+import { buildGigOutputUrl } from '../gigQr.js';
 import {
   isMixMode,
   mixModeLabelForInt,
@@ -2463,10 +2464,10 @@ function buildVjDeck(): void {
   const outputUrlInput = document.createElement('input');
   outputUrlInput.type = 'text';
   outputUrlInput.readOnly = true;
-  const vjOutputUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}/vj-output.html?remote=1&${vjViewQuery()}`
-    : '';
-  outputUrlInput.value = vjOutputUrl;
+  const syncOutputUrlInput = () => {
+    outputUrlInput.value = typeof window !== 'undefined' ? buildGigOutputUrl(getVjSessionId()) : '';
+  };
+  syncOutputUrlInput();
   outputUrlInput.title = 'Pi HDMI / OBS: open this URL on the projector machine for this gig session';
   outputUrlInput.style.cssText = 'flex: 1; min-width: 120px; font-size: 9px; padding: 2px 6px; background: var(--amiga-bg); color: var(--crt-fg); border: 1px solid var(--bevel-dark); font-family: inherit;';
   const outputUrlCopy = document.createElement('button');
@@ -2487,6 +2488,7 @@ function buildVjDeck(): void {
 
   window.addEventListener('macroverse-vj-session-changed', () => {
     void ensureVjTokens(getVjSessionId()).then(() => {
+      syncOutputUrlInput();
       gigQrBlock.refresh();
       refreshGigOutputQrSession();
     });
@@ -3422,6 +3424,7 @@ function buildVjDeck(): void {
   });
 
   void ensureVjTokens(getVjSessionId()).then(() => {
+    syncOutputUrlInput();
     if (!isVjViewOnlyMode()) {
       connectVjSession();
       if (getAudienceParticipationEnabled()) {
