@@ -537,27 +537,6 @@ export function initCodeEditor(): void {
     });
   }
 
-  // Apply default view from settings (default: split-v) or saved / mobile preference
-  let savedView: string | null = null;
-  try { savedView = localStorage.getItem(VIEW_STORAGE_KEY); } catch (_) {}
-  if (savedView) {
-    const savedTab = document.querySelector(`.view-tab[data-view="${savedView}"]`) as HTMLElement | null;
-    if (savedTab) savedTab.click();
-  } else if (isCompactLayout()) {
-    const previewTab = document.querySelector('.view-tab[data-view="preview"]') as HTMLElement | null;
-    previewTab?.click();
-  } else {
-    const dv = (appSettings as Record<string, unknown>).defaultView as string || 'split-v';
-    let defaultTab: Element | null = null;
-    if (dv === 'preview') defaultTab = document.querySelector('.view-tab[data-view="preview"]');
-    else if (dv === 'code') defaultTab = document.querySelector('.view-tab[data-view="code"]');
-    else if (dv === 'split-h' || dv === 'split-v' || dv === 'split') {
-      defaultTab = document.querySelector('.view-tab[data-view="split"]');
-      if (splitOrientationSelect) splitOrientationSelect.value = dv === 'split-h' ? 'horizontal' : 'vertical';
-    } else if (dv === 'vj') defaultTab = document.querySelector('.view-tab[data-view="vj"]');
-    if (defaultTab) (defaultTab as HTMLElement).click();
-  }
-
   const agentCodeResizer = el('agentCodeResizer');
   const agentOutputPane = el('agentOutputPane');
   const agentOutput = document.getElementById('agentOutput');
@@ -1583,4 +1562,30 @@ export function initCodeEditor(): void {
       })
       .finally(() => setCursorApiThinking(false));
   });
+}
+
+/** Restore saved/default view after the shader index has loaded (avoids empty VJ gallery on startup). */
+export function applyInitialView(): void {
+  const splitOrientationSelect = document.getElementById('splitOrientationSelect') as HTMLSelectElement | null;
+  let savedView: string | null = null;
+  try { savedView = localStorage.getItem(VIEW_STORAGE_KEY); } catch (_) {}
+  if (savedView) {
+    const savedTab = document.querySelector(`.view-tab[data-view="${savedView}"]`) as HTMLElement | null;
+    if (savedTab) savedTab.click();
+    return;
+  }
+  if (isCompactLayout()) {
+    const previewTab = document.querySelector('.view-tab[data-view="preview"]') as HTMLElement | null;
+    previewTab?.click();
+    return;
+  }
+  const dv = (appSettings as Record<string, unknown>).defaultView as string || 'split-v';
+  let defaultTab: Element | null = null;
+  if (dv === 'preview') defaultTab = document.querySelector('.view-tab[data-view="preview"]');
+  else if (dv === 'code') defaultTab = document.querySelector('.view-tab[data-view="code"]');
+  else if (dv === 'split-h' || dv === 'split-v' || dv === 'split') {
+    defaultTab = document.querySelector('.view-tab[data-view="split"]');
+    if (splitOrientationSelect) splitOrientationSelect.value = dv === 'split-h' ? 'horizontal' : 'vertical';
+  } else if (dv === 'vj') defaultTab = document.querySelector('.view-tab[data-view="vj"]');
+  if (defaultTab) (defaultTab as HTMLElement).click();
 }

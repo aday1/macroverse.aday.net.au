@@ -784,6 +784,7 @@ export function initVJDeck(): void {
         vjFrameLoopStop?.();
         vjFrameLoopStart?.();
       }
+      onVjShaderIndexUpdated?.();
       return;
     }
     vjFrameLoopStop?.();

@@ -6,7 +6,7 @@ import { loadSequence } from './loadSequence.js';
 import * as render from '../render.js';
 import { stripLeadingGarbage } from '../render.js';
 import { initSettings } from '../panels/settings.js';
-import { initCodeEditor } from './codeEditor.js';
+import { initCodeEditor, applyInitialView } from './codeEditor.js';
 import { initPreviewContextMenu } from './previewContextMenu.js';
 import { initAppBar } from './appBar.js';
 import { initCommandPalette } from './commandPalette.js';
@@ -240,6 +240,7 @@ export async function run(): Promise<void> {
     requestSplashDismiss();
   } finally {
     clearTimeout(timeout);
+    applyInitialView();
   }
 
   status('Ready.');

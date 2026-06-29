@@ -34,8 +34,15 @@ export async function fetchIndex(opts?: FetchOpts): Promise<IndexEntry[]> {
   if (!res.ok) throw new Error('index: ' + res.status + ' ' + res.statusText);
   const data = await res.json();
   const server = Array.isArray(data) ? data : [];
-  if (usesLocalBrowserStore()) return mergeIndexWithLocal(server);
-  return server;
+  if (!usesLocalBrowserStore()) return server;
+  try {
+    const merged = await mergeIndexWithLocal(server);
+    // Browser-local delete overrides can hide the whole server library; keep the server list visible.
+    if (merged.length === 0 && server.length > 0) return server;
+    return merged;
+  } catch {
+    return server;
+  }
 }
 
 export async function fetchSettings(opts?: FetchOpts): Promise<Settings | null> {
