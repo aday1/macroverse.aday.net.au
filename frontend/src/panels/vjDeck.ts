@@ -2477,9 +2477,15 @@ function buildVjDeck(): void {
   outputUrlCopy.type = 'button';
   outputUrlCopy.className = 'vj-btn vj-btn--action';
   outputUrlCopy.textContent = 'Copy';
+  const frameResidueBtn = document.createElement('button');
+  frameResidueBtn.type = 'button';
+  frameResidueBtn.className = 'vj-btn vj-btn--action';
+  frameResidueBtn.textContent = 'Frame Residue';
+  frameResidueBtn.title = 'Open this Macroverse session as an input in the Error Diffusion VJ tool';
   outputUrlRow.appendChild(outputUrlLabel);
   outputUrlRow.appendChild(outputUrlInput);
   outputUrlRow.appendChild(outputUrlCopy);
+  outputUrlRow.appendChild(frameResidueBtn);
   outputUrlCopy.addEventListener('click', () => {
     outputUrlInput.select();
     navigator.clipboard.writeText(outputUrlInput.value).then(() => {
@@ -2487,6 +2493,14 @@ function buildVjDeck(): void {
       outputUrlCopy.textContent = 'Copied';
       setTimeout(() => { outputUrlCopy.textContent = t; }, 1500);
     }).catch(() => {});
+  });
+  frameResidueBtn.addEventListener('click', () => {
+    const sessionId = encodeURIComponent(getVjSessionId());
+    window.open(
+      `https://errordiffusion.net/vj/?macroverseSession=${sessionId}`,
+      '_blank',
+      'noopener,noreferrer'
+    );
   });
 
   window.addEventListener('macroverse-vj-session-changed', () => {

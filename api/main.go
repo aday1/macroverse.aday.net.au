@@ -523,6 +523,7 @@ func writeBlocked(w http.ResponseWriter) bool {
 func cloudSafeMutatingAPI(path string) bool {
 	switch path {
 	case "/api/vj/tokens",
+		"/api/vj/view-token",
 		"/api/vj/session-config",
 		"/api/vj-output/audience-mouse",
 		"/api/vj-output/state",
@@ -9702,6 +9703,7 @@ Shader to refactor:
 	})
 
 	http.HandleFunc("/api/vj/tokens", handleVjTokens)
+	http.HandleFunc("/api/vj/view-token", handleVjViewToken)
 	http.HandleFunc("/api/vj/session-config", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
@@ -9876,6 +9878,10 @@ Shader to refactor:
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		rec := &statusRecorder{ResponseWriter: w, status: 200}
+
+		if applyVjBrowserCORS(rec, r) {
+			return
+		}
 
 		// Hard enforcement: in read-only mode (READONLY=true, used for public demo hosts)
 		// block every mutating HTTP method on any /api/ path before the handler runs.

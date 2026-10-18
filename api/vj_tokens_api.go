@@ -6,6 +6,35 @@ import (
 	"strings"
 )
 
+// handleVjViewToken mints a viewer-only token for trusted browser integrations.
+// Unlike handleVjTokens, it can never expose an operator token.
+func handleVjViewToken(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	var req struct {
+		SessionID string `json:"sessionId"`
+		ExpiresIn int    `json:"expiresIn"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid json", http.StatusBadRequest)
+		return
+	}
+	sessionID := normalizeVJSessionID(req.SessionID)
+	viewerToken, err := mintVjToken(vjRoleViewer, sessionID, req.ExpiresIn)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-store")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"sessionId":   sessionID,
+		"viewerToken": viewerToken,
+	})
+}
+
 func handleVjTokens(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", 405)
