@@ -9752,6 +9752,8 @@ Shader to refactor:
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Connection", "keep-alive")
 		w.Header().Set("X-Accel-Buffering", "no")
+		w.WriteHeader(http.StatusOK)
+		flusher.Flush()
 
 		ch, unsub := vjOutputStreamSubscribe(sessionID)
 		defer unsub()
