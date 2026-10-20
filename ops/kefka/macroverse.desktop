@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Macroverse Deck
+GenericName=Shader lab and VJ
+Comment=Macroverse 42 GLSL/ISF shader lab and VJ decks with Steam Deck controls and gyro
+Exec=@HOME@/.local/bin/macroverse-deck-open
+Icon=@HOME@/.local/share/icons/hicolor/scalable/apps/macroverse.svg
+Terminal=false
+Categories=AudioVideo;Graphics;X-Kefka;
+Keywords=shader;glsl;isf;vj;visuals;
+StartupWMClass=macroverse-deck

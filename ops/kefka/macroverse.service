@@ -1,0 +1,30 @@
+[Unit]
+Description=Macroverse 42 shader lab and VJ backend (http://127.0.0.1:8765)
+Documentation=file://%h/Apps/macroverse/docs/KEFKA.md
+StartLimitIntervalSec=120
+StartLimitBurst=10
+
+[Service]
+Type=simple
+WorkingDirectory=%h/Apps/macroverse
+# The backend reads console commands from stdin; headless it must be /dev/null.
+StandardInput=null
+# Local, writable library (not the read-only cloud demo). Loopback-only by default;
+# set MACROVERSE_BIND_HOST=0.0.0.0 in ~/.config/macroverse/kefka.env for LAN access.
+Environment=MACROVERSE_HOST_MODE=desktop
+Environment=MACROVERSE_LANE=local
+Environment=MACROVERSE_BIND_HOST=127.0.0.1
+EnvironmentFile=-%h/.config/macroverse/kefka.env
+# An explicit -port fails instead of sliding to 8766: the Deck bridge only trusts
+# the exact origins http://127.0.0.1:8765 and http://localhost:8765.
+ExecStart=%h/Apps/macroverse/Macroverse42 -port 8765
+# The in-app Restart spawns a child and exits 0; systemd then stops the cgroup,
+# so restart on every exit (failures included) to keep the backend up.
+Restart=always
+RestartSec=2
+TimeoutStopSec=15
+Nice=5
+UMask=0077
+
+[Install]
+WantedBy=default.target

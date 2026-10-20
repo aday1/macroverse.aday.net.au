@@ -1,0 +1,18 @@
+[Unit]
+Description=Read-only Steam Deck controller, trackpads and gyro for Macroverse (127.0.0.1:18783)
+Documentation=file://%h/Apps/macroverse/docs/KEFKA.md
+PartOf=macroverse-deck.service
+After=deckhypr.service
+
+[Service]
+# Opens the "Steam Deck" and "Steam Deck Motion Sensors" evdev devices read-only;
+# never grabs them, never creates virtual input, never touches deckhypr or lizard mode.
+Environment=MACROVERSE_DECK_CLASS=macroverse-deck
+Environment=MACROVERSE_DECK_ORIGINS=http://127.0.0.1:8765,http://localhost:8765
+Environment=MACROVERSE_DECK_INPUT_PORT=18783
+EnvironmentFile=-%h/.config/macroverse/kefka.env
+ExecStart=/usr/bin/python3 %h/.local/share/macroverse/deck-input.py
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=true
+Nice=5

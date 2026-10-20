@@ -1,0 +1,27 @@
+[Unit]
+Description=Macroverse Deck window (Chrome app, XWayland, class macroverse-deck)
+Documentation=file://%h/Apps/macroverse/docs/KEFKA.md
+PartOf=graphical-session.target
+After=graphical-session.target macroverse.service macroverse-input.service
+Wants=macroverse.service macroverse-input.service
+
+[Service]
+Type=simple
+RuntimeDirectory=macroverse-deck
+RuntimeDirectoryMode=0700
+ExecCondition=/usr/bin/pgrep -u %U -x Hyprland
+Environment=GDK_BACKEND=x11
+Environment=DISPLAY=:0
+Environment=MACROVERSE_DECK_URL=http://127.0.0.1:8765/
+EnvironmentFile=-%h/.config/macroverse/kefka.env
+# Give a just-started backend a few seconds so the window does not open on an error page.
+ExecStartPre=-/bin/sh -c 'for i in $$(seq 1 40); do /usr/bin/curl -fsS -o /dev/null --max-time 1 http://127.0.0.1:8765/api/config && exit 0; sleep 0.25; done; exit 1'
+# Flatpak moves Chrome into its own scope: record and stop this exact instance.
+# The profile lives under a persisted sandbox-home subpath so its lock is shared on relaunch
+# (host side: ~/.var/app/com.google.Chrome/.local/share/macroverse-browser).
+# XWayland (--ozone-platform=x11) avoids Chrome's Wayland "Custom primaries aren't supported" crash on Kefka.
+# /run/udev is exposed so the Gamepad API and Web MIDI can enumerate external devices.
+ExecStart=/bin/sh -c 'exec /usr/bin/flatpak run --die-with-parent --instance-id-fd=3 --persist=.local/share/macroverse-browser --filesystem=/run/udev:ro com.google.Chrome --app="$${MACROVERSE_DECK_URL:-http://127.0.0.1:8765/}" --start-fullscreen --ozone-platform=x11 --class=macroverse-deck --user-data-dir="%h/.local/share/macroverse-browser" --no-first-run --noerrdialogs --disable-session-crashed-bubble --disable-features=TranslateUI --autoplay-policy=no-user-gesture-required 3>"%t/macroverse-deck/instance"'
+ExecStop=-/bin/sh -c 'test -s "%t/macroverse-deck/instance" || exit 0; instance=$$(cat "%t/macroverse-deck/instance"); case "$$instance" in ""|*[!0-9]*) exit 1;; esac; exec /usr/bin/flatpak kill "$$instance"'
+TimeoutStopSec=10
+Restart=no
