@@ -66,3 +66,68 @@ export const VJ_ACTION_IDS: VJActionId[] = [
   'vj/deckA/pageUp', 'vj/deckA/pageDown', 'vj/deckB/pageLeft', 'vj/deckB/pageRight',
   'vj/autoVj'
 ];
+
+/**
+ * Richer VJ deck surface for continuous controllers (Steam Deck / gamepads): read live state and drive
+ * focus-relative actions that the numeric action ids above cannot express (browse cursor, load by
+ * library index, mouse, per-deck params by index). vjDeck registers it when the deck is built.
+ */
+export type VjDeckKey = 'A' | 'B';
+
+export interface VjDeckParamSnapshot {
+  name: string;
+  type: string;
+  min: number;
+  max: number;
+  value: number | boolean;
+}
+
+export interface VjDeckStateSnapshot {
+  path: string;
+  name: string;
+  /** Index in the (filtered) VJ library list, -1 when not in it. */
+  libraryIndex: number;
+  params: VjDeckParamSnapshot[];
+  mouse: { x: number; y: number };
+}
+
+export interface VjSurfaceSnapshot {
+  /** VJ view visible and deck built; controllers should only act while true. */
+  active: boolean;
+  crossfader: number;
+  autoVj: boolean;
+  libraryCount: number;
+  decks: Record<VjDeckKey, VjDeckStateSnapshot>;
+}
+
+export interface VjDeckSurface {
+  snapshot(): VjSurfaceSnapshot;
+  libraryEntry(index: number): { path: string; name: string } | null;
+  getCrossfader(): number;
+  setCrossfader(v: number): void;
+  /** Animated crossfade to one deck (tap feel). */
+  cutTo(deck: VjDeckKey): void;
+  /** Param value normalised to 0..1 (bool 0/1); null if the deck has no such param. */
+  getParamNorm(deck: VjDeckKey, index: number): number | null;
+  setParamNorm(deck: VjDeckKey, index: number, v: number): void;
+  getMouse(deck: VjDeckKey): { x: number; y: number };
+  setMouse(deck: VjDeckKey, x: number | null, y: number | null): void;
+  loadLibraryIndex(deck: VjDeckKey, index: number): void;
+  navigateDeck(deck: VjDeckKey, delta: number): void;
+  setAutoVj(on: boolean): void;
+  /** Visual focus for pad control (null clears). */
+  setPadFocus(deck: VjDeckKey | null): void;
+  /** Highlight the library browse cursor (null clears). */
+  setBrowseCursor(index: number | null): void;
+}
+
+let deckSurface: VjDeckSurface | null = null;
+
+export function registerVjDeckSurface(surface: VjDeckSurface | null): void {
+  deckSurface = surface;
+  if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('macroverse-vj-surface'));
+}
+
+export function getVjDeckSurface(): VjDeckSurface | null {
+  return deckSurface;
+}

@@ -45,3 +45,4 @@ https://macroverse.aday.net.au/
 - Go: `cd /workspace/api && go vet ./...`
 - Frontend build: `cd /workspace/frontend && npx vite build`
 - Frontend types: `cd /workspace/frontend && npx tsc --noEmit` (has pre-existing errors)
+- Deck controls unit tests (offline, node:test): `cd /workspace/frontend && npm run test:deck`; browser e2e against a running build: `npm run test:deck:e2e` (see `docs/DECK_CONTROLS.md`)

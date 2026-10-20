@@ -12,7 +12,7 @@ import {
 } from '../engines/audio.js';
 import { oscEngine } from '../engines/osc.js';
 import { midiEngine } from '../engines/midi.js';
-import { vjController } from '../engines/vjController.js';
+import { registerVjDeckSurface, vjController, type VjDeckKey } from '../engines/vjController.js';
 import { roliblockManager, sendStretchedLed } from '../engines/roliblock.js';
 import { initVjContextMenus } from './vjContextMenu.js';
 import {
@@ -281,6 +281,7 @@ function buildVjShaderCarousel(opts: {
   updateActive: () => void;
   refreshThumb: (path: string) => void;
   scrollToPath: (path: string) => void;
+  setCursor: (path: string | null) => void;
 } {
   const root = document.createElement('div');
   root.className = 'vj-shader-carousel panel-section';
@@ -326,6 +327,8 @@ function buildVjShaderCarousel(opts: {
   root.appendChild(trackWrap);
 
   const cardByPath = new Map<string, HTMLElement>();
+  /** Controller browse cursor (Steam Deck / gamepad), highlighted across re-renders. */
+  let cursorPath: string | null = null;
   let lastCarouselFireKey = '';
   let lastCarouselFireAt = 0;
 
@@ -425,6 +428,23 @@ function buildVjShaderCarousel(opts: {
     for (const [path, card] of cardByPath) {
       card.classList.toggle('is-on-a', path === a && !!a);
       card.classList.toggle('is-on-b', path === b && !!b);
+      card.classList.toggle('is-pad-cursor', path === cursorPath);
+    }
+  }
+
+  function setCursor(path: string | null): void {
+    if (path === cursorPath) return;
+    const prev = cursorPath ? cardByPath.get(cursorPath) : null;
+    prev?.classList.remove('is-pad-cursor');
+    cursorPath = path;
+    const card = path ? cardByPath.get(path) : null;
+    if (card) {
+      card.classList.add('is-pad-cursor');
+      const trackRect = track.getBoundingClientRect();
+      const r = card.getBoundingClientRect();
+      if (r.left < trackRect.left || r.right > trackRect.right) {
+        track.scrollTo({ left: track.scrollLeft + (r.left - trackRect.left) - (trackRect.width - r.width) / 2, behavior: 'auto' });
+      }
     }
   }
 
@@ -562,7 +582,7 @@ function buildVjShaderCarousel(opts: {
   });
   window.addEventListener('thumbnails-generating-done', refreshLoadedThumbs);
 
-  return { root, refresh: render, updateActive, refreshThumb, scrollToPath };
+  return { root, refresh: render, updateActive, refreshThumb, scrollToPath, setCursor };
 }
 
 const DECK_CANVAS_W = 420;
@@ -1139,7 +1159,7 @@ function buildVjDeck(): void {
     deckKey: 'A' | 'B',
     oscAddressesRef: Record<string, string>,
     onOscAddressChange: () => void
-  ): { el: HTMLElement; canvas: HTMLCanvasElement; navLabel: HTMLElement; setDisplayPath: (path: string) => void; updateParams: (meta: ExposeItem[]) => void; navigateShader: (delta: number) => void; loadShader: (path: string) => void } {
+  ): { el: HTMLElement; canvas: HTMLCanvasElement; navLabel: HTMLElement; setDisplayPath: (path: string) => void; updateParams: (meta: ExposeItem[]) => void; navigateShader: (delta: number) => void; loadShader: (path: string) => void; syncParamInput: (name: string) => void } {
     const deck = document.createElement('div');
     deck.className = 'vj-deck panel-section';
     deck.dataset.vjDeck = deckKey;
@@ -1327,11 +1347,25 @@ function buildVjDeck(): void {
     deck.appendChild(paramsContainer);
 
     const prefix = '/vj/' + deckKey.toLowerCase() + '/';
+    const paramInputs = new Map<string, HTMLInputElement>();
+    /** Reflect a value changed by a controller (MIDI / Steam Deck) in the row's slider or checkbox. */
+    function syncParamInput(name: string): void {
+      const inp = paramInputs.get(name);
+      if (!inp) return;
+      const v = valuesRef[name];
+      if (inp.type === 'checkbox') inp.checked = !!v;
+      else if (typeof v === 'number') {
+        inp.value = String(v);
+        updateSliderFill(inp);
+      }
+    }
     function updateParams(meta: ExposeItem[]): void {
       paramsContainer.innerHTML = '';
-      for (const p of meta) {
+      paramInputs.clear();
+      meta.forEach((p, paramIndex) => {
         const row = document.createElement('div');
         row.className = 'vj-deck-param-row';
+        row.dataset.deckTarget = `${deckKey}.param.${paramIndex}`;
         const lab = document.createElement('span');
         lab.textContent = p.name;
         lab.title = p.name;
@@ -1344,13 +1378,15 @@ function buildVjDeck(): void {
           cb.addEventListener('change', () => {
             valuesRef[p.name] = cb.checked;
           });
+          paramInputs.set(p.name, cb);
           row.appendChild(cb);
         } else {
           const sl = document.createElement('input');
           sl.type = 'range';
           sl.min = String(p.min);
           sl.max = String(p.max);
-          sl.step = String(Number.isInteger(p.min) && Number.isInteger(p.max) ? 1 : (p.max - p.min) / 100);
+          // Integer bounds do not make a param integer: a 0..1 float with step 1 could only be 0 or 1.
+          sl.step = String(p.type === 'int' ? 1 : (p.max - p.min) / 100 || 0.01);
           const v = Number(valuesRef[p.name] ?? p.def);
           sl.value = String(Math.max(p.min, Math.min(p.max, v)));
           lab.style.color = sliderColorForKey(deckKey + '-' + p.name);
@@ -1362,6 +1398,7 @@ function buildVjDeck(): void {
           sl.addEventListener('input', () => {
             valuesRef[p.name] = parseFloat(sl.value);
           });
+          paramInputs.set(p.name, sl);
         }
         const oscInp = document.createElement('input');
         oscInp.type = 'text';
@@ -1380,10 +1417,10 @@ function buildVjDeck(): void {
         });
         row.appendChild(oscInp);
         paramsContainer.appendChild(row);
-      }
+      });
     }
 
-    return { el: deck, canvas, navLabel, setDisplayPath, updateParams, navigateShader, loadShader: pickShader };
+    return { el: deck, canvas, navLabel, setDisplayPath, updateParams, navigateShader, loadShader: pickShader, syncParamInput };
   }
 
   let shaderCarousel: ReturnType<typeof buildVjShaderCarousel>;
@@ -1580,6 +1617,7 @@ function buildVjDeck(): void {
 
   const crossfaderRow = document.createElement('div');
   crossfaderRow.className = 'vj-crossfader-row vj-crossfader-row--main';
+  crossfaderRow.dataset.deckTarget = 'xfade';
   const deckTagA = document.createElement('button');
   deckTagA.type = 'button';
   deckTagA.className = 'vj-mixer-deck-tag vj-mixer-deck-tag--a';
@@ -1696,6 +1734,7 @@ function buildVjDeck(): void {
   const autoVjToggleBtn = document.createElement('button');
   autoVjToggleBtn.type = 'button';
   autoVjToggleBtn.className = 'vj-btn vj-btn--toggle';
+  autoVjToggleBtn.dataset.deckTarget = 'autoVj.toggle';
   autoVjToggleBtn.textContent = 'Off';
   autoVjToggleBtn.title = 'Auto-pilot BPM clock: crossfade, optional shader swap and param depth. Use Shaders/Depth toggles below.';
   const autoVjBpmLabel = document.createElement('label');
@@ -3401,6 +3440,7 @@ function buildVjDeck(): void {
       if (p) {
         const val = p.type === 'bool' ? v > 0.5 : p.min + (p.max - p.min) * v;
         deckAParamValues[p.name] = p.type === 'bool' ? val : Math.max(p.min, Math.min(p.max, val));
+        deckA.syncParamInput(p.name);
       }
     });
     vjController.register(`vj/deckB/param/${i}` as import('../engines/vjController.js').VJActionId, (v) => {
@@ -3408,6 +3448,7 @@ function buildVjDeck(): void {
       if (p) {
         const val = p.type === 'bool' ? v > 0.5 : p.min + (p.max - p.min) * v;
         deckBParamValues[p.name] = p.type === 'bool' ? val : Math.max(p.min, Math.min(p.max, val));
+        deckB.syncParamInput(p.name);
       }
     });
   }
@@ -3429,6 +3470,126 @@ function buildVjDeck(): void {
     currentPageB++;
     if (!applyingRemoteControl) publishVjControl({ pageB: currentPageB });
   });
+
+  // --- Steam Deck / gamepad surface (engines/steamdeck.ts). Inert until a controller is present. ---
+  const PAD_PARAM_TYPES = new Set(['float', 'int', 'long', 'bool']);
+  let xfadePublishAt = 0;
+  let xfadePublishTimer: ReturnType<typeof setTimeout> | null = null;
+  function publishCrossfaderThrottled(): void {
+    if (applyingRemoteControl) return;
+    const now = performance.now();
+    if (now - xfadePublishAt >= 50) {
+      xfadePublishAt = now;
+      publishVjControl({ crossfader });
+      return;
+    }
+    if (xfadePublishTimer) return;
+    xfadePublishTimer = setTimeout(() => {
+      xfadePublishTimer = null;
+      xfadePublishAt = performance.now();
+      publishVjControl({ crossfader });
+    }, 50);
+  }
+  const deckParts = (d: VjDeckKey) => d === 'A'
+    ? { ui: deckA, meta: deckAMeta, values: deckAParamValues }
+    : { ui: deckB, meta: deckBMeta, values: deckBParamValues };
+  const deckLibraryIndex = (d: VjDeckKey, list: ReturnType<typeof getShaderList>): number => {
+    const path = (d === 'A' ? deckA : deckB).el.dataset.vjShaderPath || '';
+    return path ? list.findIndex((e) => (e.path ?? '') === path) : -1;
+  };
+  registerVjDeckSurface({
+    snapshot() {
+      const list = getShaderList();
+      const deckSnap = (d: VjDeckKey) => {
+        const { ui, meta, values } = deckParts(d);
+        const path = ui.el.dataset.vjShaderPath || '';
+        const idx = deckLibraryIndex(d, list);
+        const entry = idx >= 0 ? list[idx] : null;
+        const { mx, my } = getDeckMouse(d);
+        return {
+          path,
+          name: entry ? carouselDisplayName(entry) : path.split('/').pop() || '',
+          libraryIndex: idx,
+          params: meta.map((p) => ({ name: p.name, type: p.type, min: p.min, max: p.max, value: values[p.name] ?? p.def })),
+          mouse: { x: mx, y: my },
+        };
+      };
+      return {
+        // Audience (view-only) links watch; they never take controller input.
+        active: vjDeckTabActive && wrap.isConnected && !isVjViewOnlyMode(),
+        crossfader,
+        autoVj: autoVjEnabled,
+        libraryCount: list.length,
+        decks: { A: deckSnap('A'), B: deckSnap('B') },
+      };
+    },
+    libraryEntry(index) {
+      const e = getShaderList()[index];
+      return e?.path ? { path: e.path, name: carouselDisplayName(e) } : null;
+    },
+    getCrossfader: () => crossfader,
+    setCrossfader(v) {
+      const nv = Math.max(0, Math.min(1, v));
+      manualCrossfadeAnim.active = false;
+      if (Math.abs(nv - crossfader) < 1e-5) return;
+      crossfader = nv;
+      updateCrossfaderUi();
+      publishCrossfaderThrottled();
+    },
+    cutTo(d) {
+      animateCrossfaderTo(d === 'A' ? 0 : 1);
+    },
+    getParamNorm(d, index) {
+      const { meta, values } = deckParts(d);
+      const p = meta[index];
+      if (!p || !PAD_PARAM_TYPES.has(p.type)) return null;
+      const v = values[p.name] ?? p.def;
+      if (p.type === 'bool') return v ? 1 : 0;
+      const span = p.max - p.min;
+      return span > 0 ? Math.max(0, Math.min(1, (Number(v) - p.min) / span)) : 0;
+    },
+    setParamNorm(d, index, v) {
+      const { ui, meta, values } = deckParts(d);
+      const p = meta[index];
+      if (!p || !PAD_PARAM_TYPES.has(p.type)) return;
+      const n = Math.max(0, Math.min(1, v));
+      values[p.name] = p.type === 'bool' ? n > 0.5 : p.min + (p.max - p.min) * n;
+      ui.syncParamInput(p.name);
+    },
+    getMouse(d) {
+      const { mx, my } = getDeckMouse(d);
+      return { x: mx, y: my };
+    },
+    setMouse(d, x, y) {
+      const cur = getDeckMouse(d);
+      const nx = x === null ? cur.mx : x;
+      const ny = y === null ? cur.my : y;
+      if (d === 'A') setVjMouseForDeckA(nx, ny);
+      else setVjMouseForDeckB(nx, ny);
+      if (!_perDeckMouseEnabled) setVjMouseFromRoliblock(nx, ny);
+    },
+    loadLibraryIndex(d, index) {
+      const e = getShaderList()[index];
+      if (e?.path) loadDeckByPath(d, e.path);
+    },
+    navigateDeck(d, delta) {
+      (d === 'A' ? deckA : deckB).navigateShader(delta);
+    },
+    setAutoVj(on) {
+      setAutoVjEnabled(on);
+    },
+    setPadFocus(d) {
+      deckA.el.classList.toggle('is-pad-focus', d === 'A');
+      deckB.el.classList.toggle('is-pad-focus', d === 'B');
+    },
+    setBrowseCursor(index) {
+      const e = index === null ? null : getShaderList()[index];
+      shaderCarousel.setCursor(e?.path ?? null);
+    },
+  });
+  void import('../engines/steamdeck.js')
+    .then((m) => m.initSteamDeckControls())
+    .catch((err) => console.warn('[VJ] Deck controls unavailable:', err));
 
   onAudienceMouse((mx, my) => {
     if (!getAudienceParticipationEnabled()) return;

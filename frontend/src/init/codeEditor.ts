@@ -1567,6 +1567,16 @@ export function initCodeEditor(): void {
 /** Restore saved/default view after the shader index has loaded (avoids empty VJ gallery on startup). */
 export function applyInitialView(): void {
   const splitOrientationSelect = document.getElementById('splitOrientationSelect') as HTMLSelectElement | null;
+  // ?view=vj (etc.) opens a view directly, e.g. a dedicated Steam Deck window.
+  let urlView: string | null = null;
+  try { urlView = new URLSearchParams(location.search).get('view'); } catch (_) {}
+  if (urlView && /^(preview|code|split|vj|gallery)$/.test(urlView)) {
+    const urlTab = document.querySelector(`.view-tab[data-view="${urlView}"]`) as HTMLElement | null;
+    if (urlTab) {
+      urlTab.click();
+      return;
+    }
+  }
   let savedView: string | null = null;
   try { savedView = localStorage.getItem(VIEW_STORAGE_KEY); } catch (_) {}
   if (savedView) {
